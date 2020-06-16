@@ -11,7 +11,7 @@ from dash.dependencies import Input, Output, State
 from journal_rec_components import (
     generate_graph, 
     displayTapNodeData,
-    update_output
+    parse_output
 )
 
 # Load up the style sheets for the dash app
@@ -32,25 +32,19 @@ app.layout = html.Div([
     ]),
     dbc.Row([
         dbc.Col(
-            dcc.Upload(
-                id='upload-article',
-                children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select Files')
-                ]),
-                style={
-                    'width': '100%',
-                    'height': '60px',
-                    'lineHeight': '60px',
-                    'borderWidth': '1px',
-                    'borderStyle': 'dashed',
-                    'borderRadius': '5px',
-                    'textAlign': 'center',
-                    'margin': '10px'
-                },
-                # Allow multiple files to be uploaded
-                multiple=False,
-            ),
+            dbc.InputGroup([
+                dbc.Input(
+                    id="biorxiv_doi",
+                    placeholder="Insert a biorxiv doi. Ex: 10.1101/440735...",
+                    type="text"
+                ),
+                dbc.Button(
+                    "Submit",
+                    id="submit_doi",
+                    color="primary",
+                    className="mr-1"
+                )
+            ]),
             md=6
         ),
         html.Div(id="query", hidden=True),
@@ -108,13 +102,12 @@ app.callback(
         Output('err', "is_open")
     ],
     [
-        Input('upload-article', 'contents')
+        Input('submit_doi', 'n_clicks')
     ],
     [
-        State('upload-article', 'filename'),
-        State('upload-article', 'last_modified')
+        State('biorxiv_doi', 'value')
     ]
-)(update_output)
+)(parse_output)
 
 # run the app
 if __name__=='__main__':

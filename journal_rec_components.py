@@ -4,6 +4,7 @@ import json
 import dash
 import numpy as np
 import pandas as pd
+import requests
 
 from journal_rec_ml_models import get_neighbors
 from journal_rec_word_vectors import parse_uploaded_file
@@ -107,24 +108,31 @@ def generate_graph(query):
 
     return nodes+edges
 
-def update_output(content, filename, timestamp):
+def parse_output(n_clicks, user_doi):
     """
     This function is designed to render the paper-journal 
-    network for the user
+    network for the user given a biorxiv doi
     
     Args:
-        content - the file content in base64
-        filename - the name of the file a user will upload
-        timestamp - the timestamp of the upload
+        n_clicks - the number of times the button has been clicked
+        user_doi - a biorxiv doi that grabs the most current version of a preprint
     """
     try:
-        # If the user inputs a document
-        if content:
-            content_type, content_string = content.split(',')
-            decoded = base64.b64decode(content_string)
-            query = parse_uploaded_file(decoded, filename)
-        
-        # Default query - word vector generated from a uniform distribution
+        if n_clicks:
+            r = requests.get(f"https://api.biorxiv.org/details/biorxiv/{user_doi}")
+            
+            if r.status_code != 200:
+                raise Expcetion("Error DOI not found in bioRxiv. Please retry with a new DOI!")
+            # grab latest version
+            print(r.json())
+            latest_version = r.json()['collection'][-1]['version']
+            r = requests.get(f"http://biorxiv.org/content/{user_doi}v{latest_version}.full.pdf")
+            print(f"http://biorxiv.org/content/{user_doi}v{latest_version}.full.pdf")
+            
+            if r.status_code != 200:
+                raise Expcetion("Error retrieving full PDF. Please retry with a new DOI!")
+                
+            query = parse_uploaded_file(r.content)
         else:
             np.random.seed(101) 
             query = np.random.uniform(-3,3,(1, 300))
