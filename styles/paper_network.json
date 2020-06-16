@@ -21,13 +21,13 @@
             "text-halign": "center",
             "font-size": "20px",
             "Tooltip":"data(journal)",
-            "background-color":"blue"
+            "background-color":"#40e0d0"
         }
     },
     {
         "selector":"node[data_type = 'centroid']",
         "style":{
-            "background-color": "#FF4136"
+            "background-color": "#bada55"
         }
     }
 ]

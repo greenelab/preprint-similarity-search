@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 import dash
 import dash_bootstrap_components as dbc
@@ -9,16 +8,19 @@ import dash_html_components as html
 import dash_table as dt
 from dash.dependencies import Input, Output, State
 
-import numpy as np
-import pandas as pd
+from journal_rec_components import (
+    generate_graph, 
+    displayTapNodeData,
+    update_output
+)
 
-from journal_rec_models import get_neighbors
-
+# Load up the style sheets for the dash app
+# Uses bootstrap until noted otherwise
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.title = "Journal Recommender"
 
-
+# Add components for the app to render
 app.layout = html.Div([
     dbc.Container([
         dcc.Markdown(
@@ -47,11 +49,17 @@ app.layout = html.Div([
                     'margin': '10px'
                 },
                 # Allow multiple files to be uploaded
-                multiple=False
+                multiple=False,
             ),
             md=6
         ),
-        html.P(id="test")
+        html.Div(id="query", hidden=True),
+        dbc.Alert(
+            id="err", 
+            color="danger", 
+            is_open=False, 
+            dismissable=True
+        )
     ]),
     dbc.Row([
         dbc.Col(
@@ -60,89 +68,29 @@ app.layout = html.Div([
                 layout={
                     "name":"circle"
                 },
-                style={'width': '100%', 'height': '720px'},
-                stylesheet=json.load(open('paper_network.json', 'r')),
+                style={'width': '100%', 'height': '760px'},
+                stylesheet=json.load(open('styles/paper_network.json', 'r')),
                 elements=[]
             ),
             md=6
         ),
         dbc.Col(
             dt.DataTable(id="node_metadata"), 
-            md=6
+            md=2
         ),
     ])
 ])
 
-@app.callback(
+# Add graph render functionality
+app.callback(
     Output(component_id="paper_paper_graph", component_property="elements"),
     [
-        Input(component_id="submission_button", component_property="n_clicks"),
+        Input(component_id="query", component_property="children"),
     ],
-    state=[
-        State(component_id="document_input", component_property="value")
-    ]
-)    
-def generate_graph(n_clicks, doi):
-    np.random.seed(101)
-    query = np.random.uniform(-3,3,(1, 300))
-    results = get_neighbors(query)
-    
-    gathered_nodes = set()
-    nodes = []
-    edges = []
+)(generate_graph)
 
-    for datapoint in results["graph"]:
-        query_label = f"query_{datapoint['query']+1}"
-       
-        if query_label not in gathered_nodes:
-            label = query_label
-            nodes.append(
-                dict(
-                    data=dict(
-                        id=query_label, 
-                        label=query_label,
-                        data_type="query"
-                    )
-                )
-            )
-            
-            gathered_nodes.add(query_label)
-        
-        
-        neighbor_label = (
-            datapoint['pmcid'] 
-            if datapoint['data_type'] == "paper" 
-            else datapoint['journal']
-        )
-
-        if neighbor_label not in gathered_nodes:
-            nodes.append(
-                dict(
-                    data=dict(
-                        id=neighbor_label, 
-                        label=neighbor_label,
-                        journal=datapoint['journal'],
-                        data_type=datapoint['data_type']
-                    )
-                )
-            )
-
-            gathered_nodes.add(neighbor_label)
-        
-        
-        edges.append(
-            dict(
-                data=dict(
-                    source=neighbor_label,
-                    target=query_label,
-                    weight=datapoint['distance']
-                )
-            )
-        )
-
-    return nodes+edges
-
-@app.callback(
+# Add table render functionality
+app.callback(
     [
         Output('node_metadata', 'columns'),
         Output('node_metadata', 'data')
@@ -150,43 +98,24 @@ def generate_graph(n_clicks, doi):
     [
         Input('paper_paper_graph', 'mouseoverNodeData')
     ]
-)
-def displayTapNodeData(data):
-    if data and 'journal' in data:
-        if data['data_type'] == 'paper':
-            columns=[
-                {"name":col.upper(), "id":col} 
-                for col in ["journal", "paper"]
-            ]
-            data=[
-                {
-                    "journal":data['journal'],
-                    "paper":data['label']
-                }
-            ]
-        else:
-            columns=[
-                {"name":col.upper(), "id":col} 
-                for col in ["journal"]
-            ]
-            data = [
-                {"journal":data['journal']}
-            ]
-        return columns, data
-    else:
-        columns = [{"name":"journal", "id":"journal"}]
-        data = [{"journal":"Joural Title Goes here"}]
-        return columns, data
+)(displayTapNodeData)
 
-@app.callback(Output('test', 'children'),
-              [Input('upload-article', 'contents')],
-              [State('upload-article', 'filename'),
-               State('upload-article', 'last_modified')])
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    print(list_of_contents)
-    print(list_of_names)
-    print(list_of_dates)
-    return dash.no_update
+# Add file upload functionality
+app.callback(
+    [
+        Output('query', 'children'),
+        Output('err', 'children'),
+        Output('err', "is_open")
+    ],
+    [
+        Input('upload-article', 'contents')
+    ],
+    [
+        State('upload-article', 'filename'),
+        State('upload-article', 'last_modified')
+    ]
+)(update_output)
 
+# run the app
 if __name__=='__main__':
     app.run_server(debug=True)

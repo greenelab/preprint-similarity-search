@@ -3,7 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 import numpy as np
 
-#Dataset
+# Datasets
 centroid_df = (
     pd.read_csv("data/centroid_dataset.tsv", sep="\t")
     .set_index("journal")
@@ -71,7 +71,10 @@ def get_neighbors(query):
         for data_row in centroid_data
     ]
     
+    full_graph = paper_graph+centroid_graph
+    np.random.seed(100)
+    np.random.shuffle(full_graph)
     return {
-        "graph": paper_graph+centroid_graph
+        "graph": full_graph
     }
 
