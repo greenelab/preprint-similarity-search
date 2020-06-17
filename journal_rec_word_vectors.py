@@ -9,6 +9,7 @@ from pdfminer.high_level import extract_text
 
 word_model = Word2Vec.load("data/word2vec_model/biorxiv_300.model")
 
+
 def process_text(sentences):
     """
     This function converts list of strings into list of word vectors
@@ -28,6 +29,7 @@ def process_text(sentences):
     word_embedd = np.stack(word_vectors)
     return word_embedd.mean(axis=0)[np.newaxis,:]
 
+
 def parse_uploaded_file(content):
     """
     This function takes in the pdf content from a biorxiv preprint
@@ -39,4 +41,4 @@ def parse_uploaded_file(content):
     text_to_process = extract_text(BytesIO(content))
     query = process_text(text_to_process.lower().split("\n"))
     return query
-    
+

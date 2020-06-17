@@ -9,6 +9,7 @@ import requests
 from journal_rec_ml_models import get_neighbors
 from journal_rec_word_vectors import parse_uploaded_file
 
+
 def displayTapNodeData(data):
     """
     This function is designed to render the data table
@@ -42,7 +43,8 @@ def displayTapNodeData(data):
         columns = [{"name":"journal", "id":"journal"}]
         data = [{"journal":"Joural Title Goes here"}]
         return columns, data
-    
+
+
 def generate_graph(query):
     """
     This function is designed to render the paper-journal 
@@ -108,6 +110,7 @@ def generate_graph(query):
 
     return nodes+edges
 
+
 def parse_output(n_clicks, user_doi):
     """
     This function is designed to render the paper-journal 
@@ -141,3 +144,4 @@ def parse_output(n_clicks, user_doi):
     
     except Exception as e:
         return dash.no_update, str(e), True
+

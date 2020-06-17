@@ -24,8 +24,8 @@ knn_centroid_model.fit(centroid_df.values, centroid_df.reset_index().journal)
 
 def get_neighbors(query):
     """
-    Function granbs the closest papers given a query point
-    arguemnts:
+    Function grabs the closest papers given a query point
+    arguments:
         - query a 300 dimension vector to query classifiers
     """
     paper_distance, paper_predictions = knn_paper_model.kneighbors(query)
