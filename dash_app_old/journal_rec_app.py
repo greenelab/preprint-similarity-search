@@ -8,11 +8,14 @@ import dash_html_components as html
 import dash_table as dt
 from dash.dependencies import Input, Output, State
 
-from journal_rec_components import (
+from journal_modules.journal_rec_components import (
     generate_graph, 
     displayTapNodeData,
     parse_output
 )
+
+# Load extra layouts
+cyto.load_extra_layouts()
 
 # Load up the style sheets for the dash app
 # Uses bootstrap until noted otherwise

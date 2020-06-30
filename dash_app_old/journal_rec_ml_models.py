@@ -3,23 +3,25 @@ from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 import numpy as np
 
-# Datasets
-centroid_df = (
-    pd.read_csv("data/centroid_dataset.tsv", sep="\t")
-    .set_index("journal")
-)
+def init():
+    # Datasets
+    print("Should be once")
+    centroid_df = (
+        pd.read_csv("data/centroid_dataset.tsv", sep="\t")
+        .set_index("journal")
+    )
 
-subsampled_df = (
-    pd.read_csv("data/paper_dataset.tsv.xz", sep="\t")
-    .set_index("document")
-)
+    subsampled_df = (
+        pd.read_csv("data/paper_dataset.tsv.xz", sep="\t")
+        .set_index("document")
+    )
 
-# Set up KNNs
-knn_paper_model = KNeighborsClassifier(n_neighbors=10)
-knn_paper_model.fit(subsampled_df.drop("journal", axis=1), subsampled_df.journal)
+    # Set up KNNs
+    knn_paper_model = KNeighborsClassifier(n_neighbors=10)
+    knn_paper_model.fit(subsampled_df.drop("journal", axis=1), subsampled_df.journal)
 
-knn_centroid_model = KNeighborsClassifier(n_neighbors=10)
-knn_centroid_model.fit(centroid_df.values, centroid_df.reset_index().journal)
+    knn_centroid_model = KNeighborsClassifier(n_neighbors=10)
+    knn_centroid_model.fit(centroid_df.values, centroid_df.reset_index().journal)
 
 
 def get_neighbors(query):
