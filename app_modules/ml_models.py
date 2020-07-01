@@ -3,7 +3,6 @@ from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 import numpy as np
 
-# Datasets
 centroid_df = (
     pd.read_csv("data/centroid_dataset.tsv", sep="\t")
     .set_index("journal")
@@ -16,10 +15,16 @@ subsampled_df = (
 
 # Set up KNNs
 knn_paper_model = KNeighborsClassifier(n_neighbors=10)
-knn_paper_model.fit(subsampled_df.drop("journal", axis=1), subsampled_df.journal)
+knn_paper_model.fit(
+    subsampled_df.drop("journal", axis=1), 
+    subsampled_df.journal
+)
 
 knn_centroid_model = KNeighborsClassifier(n_neighbors=10)
-knn_centroid_model.fit(centroid_df.values, centroid_df.reset_index().journal)
+knn_centroid_model.fit(
+    centroid_df.values,
+    centroid_df.reset_index().journal
+)
 
 
 def get_neighbors(query):
@@ -29,7 +34,9 @@ def get_neighbors(query):
         - query a 300 dimension vector to query classifiers
     """
     paper_distance, paper_predictions = knn_paper_model.kneighbors(query)
-    A_paper = knn_paper_model.kneighbors_graph(query, mode='distance')
+    A_paper = knn_paper_model.kneighbors_graph(
+        query, mode='distance'
+    )
     rows, cols = A_paper.nonzero()
     paper_data = list(zip(
         rows,
@@ -39,19 +46,19 @@ def get_neighbors(query):
         subsampled_df.reset_index().document[cols].tolist()
     ))
     
-    paper_graph = [
+    paper_neighbors = [
         dict(
-            query=data_row[0],
-            paper=data_row[1],
             distance=np.round(data_row[2], 3),
             journal=data_row[3],
             pmcid=data_row[4],
-            data_type="paper"
         )
         for data_row in paper_data
     ]
+    print(paper_neighbors)
     
-    A_centroid = knn_centroid_model.kneighbors_graph(query, mode='distance')
+    A_centroid = knn_centroid_model.kneighbors_graph(
+        query, mode='distance'
+    )
     rows, cols = A_centroid.nonzero()
     centroid_data = list(zip(
         rows,
@@ -60,21 +67,17 @@ def get_neighbors(query):
         centroid_df.reset_index().journal[cols].tolist(),
     ))
     
-    centroid_graph = [
+    centroid_neighbors = [
         dict(
-            query=data_row[0],
-            paper=data_row[1],
             distance=np.round(data_row[2], 3),
             journal=data_row[3],
-            data_type="centroid"
         )
         for data_row in centroid_data
     ]
-    
-    full_graph = paper_graph+centroid_graph
-    np.random.seed(100)
-    np.random.shuffle(full_graph)
+    print(centroid_neighbors)
+
     return {
-        "graph": full_graph
+        "paper_neighbors": paper_neighbors,
+        "journal_neighbors": centroid_neighbors
     }
 

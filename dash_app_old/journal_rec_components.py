@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import requests
 
-from journal_rec_ml_models import get_neighbors
-from journal_rec_word_vectors import parse_uploaded_file
+from journal_modules.journal_rec_ml_models import get_neighbors
+from journal_modules.journal_rec_word_vectors import parse_uploaded_file
 
 
 def displayTapNodeData(data):
@@ -126,10 +126,13 @@ def parse_output(n_clicks, user_doi):
             
             if r.status_code != 200:
                 raise Expcetion("Error DOI not found in bioRxiv. Please retry with a new DOI!")
-            # grab latest version
+    
             print(r.json())
+            
+            # grab latest version
             latest_version = r.json()['collection'][-1]['version']
             r = requests.get(f"http://biorxiv.org/content/{user_doi}v{latest_version}.full.pdf")
+            
             print(f"http://biorxiv.org/content/{user_doi}v{latest_version}.full.pdf")
             
             if r.status_code != 200:
