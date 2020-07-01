@@ -9,17 +9,17 @@ def parse_biorxiv_document(user_doi):
     Args:
         user_doi - a biorxiv doi that grabs the most current version of a preprint
     """
-    r = requests.get(
+    response = requests.get(
         f"https://api.biorxiv.org/details/biorxiv/{user_doi}"
     )
 
-    if r.status_code != 200:
+    if response.status_code != 200:
         abort(
-            r.status_code, 
+            response.status_code, 
             message="Something went wrong!"
         )
 
-    content = r.json()
+    content = response.json()
     print(content)
     
     if len(content['collection']) < 1:
@@ -30,7 +30,7 @@ def parse_biorxiv_document(user_doi):
         
     # grab latest version
     latest_version = content['collection'][-1]['version']
-    r = requests.get(
+    response = requests.get(
         "http://biorxiv.org/content/"
         f"{user_doi}v{latest_version}.full.pdf"
     )
@@ -40,9 +40,9 @@ def parse_biorxiv_document(user_doi):
         f"{user_doi}v{latest_version}.full.pdf"
     )
 
-    if r.status_code != 200:
+    if response.status_code != 200:
         abort(
-            r.status_code, 
+            response.status_code, 
             message=(
                 "Something went wrong trying to download:"
                 "http://biorxiv.org/content/"
@@ -50,4 +50,4 @@ def parse_biorxiv_document(user_doi):
             )
         )
 
-    return r.content
+    return response.content
