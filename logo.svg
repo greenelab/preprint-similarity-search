@@ -14,7 +14,7 @@
   </style>
   <path
     id="book_filling"
-    fill="#ffe0b2"
+    fill="#fff3e0"
     d="
       M 10 50
       L 50 70
@@ -34,8 +34,8 @@
   />
   <path
     id="book_top_cover"
-    fill="#000000"
-    stroke="#000000"
+    fill="#303030"
+    stroke="#303030"
     stroke-width="5"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -50,7 +50,7 @@
   <path
     id="book_outlines"
     fill="none"
-    stroke="#000000"
+    stroke="#303030"
     stroke-width="5"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -70,8 +70,8 @@
   />
   <path
     id="bookmark"
-    fill="#000000"
-    stroke="#000000"
+    fill="#303030"
+    stroke="#303030"
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -89,8 +89,8 @@
   >
     <path
       id="star"
-      fill="#ffe0b2"
-      stroke="#ffe0b2"
+      fill="#fff3e0"
+      stroke="#fff3e0"
       stroke-width="20"
       stroke-linecap="round"
       stroke-linejoin="round"
