@@ -9,17 +9,7 @@
       <section>
         <h1>Anno-Rxver</h1>
         <h2>Journal Recommender</h2>
-        <img id="logo" src="logo.svg" />
-        <script>
-          // load logo inline for animation on hover
-          const loadLogo = async () => {
-            // get logo, parse source text, and insert text into doc
-            document.write(await (await fetch("logo.svg")).text());
-            // remove fallback img logo
-            document.querySelector("img#logo").remove();
-          };
-          loadLogo();
-        </script>
+        <object id="logo" data="logo.svg"></object>
       </section>
     </header>
 
@@ -27,7 +17,7 @@
       <section>
         <p class="center">
           <i
-            >Enter a <a href="https://www.biorxiv.org/">bioRxiv</a> doi of your
+            >Enter the <a href="https://www.biorxiv.org/">bioRxiv</a> doi of your
             pre-print</i
           >
         </p>

@@ -14,7 +14,7 @@
   </style>
   <path
     id="book_filling"
-    fill="#ffffff"
+    fill="#ffe0b2"
     d="
       M 10 50
       L 50 70
@@ -56,6 +56,8 @@
     stroke-linejoin="round"
     d="
       M 10 50
+      L 30 60
+      M 47.5 68.75
       L 50 70
       L 90 50
       M 10 65
@@ -66,13 +68,29 @@
       A 10 10 0 0 0 10 65
     "
   />
+  <path
+    id="bookmark"
+    fill="#000000"
+    stroke="#000000"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="
+      M 35 55
+      L 35 71.25
+      L 38.75 69.25
+      L 42.5 74.75
+      L 42.5 58.75
+      z
+    "
+  />
   <g
-    transform="translate(50,34) rotate(26.565) skewX(-26.565) scale(0.12)"
+    transform="translate(50,34) rotate(26.565) skewX(-26.565) scale(0.10)"
   >
     <path
       id="star"
-      fill="#ffffff"
-      stroke="#ffffff"
+      fill="#ffe0b2"
+      stroke="#ffe0b2"
       stroke-width="20"
       stroke-linecap="round"
       stroke-linejoin="round"
