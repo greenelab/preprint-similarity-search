@@ -14,6 +14,15 @@
     </header>
 
     <main>
+      <noscript>
+        <div class="message error">
+          <i class="far fa-times-circle icon"></i
+          ><span class="message_text"
+            >JavaScript is required to use this tool</span
+          >
+        </div>
+      </noscript>
+
       <section>
         <p class="center">
           <i
@@ -22,16 +31,54 @@
           >
         </p>
         <div id="search">
-          <input type="text" placeholder="e.g. 10.1101/833400" />
-          <button>
+          <input
+            id="search_input"
+            type="text"
+            placeholder="e.g. 10.1101/833400"
+          />
+          <button
+            id="search_button"
+            title="Search for related papers and journals"
+          >
             <i class="fas fa-search"></i>
           </button>
         </div>
       </section>
 
-      <section>
-        <h3>Recommended journals to publish your paper</h3>
-        <p></p>
+      <section id="loading_message">
+        <div class="message loading">
+          <i class="fas fa-spinner fa-spin icon"></i
+          ><span class="message_text">Loading...</span>
+        </div>
+      </section>
+
+      <section id="error_message">
+        <div class="message error">
+          <i class="far fa-times-circle icon"></i
+          ><span class="message_text">Couldn't get results</span>
+        </div>
+      </section>
+
+      <section id="journals_section">
+        <h3>Recommended Journals</h3>
+        <template>
+          <div class="card">
+            <div class="score" title=""></div>
+            <div class="name"><a href=""></a></div>
+            <div class="pmcid"><a href=""></a></div>
+          </div>
+        </template>
+      </section>
+
+      <section id="papers_section">
+        <h3>Related Papers</h3>
+        <template>
+          <div class="card">
+            <div class="score" title=""></div>
+            <div class="name"><a href=""></a></div>
+            <div class="pmcid"><a href=""></a></div>
+          </div>
+        </template>
       </section>
 
       <section>
