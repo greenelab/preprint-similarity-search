@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap");
-@import url("https://use.fontawesome.com/releases/v5.13.1/css/all.css");
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
 
 * {
   --black: #000000;
@@ -11,7 +11,7 @@
   --red: #f44336;
   --trans: 0.2s ease;
 
-  font-family: "Libre Baskerville", serif;
+  font-family: 'Libre Baskerville', serif;
   color: var(--black);
 }
 body {
@@ -129,6 +129,9 @@ a:focus * {
 #papers_section {
   display: none;
 }
+.preprint_title {
+  text-align: center;
+}
 .card {
   display: flex;
   justify-content: center;
@@ -147,6 +150,7 @@ a:focus * {
   width: 30px;
   height: 30px;
   flex-shrink: 0;
+  border: solid 1px;
   border-radius: 999px;
   font-weight: 700;
   cursor: help;
