@@ -19,6 +19,7 @@ let journalsSection = document.querySelector('#journals_section');
 let papersSection = document.querySelector('#papers_section');
 let journalCard = document.querySelector('#journals_section template');
 let paperCard = document.querySelector('#papers_section template');
+let appTitle = document.title;
 
 // global var to hold search box text
 let query = '';
@@ -26,12 +27,12 @@ let query = '';
 // global vars to hold results from backend query
 let journals = [];
 let papers = [];
-let title = '';
+let preprintTitle = '';
 
 // when user types into search box
-const onType = (event) => {
+const onType = () => {
   // get set query from text typed into input
-  query = event.target.value;
+  query = searchInput.value;
   // remove leading and trailing whitespace
   query = query.trim();
   // remove everything before first number, eg "doi:"
@@ -41,24 +42,42 @@ const onType = (event) => {
   else query = '';
 };
 
+// singleton and funcs to prevent race conditions in search, eg so an older
+// slower search doesn't finish after and overwrite a newer quicker search
+
+// variable to hold the single latest search
+let searchId;
+// create new unique search id and set it to latest search, and return it
+const newSearch = () => (searchId = performance.now());
+// check if provided search id is the latest search
+const isLatestSearch = (id) => id === searchId;
+
 // when user clicks search button
 const onSearch = async (event) => {
   // prevent refreshing page from form submit
-  event.preventDefault();
+  if (event.type === 'submit') event.preventDefault();
 
   // don't proceed if query empty
   if (!query) return;
 
+  // update url, unless user navigated back/forward which would update url
+  // automatically
+  if (event.type !== 'popstate') updateUrl();
+
   // show loading message
   showLoading();
   try {
-    // get results from backend
-    let result = await (await fetch(server + query)).json();
+    // give this fetch a unique id
+    let id = newSearch();
+    // fetch results from backend
+    let results = await (await fetch(server + query)).json();
+    // if new search started since fetch began, exit and ignore results
+    if (!isLatestSearch(id)) return;
 
     // extract journals and papers
-    journals = result.journal_neighbors || [];
-    papers = result.paper_neighbors || [];
-    title = result.preprint_title || query;
+    journals = results.journal_neighbors || [];
+    papers = results.paper_neighbors || [];
+    preprintTitle = results.preprint_title || query;
 
     // if results empty, throw an error
     if (!journals.length || !papers.length) throw Error('Empty response');
@@ -72,6 +91,8 @@ const onSearch = async (event) => {
     showError();
     console.error(error);
   }
+
+  return false;
 };
 
 // show loading message and hide other messages and results
@@ -163,7 +184,7 @@ const showResults = () => {
   const titleLinks = document.querySelectorAll('.preprint_title a');
   for (const titleLink of titleLinks) {
     titleLink.href = 'https://doi.org/' + query;
-    titleLink.innerHTML = title;
+    titleLink.innerHTML = preprintTitle;
   }
 
   // delete any existing result elements
@@ -177,10 +198,6 @@ const showResults = () => {
   makeCards(papers, paperCard, papersSection);
 };
 
-// add input triggers
-searchInput.addEventListener('input', onType);
-search.addEventListener('submit', onSearch);
-
 // load logo inline for animation on hover and loading
 const loadLogo = async () => {
   // get logo and parse source text
@@ -193,3 +210,29 @@ const loadLogo = async () => {
   object.remove();
 };
 loadLogo();
+
+// add query to url as param
+const updateUrl = () => {
+  const oldUrl = window.location.href;
+  const base = window.location.href.split(/[?#]/)[0];
+  const newUrl = base + '?doi=' + query;
+  // compare old to new url to prevent duplicate history entries when refreshing
+  if (oldUrl !== newUrl) history.pushState(null, null, newUrl);
+  // update browser tab title
+  document.title = appTitle + ' - ' + query;
+};
+
+// populate search from url on page load
+const onUrlChange = (event) => {
+  const params = new URLSearchParams(location.search.substring(1));
+  const doi = params.get('doi');
+  searchInput.value = doi;
+  onType();
+  onSearch(event);
+};
+
+// add trigger listeners
+searchInput.addEventListener('input', onType);
+searchForm.addEventListener('submit', onSearch);
+window.addEventListener('popstate', onUrlChange);
+window.addEventListener('load', onUrlChange);

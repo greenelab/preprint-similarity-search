@@ -132,6 +132,9 @@ a:focus * {
 .preprint_title {
   text-align: center;
 }
+.preprint_title a {
+  font-style: italic;
+}
 .card {
   display: flex;
   justify-content: center;
