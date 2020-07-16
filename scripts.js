@@ -67,6 +67,9 @@ const onSearch = async (event) => {
   // show loading message
   showLoading();
   try {
+    // save initial query in case user changes text in search box while fetching
+    const initialQuery = query;
+
     // give this fetch a unique id
     let id = newSearch();
     // fetch results from backend
@@ -77,7 +80,7 @@ const onSearch = async (event) => {
     // extract journals and papers
     journals = results.journal_neighbors || [];
     papers = results.paper_neighbors || [];
-    preprintTitle = results.preprint_title || query;
+    preprintTitle = results.preprint_title || initialQuery;
 
     // if results empty, throw an error
     if (!journals.length || !papers.length) throw Error('Empty response');
