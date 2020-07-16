@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="logo">
   <style>
-    #logo:hover #star {
+    #logo:hover #star,
+    #logo[data-spin] #star {
       animation: star_rotate 2s ease forwards infinite;
     }
     @keyframes star_rotate {
