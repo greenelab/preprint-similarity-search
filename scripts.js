@@ -1,5 +1,5 @@
 // backend server
-let server = 'http://api-journal-rec.greenelab.com/doi/';
+let server = 'https://api-journal-rec.greenelab.com/doi/';
 
 // rank color
 let rankColor = '#ff9800';
@@ -30,10 +30,15 @@ let title = '';
 
 // when user types into search box
 const onType = (event) => {
-  // remove whitespace
-  query = event.target.value.trim();
+  // get set query from text typed into input
+  query = event.target.value;
+  // remove leading and trailing whitespace
+  query = query.trim();
   // remove everything before first number, eg "doi:"
-  query = query.substr(query.search(/\d/));
+  const index = query.search(/\d/);
+  if (index !== -1) query = query.substr(index);
+  // if no number, can't be a valid doi, so set query to empty
+  else query = '';
 };
 
 // when user clicks search button
@@ -41,8 +46,8 @@ const onSearch = async (event) => {
   // prevent refreshing page from form submit
   event.preventDefault();
 
-  // don't proceed if search box empty
-  if (!query.trim()) return;
+  // don't proceed if query empty
+  if (!query) return;
 
   // show loading message
   showLoading();
