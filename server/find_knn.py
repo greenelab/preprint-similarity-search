@@ -6,7 +6,7 @@ from document_downloader import get_doi_content
 from utils import create_journal_model, create_paper_models, server_log
 from word_vectors import parse_content
 
-N_NEIGHBORS = 10
+N_NEIGHBORS = 10          # number of closest neighbors to find
 
 # Pre-load journal_model
 journal_df, journal_model = create_journal_model(N_NEIGHBORS)
@@ -28,7 +28,7 @@ def get_neighbors(user_doi):
     server_log("Downloaded PDF content")
 
     query_vec = parse_content(content)
-    server_log("Converted PDF content to query_vec, start searching KNN now ...")
+    server_log("Start searching KNN based on query_vec")
 
     paper_knn = get_paper_knn(query_vec)
     journal_knn = get_journal_knn(query_vec)

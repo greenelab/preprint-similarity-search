@@ -22,9 +22,11 @@ def create_paper_models(n_neighbors):
     """Return a list of paper models based on pickled sub-kd-trees."""
 
     server_log("Start initializing paper models")
-    PAPER_MODEL_SIZE = 431539
+
+    N_PAPER_MODELS = 4         # number of sub-models for paper dataset
+    PAPER_MODEL_SIZE = 431539  # number of nodes in each sub-model
     paper_models = list()
-    for id in range(1, 5):
+    for id in range(1, N_PAPER_MODELS + 1):
         pkl_filename = f"data/paper_dataset/sub{id}.pkl"
         sub_model = KNeighborsClassifier(n_neighbors)
         sub_model.n_samples_fit_ = PAPER_MODEL_SIZE
