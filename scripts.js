@@ -1,33 +1,39 @@
 // backend server
-let server = 'https://api-journal-rec.greenelab.com/doi/';
+let server = "https://api-journal-rec.greenelab.com/doi/";
+
+// map data
+let mapData = "/data/pmc_hexbin_plot.json";
 
 // rank color
-let rankColor = '#ff9800';
+let rankColor = "#ff9800";
 
 // lookup resources
-const googleLookup = 'https://www.google.com/search?q=';
-const pubMedLookup = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
+const googleLookup = "https://www.google.com/search?q=";
+const pubMedLookup = "https://www.ncbi.nlm.nih.gov/pmc/articles/";
 
 // dom elements
-let searchForm = document.querySelector('#search');
-let searchInput = document.querySelector('#search_input');
-let searchButton = document.querySelector('#search_button');
-let loadingMessage = document.querySelector('#loading_message');
-let emptyMessage = document.querySelector('#empty_message');
-let errorMessage = document.querySelector('#error_message');
-let journalsSection = document.querySelector('#journals_section');
-let papersSection = document.querySelector('#papers_section');
-let journalCard = document.querySelector('#journals_section template');
-let paperCard = document.querySelector('#papers_section template');
+let searchForm = document.querySelector("#search");
+let searchInput = document.querySelector("#search_input");
+let searchButton = document.querySelector("#search_button");
+let loadingMessage = document.querySelector("#loading_message");
+let emptyMessage = document.querySelector("#empty_message");
+let errorMessage = document.querySelector("#error_message");
+let journalsSection = document.querySelector("#journals_section");
+let papersSection = document.querySelector("#papers_section");
+let mapSection = document.querySelector("#map_section");
+let journalCard = document.querySelector("#journals_section template");
+let paperCard = document.querySelector("#papers_section template");
+let gridSvg = document.querySelector("#grid");
+let legendSvg = document.querySelector("#legend");
 let appTitle = document.title;
 
 // global var to hold search box text
-let query = '';
+let query = "";
 
 // global vars to hold results from backend query
 let journals = [];
 let papers = [];
-let preprintTitle = '';
+let preprintTitle = "";
 
 // when user types into search box
 const onType = () => {
@@ -39,7 +45,7 @@ const onType = () => {
   const index = query.search(/\d/);
   if (index !== -1) query = query.substr(index);
   // if no number, can't be a valid doi, so set query to empty
-  else query = '';
+  else query = "";
 };
 
 // singleton and funcs to prevent race conditions in search, eg so an older
@@ -55,14 +61,14 @@ const isLatestSearch = (id) => id === searchId;
 // when user clicks search button
 const onSearch = async (event) => {
   // prevent refreshing page from form submit
-  if (event.type === 'submit') event.preventDefault();
+  if (event.type === "submit") event.preventDefault();
 
   // don't proceed if query empty
   if (!query) return;
 
   // update url, unless user navigated back/forward which would update url
   // automatically
-  if (event.type !== 'popstate') updateUrl();
+  if (event.type !== "popstate") updateUrl();
 
   // show loading message
   showLoading();
@@ -83,7 +89,7 @@ const onSearch = async (event) => {
     preprintTitle = results.preprint_title || initialQuery;
 
     // if results empty, throw an error
-    if (!journals.length || !papers.length) throw Error('Empty response');
+    if (!journals.length || !papers.length) throw Error("Empty response");
 
     // otherwise, clean and show results
     journals = cleanArray(journals);
@@ -100,20 +106,20 @@ const onSearch = async (event) => {
 
 // show loading message and hide other messages and results
 const showLoading = () => {
-  document.querySelector('#logo').setAttribute('data-spin', true);
-  loadingMessage.style.display = 'block';
-  errorMessage.style.display = 'none';
-  journalsSection.style.display = 'none';
-  papersSection.style.display = 'none';
+  document.querySelector("#logo").setAttribute("data-spin", true);
+  loadingMessage.style.display = "block";
+  errorMessage.style.display = "none";
+  journalsSection.style.display = "none";
+  papersSection.style.display = "none";
 };
 
 // show error message and hide other messages and results
 const showError = () => {
-  document.querySelector('#logo').removeAttribute('data-spin');
-  loadingMessage.style.display = 'none';
-  errorMessage.style.display = 'block';
-  journalsSection.style.display = 'none';
-  papersSection.style.display = 'none';
+  document.querySelector("#logo").removeAttribute("data-spin");
+  loadingMessage.style.display = "none";
+  errorMessage.style.display = "block";
+  journalsSection.style.display = "none";
+  papersSection.style.display = "none";
 };
 
 // clean array of journal or paper results
@@ -129,7 +135,7 @@ const cleanArray = (array) => {
 
   // set new values of array
   array = array.map((entry, index) => ({
-    name: (entry.journal || '').split('_').join(' '), // name of journal
+    name: (entry.journal || "").split("_").join(" "), // name of journal
     distance: entry.distance, // distance score
     strength: (entry.distance - min) / diff, // normalized distance score
     rank: index + 1, // rank
@@ -146,18 +152,18 @@ const makeCards = (list, template, section) => {
     let clone = template.content.cloneNode(true);
 
     // get sub elements of clone
-    let score = clone.querySelector('.score');
-    let nameLink = clone.querySelector('.name a');
-    let pmcidLink = clone.querySelector('.pmcid a');
+    let score = clone.querySelector(".score");
+    let nameLink = clone.querySelector(".name a");
+    let pmcidLink = clone.querySelector(".pmcid a");
 
     // set score element
     score.innerHTML = rank;
-    score.title = 'Distance score: ' + distance;
+    score.title = "Distance score: " + distance;
     score.style.background =
       rankColor +
       Math.floor((1 - strength) * 255)
         .toString(16)
-        .padStart(2, '0');
+        .padStart(2, "0");
     score.style.borderColor = rankColor;
 
     // set name element
@@ -168,7 +174,7 @@ const makeCards = (list, template, section) => {
     if (pmcid) {
       pmcidLink.href = pubMedLookup + pmcid;
       pmcidLink.innerHTML = pmcid;
-    } else clone.querySelector('.pmcid').remove();
+    } else clone.querySelector(".pmcid").remove();
 
     // attach new clone to section
     section.append(clone);
@@ -177,22 +183,22 @@ const makeCards = (list, template, section) => {
 
 // show results and hide messages
 const showResults = () => {
-  document.querySelector('#logo').removeAttribute('data-spin');
-  loadingMessage.style.display = 'none';
-  errorMessage.style.display = 'none';
-  journalsSection.style.display = 'block';
-  papersSection.style.display = 'block';
+  document.querySelector("#logo").removeAttribute("data-spin");
+  loadingMessage.style.display = "none";
+  errorMessage.style.display = "none";
+  journalsSection.style.display = "block";
+  papersSection.style.display = "block";
 
   // set preprint title
-  const titleLinks = document.querySelectorAll('.preprint_title a');
+  const titleLinks = document.querySelectorAll(".preprint_title a");
   for (const titleLink of titleLinks) {
-    titleLink.href = 'https://doi.org/' + query;
+    titleLink.href = "https://doi.org/" + query;
     titleLink.innerHTML = preprintTitle;
   }
 
   // delete any existing result elements
-  const journalCards = document.querySelectorAll('#journals_section .card');
-  const paperCards = document.querySelectorAll('#papers_section .card');
+  const journalCards = document.querySelectorAll("#journals_section .card");
+  const paperCards = document.querySelectorAll("#papers_section .card");
   for (const journalCard of journalCards) journalCard.remove();
   for (const paperCard of paperCards) paperCard.remove();
 
@@ -204,11 +210,11 @@ const showResults = () => {
 // load logo inline for animation on hover and loading
 const loadLogo = async () => {
   // get logo and parse source text
-  let svg = await (await fetch('logo.svg')).text();
+  let svg = await (await fetch("logo.svg")).text();
   // get fallback object logo
-  let object = document.querySelector('object#logo');
+  let object = document.querySelector("object#logo");
   // insert svg inline after fallback
-  object.insertAdjacentHTML('afterEnd', svg);
+  object.insertAdjacentHTML("afterEnd", svg);
   // delete fallback
   object.remove();
 };
@@ -218,24 +224,53 @@ loadLogo();
 const updateUrl = () => {
   const oldUrl = window.location.href;
   const base = window.location.href.split(/[?#]/)[0];
-  const newUrl = base + '?doi=' + query;
+  const newUrl = base + "?doi=" + query;
   // compare old to new url to prevent duplicate history entries when refreshing
   if (oldUrl !== newUrl) history.pushState(null, null, newUrl);
   // update browser tab title
-  document.title = appTitle + ' - ' + query;
+  document.title = appTitle + " - " + query;
 };
 
 // populate search from url on page load
 const onUrlChange = (event) => {
   const params = new URLSearchParams(location.search.substring(1));
-  const doi = params.get('doi');
+  const doi = params.get("doi");
   searchInput.value = doi;
   onType();
   onSearch(event);
 };
 
+// load hex map data and make static map
+const makeMap = async () => {
+  let data = await (await fetch(mapData)).json();
+  let positions = [...data.map((d) => d.x), ...data.map((d) => d.y)];
+  let maxPos = Math.max(...positions.map((d) => Math.abs(d)));
+  let maxCount = Math.max(...data.map((d) => d.count));
+  let svgSize = 100;
+  let posScale = svgSize / 2 / maxPos;
+  let cellSize = 3.6;
+  for (const d of data) {
+    const hexagon = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "use"
+    );
+    hexagon.setAttributeNS(
+      "http://www.w3.org/1999/xlink",
+      "xlink:href",
+      "#hexagon"
+    );
+    hexagon.setAttribute("x", d.x * posScale - cellSize / 2);
+    hexagon.setAttribute("y", d.y * posScale - cellSize / 2);
+    hexagon.setAttribute("width", cellSize);
+    hexagon.setAttribute("height", cellSize);
+    hexagon.setAttribute("fill-opacity", d.count / maxCount);
+    gridSvg.append(hexagon);
+  }
+};
+makeMap();
+
 // add trigger listeners
-searchInput.addEventListener('input', onType);
-searchForm.addEventListener('submit', onSearch);
-window.addEventListener('popstate', onUrlChange);
-window.addEventListener('load', onUrlChange);
+searchInput.addEventListener("input", onType);
+searchForm.addEventListener("submit", onSearch);
+window.addEventListener("popstate", onUrlChange);
+window.addEventListener("load", onUrlChange);

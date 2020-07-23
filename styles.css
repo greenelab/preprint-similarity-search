@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://use.fontawesome.com/releases/v5.13.1/css/all.css");
 
 * {
   --black: #000000;
@@ -11,12 +11,13 @@
   --red: #f44336;
   --trans: 0.2s ease;
 
-  font-family: 'Libre Baskerville', serif;
+  font-family: "Libre Baskerville", serif;
   color: var(--black);
 }
 body {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   background: var(--white);
 }
@@ -174,4 +175,19 @@ a:focus * {
 }
 .error * {
   color: var(--red);
+}
+#map {
+  display: flex;
+}
+#map > * {
+  height: 500px;
+  max-height: 75vh;
+}
+#hexagon {
+  fill: var(--orange);
+  stroke: var(--black);
+  stroke-width: 0.5px;
+}
+#grid {
+  width: 100%;
 }
