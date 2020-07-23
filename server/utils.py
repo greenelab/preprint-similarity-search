@@ -21,7 +21,8 @@ def create_journal_model(n_neighbors):
 def create_paper_models(n_neighbors):
     """Return a list of paper models based on pickled sub-kd-trees."""
 
-    server_log("\nStart initializing paper models")
+    print('', flush=True)  # add a blank line before log section
+    server_log("Start initializing paper models")
 
     N_PAPER_MODELS = 4         # number of sub-models for paper dataset
     PAPER_MODEL_SIZE = 431539  # number of nodes in each sub-model
