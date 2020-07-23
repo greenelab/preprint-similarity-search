@@ -25,14 +25,14 @@ def get_neighbors(user_doi):
     server_log(f"Received user DOI ({user_doi})")
 
     content = get_doi_content(user_doi)
-    server_log("Downloaded PDF content")
+    server_log(f"Downloaded PDF content of {user_doi}")
 
     query_vec = parse_content(content)
-    server_log("Start searching KNN based on query_vec")
+    server_log(f"Start searching KNN of {user_doi}")
 
     paper_knn = get_paper_knn(query_vec)
     journal_knn = get_journal_knn(query_vec)
-    server_log("Finished searching KNN\n")
+    server_log(f"Finished searching KNN of {user_doi}\n")
 
     return {
         "paper_neighbors": paper_knn,
