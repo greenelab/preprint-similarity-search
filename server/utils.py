@@ -1,4 +1,4 @@
-"""Utility functions"""
+# Utility functions
 
 import pandas as pd
 import pickle
@@ -8,7 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 def server_log(message):
     """Print out message with current time at the beginning."""
-    print(datetime.now(), message, sep=": ")
+    print(datetime.now(), message, sep=": ", flush=True)
 
 
 def create_journal_model(n_neighbors):
@@ -21,7 +21,7 @@ def create_journal_model(n_neighbors):
 def create_paper_models(n_neighbors):
     """Return a list of paper models based on pickled sub-kd-trees."""
 
-    server_log("Start initializing paper models")
+    server_log("\nStart initializing paper models")
 
     N_PAPER_MODELS = 4         # number of sub-models for paper dataset
     PAPER_MODEL_SIZE = 431539  # number of nodes in each sub-model
