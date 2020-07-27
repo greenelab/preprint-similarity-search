@@ -2,7 +2,7 @@
 let server = "https://api-journal-rec.greenelab.com/doi/";
 
 // map data
-let mapData = "/data/pmc_hexbin_plot.json";
+let mapData = "/data/pmc_square_plot.json";
 
 // rank color
 let rankColor = "#ff9800";
@@ -242,29 +242,37 @@ const onUrlChange = (event) => {
 
 // load hex map data and make static map
 const makeMap = async () => {
+  // fetch journal bin data
   let data = await (await fetch(mapData)).json();
-  let positions = [...data.map((d) => d.x), ...data.map((d) => d.y)];
-  let maxPos = Math.max(...positions.map((d) => Math.abs(d)));
-  let maxCount = Math.max(...data.map((d) => d.count));
-  let svgSize = 100;
-  let posScale = svgSize / 2 / maxPos;
-  let cellSize = 3.6;
+
+  // how big, in svg units, to draw each cell
+  let cellSize = 5;
+  let cellOverlap = 0.1;
+
+  // pre compute count ranges
+  let counts = data.map((d) => d.count);
+  let minCount = Math.min(...counts);
+  let maxCount = Math.max(...counts);
+  let countRange = maxCount - minCount;
+
+  // draw each point "d" of data
   for (const d of data) {
-    const hexagon = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "use"
-    );
-    hexagon.setAttributeNS(
-      "http://www.w3.org/1999/xlink",
-      "xlink:href",
-      "#hexagon"
-    );
-    hexagon.setAttribute("x", d.x * posScale - cellSize / 2);
-    hexagon.setAttribute("y", d.y * posScale - cellSize / 2);
-    hexagon.setAttribute("width", cellSize);
-    hexagon.setAttribute("height", cellSize);
-    hexagon.setAttribute("fill-opacity", d.count / maxCount);
-    gridSvg.append(hexagon);
+    // use cell template already in svg
+    const cell = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    cell.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#cell");
+
+    // position and size cell
+    cell.setAttribute("x", d.x * cellSize - cellSize / 2 - cellOverlap / 2);
+    cell.setAttribute("y", d.y * cellSize - cellSize / 2 - cellOverlap / 2);
+    cell.setAttribute("width", cellSize + cellOverlap);
+    cell.setAttribute("height", cellSize + cellOverlap);
+
+    // color cell according to count
+    let strength = (d.count - minCount) / countRange; // normalized (0-1) count
+    cell.setAttribute("fill-opacity", 0.25 + strength * 0.75);
+
+    // add cell to svg
+    gridSvg.append(cell);
   }
 };
 makeMap();

@@ -183,10 +183,8 @@ a:focus * {
   height: 500px;
   max-height: 75vh;
 }
-#hexagon {
+#cell {
   fill: var(--orange);
-  stroke: var(--black);
-  stroke-width: 0.5px;
 }
 #grid {
   width: 100%;
