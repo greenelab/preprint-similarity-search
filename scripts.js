@@ -260,6 +260,7 @@ const makeMap = async () => {
     // use cell template already in svg
     const cell = document.createElementNS("http://www.w3.org/2000/svg", "use");
     cell.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#cell");
+    cell.setAttribute("class", "cell");
 
     // position and size cell
     cell.setAttribute("x", d.x * cellSize - cellSize / 2 - cellOverlap / 2);

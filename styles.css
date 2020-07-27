@@ -180,12 +180,15 @@ a:focus * {
   display: flex;
 }
 #map > * {
-  height: 500px;
+  height: 300px;
   max-height: 75vh;
-}
-#cell {
-  fill: var(--orange);
 }
 #grid {
   width: 100%;
+}
+.cell {
+  fill: var(--orange);
+}
+#map:hover .cell:not(:hover) {
+  fill: var(--light-gray);
 }
