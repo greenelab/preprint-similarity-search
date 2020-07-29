@@ -188,6 +188,7 @@ const showResults = () => {
   errorMessage.style.display = "none";
   journalsSection.style.display = "block";
   papersSection.style.display = "block";
+  // mapSection.style.display = "block";
 
   // set preprint title
   const titleLinks = document.querySelectorAll(".preprint_title a");
@@ -247,7 +248,7 @@ const makeMap = async () => {
 
   // how big, in svg units, to draw each cell
   let cellSize = 5;
-  let cellOverlap = 0.1;
+  let cellOverlap = 0.5;
 
   // pre compute count ranges
   let counts = data.map((d) => d.count);

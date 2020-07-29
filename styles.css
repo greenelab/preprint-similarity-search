@@ -127,7 +127,8 @@ a:focus * {
 #loading_message,
 #error_message,
 #journals_section,
-#papers_section {
+#papers_section,
+#map_section {
   display: none;
 }
 .preprint_title {
