@@ -10,6 +10,8 @@ let rankColor = "#ff9800";
 // lookup resources
 const googleLookup = "https://www.google.com/search?q=";
 const pubMedLookup = "https://www.ncbi.nlm.nih.gov/pmc/articles/";
+const metaLookup =
+  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pmc&tool=AnnoRxivir&email=greenescientist@gmail.com&retmode=json&id=";
 
 // dom elements
 let searchForm = document.querySelector("#search");
@@ -101,8 +103,16 @@ const onSearch = async (event) => {
     console.error(error);
   }
 
+  // get paper meta data
+  papers = await Promise.all([...papers.map(getPaperMeta)]);
+  console.log(papers);
+
   return false;
 };
+
+// get meta data of paper
+const getPaperMeta = async ({ paper }) =>
+  await (await fetch(metaLookup + paper.pmcid.replace("PMC", ""))).json();
 
 // show loading message and hide other messages and results
 const showLoading = () => {
@@ -135,11 +145,11 @@ const cleanArray = (array) => {
 
   // set new values of array
   array = array.map((entry, index) => ({
-    name: (entry.journal || "").split("_").join(" "), // name of journal
+    journal: (entry.journal || "").split("_").join(" "), // name of journal
     distance: entry.distance, // distance score
     strength: (entry.distance - min) / diff, // normalized distance score
     rank: index + 1, // rank
-    pmcid: entry.pmcid || null, // pubmed id
+    paper: { pmcid: entry.pmcid || null }, // pubmed id
   }));
 
   return array;
@@ -147,14 +157,14 @@ const cleanArray = (array) => {
 
 // make list of journal or paper result cards
 const makeCards = (list, template, section) => {
-  for (const { rank, name, pmcid, distance, strength } of list) {
+  for (const { rank, journal, paper, distance, strength } of list) {
     // clone template to make new card
     let clone = template.content.cloneNode(true);
 
     // get sub elements of clone
     let score = clone.querySelector(".score");
-    let nameLink = clone.querySelector(".name a");
-    let pmcidLink = clone.querySelector(".pmcid a");
+    let journalLink = clone.querySelector(".journal a");
+    let paperLink = clone.querySelector(".paper a");
 
     // set score element
     score.innerHTML = rank;
@@ -166,15 +176,15 @@ const makeCards = (list, template, section) => {
         .padStart(2, "0");
     score.style.borderColor = rankColor;
 
-    // set name element
-    nameLink.href = googleLookup + name;
-    nameLink.innerHTML = name;
+    // set journal element
+    journalLink.href = googleLookup + journal;
+    journalLink.innerHTML = journal;
 
-    // set or remove pmcid element
-    if (pmcid) {
-      pmcidLink.href = pubMedLookup + pmcid;
-      pmcidLink.innerHTML = pmcid;
-    } else clone.querySelector(".pmcid").remove();
+    // set or remove paper element
+    if (paper.pmcid) {
+      paperLink.href = pubMedLookup + paper.pmcid;
+      paperLink.innerHTML = paper.pmcid;
+    } else clone.querySelector(".paper").remove();
 
     // attach new clone to section
     section.append(clone);

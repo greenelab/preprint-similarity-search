@@ -160,12 +160,12 @@ a:focus * {
   font-weight: 700;
   cursor: help;
 }
-.name {
+.journal {
   flex-grow: 1;
   justify-content: flex-start;
   overflow-wrap: break-word;
 }
-.pmcid {
+.paper {
   overflow-wrap: anywhere;
 }
 .message {
