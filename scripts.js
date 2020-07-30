@@ -111,8 +111,12 @@ const onSearch = async (event) => {
 };
 
 // get meta data of paper
-const getPaperMeta = async ({ paper }) =>
-  await (await fetch(metaLookup + paper.pmcid.replace("PMC", ""))).json();
+const getPaperMeta = async (paper) => ({
+  ...paper,
+  paper: await (
+    await fetch(metaLookup + paper.paper.pmcid.replace("PMC", ""))
+  ).json(),
+});
 
 // show loading message and hide other messages and results
 const showLoading = () => {
