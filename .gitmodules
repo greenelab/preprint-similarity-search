@@ -1,0 +1,3 @@
+[submodule "server/SAUCIE"]
+	path = server/SAUCIE
+	url = https://github.com/KrishnaswamyLab/SAUCIE.git
