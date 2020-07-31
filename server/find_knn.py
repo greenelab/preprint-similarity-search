@@ -52,20 +52,15 @@ def get_journal_knn(query_vec):
             A_journal.data, 
             journal_df
              .reset_index()
-             .journal[cols]
-             .tolist(),
-            journal_df
-             .reset_index()
              .document[cols]
-             .tolist()
+             .tolist(),
         )
     )
 
     journal_knn = [
         dict(
             distance=np.round(data_row[0], 3),
-            journal=data_row[1],
-            pmcid=data_row[2]
+            document=data_row[1],
         )
         for data_row in journal_data
     ]
@@ -93,7 +88,6 @@ def get_paper_knn(query_vec):
             )
             node = {
                 'distance': distances[idx],
-                'journal': neighbor.iloc[0].journal,
                 'pmcid': neighbor.iloc[0].document,
             }
             paper_knn.append(node)
