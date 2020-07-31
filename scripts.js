@@ -2,7 +2,7 @@
 let server = "https://api-journal-rec.greenelab.com/doi/";
 
 // map data
-let mapData = "/data/pmc_square_plot.json";
+let mapData = "data/pmc_square_plot.json";
 
 // rank color
 let rankColor = "#ff9800";
@@ -35,7 +35,6 @@ let query = "";
 // global vars to hold results from backend query
 let journals = [];
 let papers = [];
-let preprintTitle = "";
 
 // when user types into search box
 const onType = () => {
@@ -89,7 +88,6 @@ const onSearch = async (event) => {
     if (!isLatestSearch(id)) return;
 
     // extract journals and papers from backend results
-    preprintTitle = neighbors.preprint_title || initialQuery;
     journals = neighbors.journal_neighbors || [];
     papers = neighbors.paper_neighbors || [];
 
