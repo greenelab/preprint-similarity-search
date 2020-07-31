@@ -131,43 +131,6 @@ a:focus * {
 #map_section {
   display: none;
 }
-.preprint_title {
-  text-align: center;
-}
-.preprint_title a {
-  font-style: italic;
-}
-.card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-  border: solid 1px var(--light-gray);
-  border-radius: 5px;
-}
-.card > * {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px;
-}
-.score {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  border: solid 1px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: help;
-}
-.name {
-  flex-grow: 1;
-  justify-content: flex-start;
-  overflow-wrap: break-word;
-}
-.pmcid {
-  overflow-wrap: anywhere;
-}
 .message {
   text-align: center;
 }
@@ -176,6 +139,32 @@ a:focus * {
 }
 .error * {
   color: var(--red);
+}
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+.score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-right: 20px;
+  border: solid 1px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: help;
+}
+.details {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
 }
 #map {
   display: flex;

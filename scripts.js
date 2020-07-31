@@ -8,8 +8,10 @@ let mapData = "/data/pmc_square_plot.json";
 let rankColor = "#ff9800";
 
 // lookup resources
-const googleLookup = "https://www.google.com/search?q=";
-const pubMedLookup = "https://www.ncbi.nlm.nih.gov/pmc/articles/";
+const googleLink = "https://www.google.com/search?q=";
+const paperLink = "https://www.ncbi.nlm.nih.gov/pmc/articles/";
+const metaLookup =
+  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pmc&tool=AnnoRxivir&email=greenescientist@gmail.com&retmode=json&id=";
 
 // dom elements
 let searchForm = document.querySelector("#search");
@@ -63,6 +65,9 @@ const onSearch = async (event) => {
   // prevent refreshing page from form submit
   if (event.type === "submit") event.preventDefault();
 
+  // reset search input to query
+  searchInput.value = query;
+
   // don't proceed if query empty
   if (!query) return;
 
@@ -78,22 +83,43 @@ const onSearch = async (event) => {
 
     // give this fetch a unique id
     let id = newSearch();
-    // fetch results from backend
-    let results = await (await fetch(server + query)).json();
+    // fetch neighbor results from backend
+    let neighbors = await (await fetch(server + query)).json();
     // if new search started since fetch began, exit and ignore results
     if (!isLatestSearch(id)) return;
 
-    // extract journals and papers
-    journals = results.journal_neighbors || [];
-    papers = results.paper_neighbors || [];
-    preprintTitle = results.preprint_title || initialQuery;
+    // extract journals and papers from backend results
+    preprintTitle = neighbors.preprint_title || initialQuery;
+    journals = neighbors.journal_neighbors || [];
+    papers = neighbors.paper_neighbors || [];
 
     // if results empty, throw an error
     if (!journals.length || !papers.length) throw Error("Empty response");
 
-    // otherwise, clean and show results
+    // remove "PMC" prefix from PMCID's
+    const removePMC = (entry) =>
+      (entry.pmcid = (entry.pmcid || "").replace("PMC", ""));
+    journals.forEach(removePMC);
+    papers.forEach(removePMC);
+
+    // get pmcid's of all papers for looking up meta data
+    const ids = [...journals, ...papers]
+      .map((entry) => entry.pmcid)
+      .filter((entry) => entry);
+    // lookup metadata from pubmed
+    let metadata = (await (await fetch(metaLookup + ids.join(","))).json())
+      .result;
+
+    // incorp meta data into journal and paper objects
+    const incorp = (entry) => ({ ...entry, ...(metadata[entry.pmcid] || {}) });
+    journals = journals.map(incorp);
+    papers = papers.map(incorp);
+
+    // clean results
     journals = cleanArray(journals);
     papers = cleanArray(papers);
+
+    // show results
     showResults();
   } catch (error) {
     // if any error occurs, show error message
@@ -133,28 +159,47 @@ const cleanArray = (array) => {
   // sort by smaller distances first
   array.sort((a, b) => a.distance - b.distance);
 
-  // set new values of array
+  // set new values of array. keep only needed props and rename sensically
   array = array.map((entry, index) => ({
-    name: (entry.journal || "").split("_").join(" "), // name of journal
-    distance: entry.distance, // distance score
-    strength: (entry.distance - min) / diff, // normalized distance score
-    rank: index + 1, // rank
-    pmcid: entry.pmcid || null, // pubmed id
+    // pubmed id
+    id: entry.pmcid || null,
+    // name of paper
+    title: entry.title || "",
+    // authors of paper
+    authors: (entry.authors || [])
+      .map((author) => author.name || "")
+      .filter((name) => name)
+      .join(", "),
+    // name of journal
+    journal: (entry.fulljournalname || entry.journal || "")
+      .split("_")
+      .join(" "),
+    // year of publication
+    year: (entry.pubdate || "").split(" ")[0] || "",
+    // distance score
+    distance: entry.distance,
+    // normalized distance score
+    strength: (entry.distance - min) / diff,
+    // whole number rank
+    rank: index + 1,
   }));
 
   return array;
 };
 
 // make list of journal or paper result cards
-const makeCards = (list, template, section) => {
-  for (const { rank, name, pmcid, distance, strength } of list) {
+const makeCards = (type, list, template, section) => {
+  for (const paper of list) {
+    // get paper details
+    const { id, title, authors, year, journal } = paper;
+    const { rank, distance, strength } = paper;
+
     // clone template to make new card
     let clone = template.content.cloneNode(true);
 
     // get sub elements of clone
     let score = clone.querySelector(".score");
-    let nameLink = clone.querySelector(".name a");
-    let pmcidLink = clone.querySelector(".pmcid a");
+    let details = clone.querySelector(".details");
 
     // set score element
     score.innerHTML = rank;
@@ -166,15 +211,20 @@ const makeCards = (list, template, section) => {
         .padStart(2, "0");
     score.style.borderColor = rankColor;
 
-    // set name element
-    nameLink.href = googleLookup + name;
-    nameLink.innerHTML = name;
-
-    // set or remove pmcid element
-    if (pmcid) {
-      pmcidLink.href = pubMedLookup + pmcid;
-      pmcidLink.innerHTML = pmcid;
-    } else clone.querySelector(".pmcid").remove();
+    // set details element
+    if (type === "journals") {
+      const href = googleLink + journal;
+      details.innerHTML = `<a href="${href}">${journal}</a>`;
+    }
+    if (type === "papers") {
+      const href = paperLink + id;
+      details.innerHTML += `<a href="${href}" title="${title}">${title}</a>`;
+      details.innerHTML += `<br>`;
+      details.innerHTML += `<span title="${authors}">${authors}</span>`;
+      details.innerHTML += `<br>`;
+      const pub = `${journal} · ${year}`;
+      details.innerHTML += `<span title="${pub}">${pub}</span>`;
+    }
 
     // attach new clone to section
     section.append(clone);
@@ -190,13 +240,6 @@ const showResults = () => {
   papersSection.style.display = "block";
   // mapSection.style.display = "block";
 
-  // set preprint title
-  const titleLinks = document.querySelectorAll(".preprint_title a");
-  for (const titleLink of titleLinks) {
-    titleLink.href = "https://doi.org/" + query;
-    titleLink.innerHTML = preprintTitle;
-  }
-
   // delete any existing result elements
   const journalCards = document.querySelectorAll("#journals_section .card");
   const paperCards = document.querySelectorAll("#papers_section .card");
@@ -204,8 +247,8 @@ const showResults = () => {
   for (const paperCard of paperCards) paperCard.remove();
 
   // make new journal and paper cards
-  makeCards(journals, journalCard, journalsSection);
-  makeCards(papers, paperCard, papersSection);
+  makeCards("journals", journals, journalCard, journalsSection);
+  makeCards("papers", papers, paperCard, papersSection);
 };
 
 // load logo inline for animation on hover and loading
