@@ -19,8 +19,8 @@ def get_2D_coordinates(query_vector):
     )
     
     return {
-        "dim1": coordinates[0][0],
-        "dim2": coordinates[0][1]
+        "dim1": np.float64(coordinates[0][0]),
+        "dim2": np.float64(coordinates[0][1])
     }
 
 if __name__ == "__main__":
