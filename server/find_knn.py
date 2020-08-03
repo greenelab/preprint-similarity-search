@@ -49,7 +49,7 @@ def get_journal_knn(query_vec):
     cols = A_journal.nonzero()[1]
     journal_data = list(
         zip(
-            A_journal.data, 
+            A_journal.data,
             journal_df
              .reset_index()
              .document[cols]
