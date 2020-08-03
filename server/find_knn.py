@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from document_downloader import get_doi_content
-from find_2d_coordinates import get_2d_coordinates
+from find_2D_coordinates import get_2D_coordinates
 from utils import create_journal_model, create_paper_models, server_log
 from word_vectors import parse_content
 
