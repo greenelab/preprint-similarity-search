@@ -14,7 +14,10 @@ def server_log(message):
 def create_journal_model(n_neighbors):
     journal_df = pd.read_csv("data/journal_dataset.tsv", sep="\t").set_index("journal")
     journal_model = KNeighborsClassifier(n_neighbors)
-    journal_model.fit(journal_df.values, journal_df.reset_index().journal)
+    journal_model.fit(
+        journal_df.drop("document", axis=1),
+        journal_df.reset_index().journal
+    )
     return (journal_df, journal_model)
 
 
