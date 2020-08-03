@@ -5,7 +5,7 @@ saucie_model = SAUCIE.SAUCIE(300, restore_folder="saucie_model")
 
 def get_2D_coordinates(query_vector):
     """ 
-    Get the 2D coorindates for the query document
+    Get the 2D coordinates for the query document
     Arguments:
         query_vector - a 300 dimensional document vector to project into 2D space 
     """
