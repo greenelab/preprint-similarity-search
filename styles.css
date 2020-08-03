@@ -1,17 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap");
-@import url("https://use.fontawesome.com/releases/v5.13.1/css/all.css");
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
 
 * {
   --black: #000000;
   --gray: #a0a0a0;
   --light-gray: #e8e8e8;
   --white: #ffffff;
+  --shadow: #00000040;
   --light-orange: #ffcc80;
   --orange: #ff9800;
   --red: #f44336;
   --trans: 0.2s ease;
 
-  font-family: "Libre Baskerville", serif;
+  font-family: 'Libre Baskerville', serif;
   color: var(--black);
 }
 body {
@@ -177,8 +178,27 @@ a:focus * {
   width: 100%;
 }
 .cell {
-  fill: var(--orange);
+  fill: var(--gray);
 }
-#map:hover .cell:not(:hover) {
-  fill: var(--light-gray);
+.cell[data-hover='true'] {
+  fill: var(--orange);
+  stroke: var(--orange);
+  stroke-width: 2px;
+}
+#tooltip {
+  display: none;
+  position: fixed;
+  background: var(--white);
+  padding: 20px;
+  box-shadow: 0 0 10px 0 var(--shadow);
+  transform: translate(-50%, calc(-100% - 20px));
+  z-index: 3;
+  pointer-events: none;
+}
+#tooltip .key {
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+#tooltip .value:not(:last-child) {
+  margin-bottom: 10px;
 }
