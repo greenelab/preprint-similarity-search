@@ -26,7 +26,13 @@ def get_doi_content(user_doi):
             message=f"Invalid response from {api_url}"
         )
 
-    content = response.json()
+    try:
+        content = response.json()
+    except Exception as e:
+        message = f"Cannot convert response from {api_url} to json format"
+        server_log(f"{message}: {e}")
+        abort(404, message=message)
+
     if len(content['collection']) < 1:
         abort(
             404,
@@ -39,7 +45,7 @@ def get_doi_content(user_doi):
     try:
         response = requests.get(pdf_url)
     except Exception as e:
-        message = f"Cannot connect to {paper_url}"
+        message = f"Cannot connect to {pdf_url}"
         server_log(f"{message}: {e}")
         abort(404, message=message)
 
