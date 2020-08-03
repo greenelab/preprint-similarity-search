@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from document_downloader import get_doi_content
+from find_2d_coordinates import get_2d_coordinates
 from utils import create_journal_model, create_paper_models, server_log
 from word_vectors import parse_content
 
@@ -36,7 +37,8 @@ def get_neighbors(user_doi):
 
     return {
         "paper_neighbors": paper_knn,
-        "journal_neighbors": journal_knn
+        "journal_neighbors": journal_knn,
+        "2d_coord": get_2d_coordinates(query_vec)
     }
 
 
@@ -46,13 +48,19 @@ def get_journal_knn(query_vec):
     A_journal = journal_model.kneighbors_graph(query_vec, mode='distance')
     cols = A_journal.nonzero()[1]
     journal_data = list(
-        zip(A_journal.data, journal_df.reset_index().journal[cols].tolist())
+        zip(
+            A_journal.data,
+            journal_df
+             .reset_index()
+             .document[cols]
+             .tolist(),
+        )
     )
 
     journal_knn = [
         dict(
             distance=np.round(data_row[0], 3),
-            journal=data_row[1],
+            document=data_row[1],
         )
         for data_row in journal_data
     ]
@@ -80,7 +88,6 @@ def get_paper_knn(query_vec):
             )
             node = {
                 'distance': distances[idx],
-                'journal': neighbor.iloc[0].journal,
                 'pmcid': neighbor.iloc[0].document,
             }
             paper_knn.append(node)
