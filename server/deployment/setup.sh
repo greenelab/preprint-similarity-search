@@ -17,8 +17,13 @@ git submodule update --init
 mkdir data
 aws s3 cp --recursive s3://journal-rec-app/data_for_deployment ./data
 
+# (3) Set up virtualenv
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install -r requirements.txt
+
 # =============================================================================
-#    The following section is executed as root (with `sudo` prefix):
+#        The following section needs `sudo` privilege:
 # =============================================================================
 
 cd deployment/
