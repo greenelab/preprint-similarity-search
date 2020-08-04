@@ -390,7 +390,7 @@ const openTooltip = (event) => {
 // when user unhovers off of a cell in the map
 const closeTooltip = () => {
   // hide tooltip
-  // tooltip.style.display = 'none';
+  tooltip.style.display = 'none';
 
   // unhover cells
   unhoverCells();
