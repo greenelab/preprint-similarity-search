@@ -287,9 +287,22 @@ const makeMap = async () => {
   // fetch journal bin data
   let data = await (await fetch(mapData)).json();
 
+  // extract coordinates
+  let xs = data.map((d) => d.x);
+  let ys = data.map((d) => d.y);
+  // get extreme values
+  let maxX = Math.max(...xs);
+  let minX = Math.min(...xs);
+  let maxY = Math.max(...ys);
+  let minY = Math.min(...ys);
+  // get range and center of coordinates
+  let range = Math.max(Math.abs(maxX - minX), Math.abs(maxY - minY)) + 1;
+  let offsetX = -(maxX + minX) / 2;
+  let offsetY = -(maxY + minY) / 2;
+
   // how big, in svg units, to draw each cell
-  let cellSize = 4;
-  let cellOverlap = -0.1;
+  let size = 100 / range;
+  let overlap = -0.1;
 
   // pre compute count ranges
   let counts = data.map((d) => d.count);
@@ -305,10 +318,10 @@ const makeMap = async () => {
     cell.setAttribute('class', 'cell');
 
     // position and size cell
-    cell.setAttribute('x', d.x * cellSize - cellSize / 2 - cellOverlap / 2);
-    cell.setAttribute('y', d.y * cellSize - cellSize / 2 - cellOverlap / 2);
-    cell.setAttribute('width', cellSize + cellOverlap);
-    cell.setAttribute('height', cellSize + cellOverlap);
+    cell.setAttribute('x', (d.x + offsetX) * size - size / 2 - overlap / 2);
+    cell.setAttribute('y', (d.y + offsetY) * size - size / 2 - overlap / 2);
+    cell.setAttribute('width', size + overlap);
+    cell.setAttribute('height', size + overlap);
 
     // put select info into cell element as string
     const info = {

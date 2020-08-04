@@ -176,6 +176,7 @@ a:focus * {
 }
 #grid {
   width: 100%;
+  overflow: visible;
 }
 .cell {
   fill: var(--gray);
@@ -196,9 +197,9 @@ a:focus * {
   pointer-events: none;
 }
 #tooltip .key {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 #tooltip .value:not(:last-child) {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
