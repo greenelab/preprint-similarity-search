@@ -288,7 +288,7 @@ const makeMap = async () => {
   let data = await (await fetch(mapData)).json();
 
   // how big, in svg units, to draw each cell
-  let cellSize = 5;
+  let cellSize = 4;
   let cellOverlap = -0.1;
 
   // pre compute count ranges
