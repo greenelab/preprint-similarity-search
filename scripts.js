@@ -2,7 +2,7 @@
 let server = 'https://api-journal-rec.greenelab.com/doi/';
 
 // map data
-let mapData = "data/pmc_square_plot.json";
+let mapData = 'data/pmc_square_plot.json';
 
 // rank color
 let rankColor = '#ff9800';
@@ -179,7 +179,7 @@ const cleanArray = (array) => {
     // normalized distance score
     strength: (entry.distance - min) / diff,
     // whole number rank
-    rank: index + 1,
+    rank: index + 1
   }));
 
   return array;
@@ -312,14 +312,14 @@ const makeMap = async () => {
 
     // put select info into cell element as string
     const info = {
-      Papers: d.count.toLocaleString(),
+      'Papers': d.count.toLocaleString(),
       'Top Journals': Object.entries(d.journal || {})
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5)
         .map(
           (journal) =>
             journal[0] + ' (' + journal[1].toLocaleString() + ' papers)'
-        ),
+        )
     };
     cell.setAttribute('data-info', JSON.stringify(info));
 
