@@ -29,16 +29,17 @@ def get_neighbors(user_doi):
     server_log(f"Downloaded PDF content of {user_doi}")
 
     query_vec = parse_content(content)
-    server_log(f"Start searching KNN of {user_doi}")
+    server_log(f"Start searching {user_doi}")
 
     paper_knn = get_paper_knn(query_vec)
     journal_knn = get_journal_knn(query_vec)
-    server_log(f"Finished searching KNN of {user_doi}\n")
+    two_d_coord = get_2d_coordinates(query_vec)
+    server_log(f"Finished searching {user_doi}\n")
 
     return {
         "paper_neighbors": paper_knn,
         "journal_neighbors": journal_knn,
-        "2d_coord": get_2d_coordinates(query_vec)
+        "2d_coord": two_d_coord
     }
 
 
