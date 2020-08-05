@@ -81,9 +81,6 @@ const onSearch = async (event) => {
   // show loading message
   showLoading();
   try {
-    // save initial query in case user changes text in search box while fetching
-    const initialQuery = query;
-
     // give this fetch a unique id
     let id = newSearch();
     // fetch neighbor results from backend
