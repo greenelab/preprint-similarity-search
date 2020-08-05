@@ -69,7 +69,7 @@
         <p class="center">
           <i
             >Enter the <a href="https://www.biorxiv.org/">bioRxiv</a> DOI of
-            your pre-print</i
+            your preprint</i
           >
         </p>
         <form id="search">
@@ -122,24 +122,11 @@
         </template>
       </section>
 
-      <section id="map_section">
-        <h3>
-          Your pre-print &nbsp;<i>vs.</i> &nbsp;the rest of PubMed Central
-        </h3>
-        <div id="map">
-          <svg viewBox="-50 -50 100 100" id="grid">
-            <symbol id="cell" viewBox="0 0 10 10">
-              <rect x="0" y="0" width="10" height="10" />
-            </symbol>
-          </svg>
-        </div>
-      </section>
-
       <section>
         <h3>What does this do?</h3>
         <p>
           This tool uses a machine learning model trained on 1.7 million
-          <a href="https://www.ncbi.nlm.nih.gov/pmc/">Pubmed Central</a>
+          <a href="https://www.ncbi.nlm.nih.gov/pmc/">PubMed Central</a>
           documents to recommend suitable journals based on the textual content
           of your <a href="https://www.biorxiv.org/">bioRxiv</a> preprint. For
           information on how this works, see the
@@ -149,6 +136,36 @@
             readme on GitHub</a
           >.
         </p>
+      </section>
+
+      <section id="map_section">
+        <h3>
+          Map of PubMed Central
+        </h3>
+        <p>
+          A plot of all PubMed Central papers, grouped into squares by
+          similarity. Click on a square for more info about that group. Your
+          preprint will fall somewhere on this plot, marked as a circle.
+        </p>
+        <svg
+          id="map"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <symbol id="cell" viewBox="0 0 1 1">
+            <rect x="0" y="0" width="1" height="1" />
+          </symbol>
+          <g id="grid"></g>
+          <circle id="marker" cx="999" cy="999" r="0.35" />
+        </svg>
+        <div id="info_section">
+          <p><b>Papers</b></p>
+          <p id="paper_count"></p>
+          <p><b>Top Journals</b></p>
+          <p id="top_journals"></p>
+          <p><b>Top Principal Components</b></p>
+          <p id="top_pcs"></p>
+        </div>
       </section>
     </main>
 

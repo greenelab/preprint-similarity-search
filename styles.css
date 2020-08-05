@@ -3,6 +3,7 @@
 
 * {
   --black: #000000;
+  --dark-gray: #606060;
   --gray: #a0a0a0;
   --light-gray: #e8e8e8;
   --white: #ffffff;
@@ -21,6 +22,7 @@ body {
   min-height: 100vh;
   margin: 0;
   background: var(--white);
+  line-height: 1.5;
 }
 main {
   flex-grow: 1;
@@ -129,7 +131,7 @@ a:focus * {
 #error_message,
 #journals_section,
 #papers_section,
-#map_section {
+#info_section {
   display: none;
 }
 .message {
@@ -165,41 +167,28 @@ a:focus * {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.5;
 }
 #map {
-  display: flex;
-}
-#map > * {
-  height: 300px;
-  max-height: 75vh;
-}
-#grid {
   width: 100%;
+  height: 400px;
+  max-height: 75vh;
   overflow: visible;
 }
 .cell {
-  fill: var(--gray);
+  fill: var(--dark-gray);
+  cursor: pointer;
 }
-.cell[data-hover='true'] {
+.cell:hover {
   fill: var(--orange);
-  stroke: var(--orange);
-  stroke-width: 2px;
 }
-#tooltip {
-  display: none;
-  position: fixed;
-  background: var(--white);
-  padding: 20px;
-  box-shadow: 0 0 10px 0 var(--shadow);
-  transform: translate(-50%, calc(-100% - 20px));
-  z-index: 3;
+.cell[data-selected='true'] {
+  fill: var(--orange);
+  stroke: var(--black);
+  stroke-width: 0.25;
+}
+#marker {
+  fill: var(--orange);
+  stroke: var(--black);
+  stroke-width: 0.125;
   pointer-events: none;
-}
-#tooltip .key {
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-#tooltip .value:not(:last-child) {
-  margin-bottom: 20px;
 }
