@@ -344,10 +344,9 @@ const showCellInfo = () => {
   // select clicked cell
   document
     .querySelectorAll('.cell')
-    .forEach((el) => (el.dataset.selected = false));
+    .forEach((element) => (element.dataset.selected = false));
   event.target.dataset.selected = true;
 
-  console.log(info);
   // show info section
   infoSection.style.display = 'block';
 
