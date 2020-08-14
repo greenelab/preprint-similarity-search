@@ -1,0 +1,24 @@
+.map {
+  width: 100%;
+  height: 400px;
+  max-height: 75vh;
+  overflow: visible;
+}
+.cell {
+  fill: var(--dark-gray);
+  cursor: pointer;
+}
+.cell:hover {
+  fill: var(--orange);
+}
+.cell[data-selected='true'] {
+  fill: var(--orange);
+  stroke: var(--black);
+  stroke-width: 0.25;
+}
+.marker {
+  fill: var(--orange);
+  stroke: var(--black);
+  stroke-width: 0.125;
+  pointer-events: none;
+}

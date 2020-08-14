@@ -6,6 +6,7 @@ import Search from './search';
 import Status from './status';
 import RecommendedJournals from './recommended-journals';
 import RelatedPapers from './related-papers';
+import Map from './map';
 import About from './about';
 import Footer from './footer';
 
@@ -39,6 +40,7 @@ export default () => {
           <RecommendedJournals {...{ recommendedJournals }} />
         )}
         {status === success && <RelatedPapers {...{ relatedPapers }} />}
+        <Map/>
         <About />
       </main>
       <Footer />
