@@ -1,0 +1,6 @@
+.loading * {
+  color: var(--gray);
+}
+.error * {
+  color: var(--red);
+}
