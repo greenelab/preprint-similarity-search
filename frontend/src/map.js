@@ -8,7 +8,7 @@ import './map.css';
 
 const mapData = './data/plot.json';
 
-export default () => {
+export default ({ coordinates }) => {
   const svg = useRef();
   const [cells, setCells] = useState([]);
   const [viewBox, setViewBox] = useState('');
@@ -32,18 +32,29 @@ export default () => {
   }, [cells]);
 
   return (
-    <svg ref={svg} viewBox={viewBox || undefined} className='map'>
-      {cells.map((cell, index) => (
-        <rect
-          key={index}
-          className='cell'
-          x={cell.x}
-          y={cell.y}
-          width='1'
-          height='1'
-          fillOpacity={0.25 + ((cell.papers - minCount) / countRange) * 0.75}
-        />
-      ))}
-    </svg>
+    <section>
+      <h3>Map of PubMed Central</h3>
+      <svg ref={svg} viewBox={viewBox || undefined} className='map'>
+        {cells.map((cell, index) => (
+          <rect
+            key={index}
+            className='cell'
+            x={cell.x - 0.5}
+            y={cell.y - 0.5}
+            width='1'
+            height='1'
+            fillOpacity={0.25 + ((cell.papers - minCount) / countRange) * 0.75}
+          />
+        ))}
+        {coordinates.x && coordinates.y && (
+          <circle
+            className='marker'
+            cx={coordinates.x}
+            cy={coordinates.y}
+            r='0.35'
+          />
+        )}
+      </svg>
+    </section>
   );
 };

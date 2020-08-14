@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { getData } from './data';
-import { getMetadata } from './data';
-import { cleanData } from './data';
+import { getNeighbors } from './neighbors';
+import { getMetadata } from './neighbors';
+import { cleanNeighbors } from './neighbors';
 import { loading, success, error } from './status';
 
 import './search.css';
@@ -43,7 +43,7 @@ export default ({
         recommendedJournals,
         relatedPapers,
         coordinates
-      } = await cleanData(await getMetadata(await getData(query)));
+      } = await cleanNeighbors(await getMetadata(await getNeighbors(query)));
 
       setRecommendedJournals(recommendedJournals);
       setRelatedPapers(relatedPapers);

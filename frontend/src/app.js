@@ -40,7 +40,7 @@ export default () => {
           <RecommendedJournals {...{ recommendedJournals }} />
         )}
         {status === success && <RelatedPapers {...{ relatedPapers }} />}
-        <Map/>
+        <Map {...{ coordinates }} />
         <About />
       </main>
       <Footer />

@@ -1,7 +1,7 @@
 const backendServer = 'https://api-journal-rec.greenelab.com/doi/';
 
 // get neighbor and coordinate data from backend
-export const getData = async (query) => {
+export const getNeighbors = async (query) => {
   // lookup data from backend
   const neighbors = await (await fetch(backendServer + query)).json();
 
@@ -47,8 +47,12 @@ export const getMetadata = async ({
   return { recommendedJournals, relatedPapers, ...rest };
 };
 
-// clean data to handle more conveniently
-export const cleanData = ({ recommendedJournals, relatedPapers, ...rest }) => {
+// clean neighbor data to handle more conveniently
+export const cleanNeighbors = ({
+  recommendedJournals,
+  relatedPapers,
+  ...rest
+}) => {
   recommendedJournals = cleanArray(recommendedJournals);
   relatedPapers = cleanArray(relatedPapers);
 
