@@ -24,6 +24,7 @@ let mapSection = document.querySelector('#map_section');
 let infoSection = document.querySelector('#info_section');
 let journalCard = document.querySelector('#journals_section template');
 let paperCard = document.querySelector('#papers_section template');
+let cloudButtons = document.querySelector('#cloud_buttons');
 let mapSvg = document.querySelector('#map');
 let mapGrid = document.querySelector('#grid');
 let marker = document.querySelector('#marker');
@@ -32,13 +33,12 @@ let topJournals = document.querySelector('#top_journals');
 let topPcs = document.querySelector('#top_pcs');
 let appTitle = document.title;
 
-// global var to hold search box text
+// global vars
 let query = '';
-
-// global vars to hold results from backend query
 let journals = [];
 let papers = [];
 let coordinates = {};
+let selectedPc = null;
 
 // when user types into search box
 const onType = () => {
@@ -290,10 +290,31 @@ const onUrlChange = (event) => {
   onSearch(event);
 };
 
+// make cloud image buttons
+const makeClouds = () => {
+  const first = 1;
+  const last = 50;
+  for (let index = first; index <= last; index++) {
+    const src = cloudImages.replace('XX', String(index).padStart(2, '0'));
+    const img = document.createElement('img');
+    img.src = src;
+    img.addEventListener('click',)
+    cloudButtons.append(img);
+  }
+};
+makeClouds();
+
+// select PC when user clicks on PC cloud image
+const selectPc = (event) => {
+
+}
+
 // load hex map data and make static map
 const makeMap = async () => {
   // fetch journal bin data
   let data = await (await fetch(mapData)).json();
+
+  console.log(data);
 
   // pre compute paper count ranges
   let counts = data.map((d) => d.papers);
