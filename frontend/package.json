@@ -2,7 +2,7 @@
 {
   "name": "annorxiver-journal-recommender",
   "version": "1.0.0",
-  "homepage": "https://greenelab.github.io/annorxiver-journal-recommender/",
+  "homepage": ".",
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
