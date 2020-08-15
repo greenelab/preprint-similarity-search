@@ -20,7 +20,7 @@ export default () => {
   const [relatedPapers, setRelatedPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
 
-  console.log({ recommendedJournals, relatedPapers, coordinates });
+  // console.log({ recommendedJournals, relatedPapers, coordinates });
 
   return (
     <>

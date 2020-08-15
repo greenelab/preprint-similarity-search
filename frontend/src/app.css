@@ -36,7 +36,7 @@ main {
 section {
   margin: 40px auto;
   padding: 0 20px;
-  max-width: 800px;
+  max-width: 600px;
 }
 header,
 footer {
@@ -56,7 +56,8 @@ footer section {
 /* headings */
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-weight: 700;
   margin: 0;
 }

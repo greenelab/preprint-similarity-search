@@ -13,14 +13,14 @@
   margin: 0;
   padding: 0;
   border-bottom: solid 1px var(--black);
-  transition: background var(--trans);
+  transition: background var(--trans), opacity var(--trans), filter var(--trans);
 }
-.search_input:hover,
-.search_input:focus {
+.search_input:hover:not([disabled]),
+.search_input:focus:not([disabled]) {
   background: var(--light-gray);
 }
-.search_button:focus,
-.search_button:hover {
+.search_button:focus:not([disabled]),
+.search_button:hover:not([disabled]) {
   background: var(--orange);
 }
 .search_input {
@@ -31,4 +31,9 @@
 .search_button {
   background: var(--light-orange);
   width: 50px;
+}
+.search_input[disabled],
+.search_button[disabled] {
+  filter: saturate(0);
+  opacity: 0.25;
 }

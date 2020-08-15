@@ -7,18 +7,30 @@
 .cell {
   fill: var(--dark-gray);
   cursor: pointer;
+  transform-origin: 50% 50%;
 }
-.cell:hover {
-  fill: var(--orange);
-}
+.cell:hover,
 .cell[data-selected='true'] {
-  fill: var(--orange);
   stroke: var(--black);
-  stroke-width: 0.25;
+  stroke-width: 1;
 }
 .marker {
   fill: var(--orange);
   stroke: var(--black);
-  stroke-width: 0.125;
+  stroke-width: 1;
   pointer-events: none;
+}
+.cell_detail_row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cell_detail_row > * {
+  width: 50%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cell_detail_row > *:nth-child(2) {
+  text-align: right;
 }
