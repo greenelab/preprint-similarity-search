@@ -90,6 +90,10 @@ button {
   font-size: 1em;
 }
 button {
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
   cursor: pointer;
 }
 a,
@@ -101,4 +105,7 @@ a:focus,
 a:hover *,
 a:focus * {
   color: var(--orange);
+}
+img {
+  max-width: 100%;
 }
