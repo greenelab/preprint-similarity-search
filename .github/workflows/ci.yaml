@@ -31,7 +31,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         if: github.event_name == 'push'
         with:
-          keepFiles: false
+          keep_files: false
         env:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: frontend/build
