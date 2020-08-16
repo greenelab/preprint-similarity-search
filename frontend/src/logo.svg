@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="logo">
+  <style>
+    #logo:hover #star,
+    #logo[data-spin] #star {
+      animation: star_rotate 2s ease forwards infinite;
+    }
+    @keyframes star_rotate {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <path
+    id="book_filling"
+    fill="#ffe0b2"
+    d="
+      M 10 50
+      L 50 70
+      L 90 50
+      L 90 35
+      L 50 55
+      L 10 35
+      A 10 10 0 0 0 10 50
+      M 10 65
+      L 50 85
+      L 90 65
+      L 90 50
+      L 50 70
+      L 10 50
+      A 10 10 0 0 0 10 65
+    "
+  />
+  <path
+    id="book_top_cover"
+    fill="#000000"
+    stroke="#000000"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="
+      M 50 15
+      L 90 35
+      L 50 55
+      L 10 35
+      z
+    "
+  />
+  <path
+    id="book_outlines"
+    fill="none"
+    stroke="#000000"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="
+      M 10 50
+      L 30 60
+      M 47.5 68.75
+      L 50 70
+      L 90 50
+      M 10 65
+      L 50 85
+      L 90 65
+      M 10 35
+      A 10 10 0 0 0 10 50
+      A 10 10 0 0 0 10 65
+    "
+  />
+  <path
+    id="bookmark"
+    fill="#000000"
+    stroke="#000000"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="
+      M 35 55
+      L 35 71.25
+      L 38.75 69.25
+      L 42.5 74.75
+      L 42.5 58.75
+      z
+    "
+  />
+  <g
+    transform="translate(50,34) rotate(26.565) skewX(-26.565) scale(0.10)"
+  >
+    <path
+      id="star"
+      fill="#ffe0b2"
+      stroke="#ffe0b2"
+      stroke-width="20"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="
+        M 0.000 -100.000
+        L 29.389 -40.451
+        L 95.106 -30.902
+        L 47.553 15.451
+        L 58.779 80.902
+        L 0.000 50.000
+        L -58.779 80.902
+        L -47.553 15.451
+        L -95.106 -30.902
+        L -29.389 -40.451
+        z
+      "
+    />
+  </g>
+</svg>
