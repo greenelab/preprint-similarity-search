@@ -28,11 +28,11 @@ jobs:
       - name: Build app
         run: CI=false yarn build
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v2
+        uses: peaceiris/actions-gh-pages@v3
         if: github.event_name == 'push'
         with:
           keepFiles: false
         env:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: ./build
-          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
