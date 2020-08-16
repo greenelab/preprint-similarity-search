@@ -15,10 +15,10 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - name: Go to frontend directory
-        run: cd frontend
       - name: Checkout code
         uses: actions/checkout@v1
+      - name: Go to frontend directory
+        run: cd frontend
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
