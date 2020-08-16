@@ -73,8 +73,11 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
   // make tooltip
   const { styles, attributes, update } = usePopper(reference, popper, {
     placement: 'top',
-    // https://github.com/popperjs/popper-core/issues/1138
-    modifiers: [{ name: 'computeStyles', options: { adaptive: false } }]
+    modifiers: [
+      // https://github.com/popperjs/popper-core/issues/1138
+      { name: 'computeStyles', options: { adaptive: false } },
+      { name: 'offset', options: { offset: [0, 10] } }
+    ]
   });
 
   // render
@@ -82,7 +85,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
     <>
       <button
         ref={setReference}
-        className='pc_button'
+        className='cloud_button'
         data-selected={selectedPc === number}
         onClick={() => setSelectedPc(number)}
         onMouseEnter={() => setHover(true)}
@@ -100,7 +103,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
           <img
             ref={setPopper}
             src={getCloudUrl(number)}
-            className='pc_enlarged'
+            className='cloud_enlarged'
             title={'Principal component ' + number}
             alt={'Principal component ' + number}
             onLoad={update}

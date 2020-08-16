@@ -1,8 +1,13 @@
-.pc_button {
+.cloud_button {
   width: 50px;
   margin: 5px;
 }
-.pc_button[data-selected='true'] {
+.cloud_button[data-selected='true'] {
+  outline: solid 2px var(--black);
+}
+.cloud_enlarged {
+  width: 300px;
+  pointer-events: none;
   outline: solid 2px var(--black);
 }
 .map {
@@ -10,9 +15,6 @@
   height: 400px;
   max-height: 75vh;
   overflow: visible;
-}
-.pc_enlarged {
-  width: 300px;
 }
 .cell {
   fill: var(--dark-gray);
