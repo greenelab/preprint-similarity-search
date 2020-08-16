@@ -32,7 +32,6 @@ jobs:
         if: github.event_name == 'push'
         with:
           keep_files: false
-        env:
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: frontend/build
+          publish_branch: gh-pages
+          publish_dir: frontend/build
           github_token: ${{ secrets.GITHUB_TOKEN }}
