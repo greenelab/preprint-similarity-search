@@ -5,6 +5,8 @@ import './card.css';
 const rankColor = '#ff9800';
 const googleLink = 'https://www.google.com/search?q=';
 
+// recommended journals section
+
 export default ({ recommendedJournals }) => (
   <section>
     <h3>Recommended Journals</h3>

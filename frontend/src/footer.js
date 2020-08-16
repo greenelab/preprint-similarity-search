@@ -1,5 +1,7 @@
 import React from 'react';
 
+// footer component
+
 export default () => (
   <footer>
     <section>

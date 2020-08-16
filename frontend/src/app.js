@@ -14,14 +14,18 @@ import './app.css';
 
 import { empty, success } from './status';
 
+// main app component
+
 export default () => {
+  // data status
   const [status, setStatus] = useState(empty);
+
+  // main data
   const [recommendedJournals, setRecommendedJournals] = useState([]);
   const [relatedPapers, setRelatedPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
 
-  // console.log({ recommendedJournals, relatedPapers, coordinates });
-
+  // render
   return (
     <>
       <Header />

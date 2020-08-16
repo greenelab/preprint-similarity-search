@@ -1,5 +1,7 @@
 import React from 'react';
 
+// about section
+
 export default () => (
   <section>
     <h3>What does this do?</h3>

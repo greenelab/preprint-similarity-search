@@ -5,6 +5,8 @@ import './card.css';
 const rankColor = '#ff9800';
 const paperLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
 
+// related papers section
+
 export default ({ relatedPapers }) => (
   <section>
     <h3>Related Papers</h3>

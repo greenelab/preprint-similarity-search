@@ -2,10 +2,13 @@ import React from 'react';
 
 import './status.css';
 
+// status key codes
 export const empty = '';
 export const loading = 'LOADING';
 export const error = 'ERROR';
 export const success = 'SUCCESS';
+
+// loading/error message component
 
 export default ({ status }) => {
   if (status === loading) {

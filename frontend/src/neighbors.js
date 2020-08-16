@@ -19,6 +19,7 @@ export const getNeighbors = async (query) => {
   recommendedJournals.forEach(removePMC);
   relatedPapers.forEach(removePMC);
 
+  // return results
   return { recommendedJournals, relatedPapers, coordinates };
 };
 
@@ -35,6 +36,7 @@ export const getMetadata = async ({
   const ids = [...recommendedJournals, ...relatedPapers]
     .map((entry) => entry.pmcid)
     .filter((entry) => entry);
+
   // lookup metadata from pubmed
   const metadata = (await (await fetch(metaLookup + ids.join(','))).json())
     .result;
@@ -44,6 +46,7 @@ export const getMetadata = async ({
   recommendedJournals = recommendedJournals.map(incorp);
   relatedPapers = relatedPapers.map(incorp);
 
+  // return results
   return { recommendedJournals, relatedPapers, ...rest };
 };
 
@@ -55,7 +58,6 @@ export const cleanNeighbors = ({
 }) => {
   recommendedJournals = cleanArray(recommendedJournals);
   relatedPapers = cleanArray(relatedPapers);
-
   return { recommendedJournals, relatedPapers, ...rest };
 };
 
@@ -70,7 +72,7 @@ const cleanArray = (array) => {
   // sort by smaller distances first
   array.sort((a, b) => a.distance - b.distance);
 
-  // set new values of array. keep only needed props and rename sensically
+  // set new values of array. keep only needed props and rename sensibly
   array = array.map((entry, index) => ({
     // pubmed id
     id: entry.pmcid || null,

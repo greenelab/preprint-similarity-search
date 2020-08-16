@@ -4,6 +4,8 @@ import { ReactComponent as Logo } from './logo.svg';
 
 import './header.css';
 
+// header component
+
 export default () => (
   <header>
     <section>

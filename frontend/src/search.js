@@ -9,6 +9,8 @@ import { loading, success, error } from './status';
 
 import './search.css';
 
+// search box component
+
 export default ({
   status,
   setStatus,
@@ -38,7 +40,7 @@ export default ({
       // set loading status
       setStatus(loading);
 
-      // update url if specified
+      // update url based on search
       if (updateUrl)
         setUrl(doi);
 
@@ -65,7 +67,7 @@ export default ({
   );
 
   // when user navigates back/forward
-  const onPop = useCallback(() => {
+  const onNav = useCallback(() => {
     // get new doi
     const doi = getUrl();
     if (!doi)
@@ -84,10 +86,11 @@ export default ({
 
   // listen for user back/forward nav
   useEffect(() => {
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
-  }, [onPop, search]);
+    window.addEventListener('popstate', onNav);
+    return () => window.removeEventListener('popstate', onNav);
+  }, [onNav, search]);
 
+  // render
   return (
     <section>
       <p className='center'>
@@ -99,6 +102,7 @@ export default ({
       <form
         className='search'
         onSubmit={(event) => {
+          // prevent page from navigating away/refreshing on submit
           event.preventDefault();
           if (!query.trim())
             return;

@@ -1,21 +1,9 @@
 .pc_button {
-  position: relative;
   width: 50px;
   margin: 5px;
 }
-@media (hover: hover) {
-  .pc_button:hover {
-    z-index: 2;
-  }
-  .pc_button:hover img {
-    transform: scale(10);
-  }
-}
 .pc_button[data-selected='true'] {
   outline: solid 2px var(--black);
-}
-.pc_button img {
-  pointer-events: none;
 }
 .map {
   width: 100%;
@@ -23,10 +11,12 @@
   max-height: 75vh;
   overflow: visible;
 }
+.pc_enlarged {
+  width: 300px;
+}
 .cell {
   fill: var(--dark-gray);
   cursor: pointer;
-  transform-origin: 50% 50%;
 }
 .cell:hover,
 .cell[data-selected='true'] {
