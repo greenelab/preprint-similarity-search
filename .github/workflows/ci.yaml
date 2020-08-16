@@ -17,16 +17,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Go to frontend directory
-        run: cd frontend
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
       - name: Install packages
         run: yarn install
+        working-directory: frontend
       - name: Build app
         run: CI=false yarn build
+        working-directory: frontend
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: github.event_name == 'push'
@@ -34,5 +34,5 @@ jobs:
           keepFiles: false
         env:
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./build
+          PUBLISH_DIR: frontend/build
           github_token: ${{ secrets.GITHUB_TOKEN }}
