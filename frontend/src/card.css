@@ -1,0 +1,30 @@
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  width: 100%;
+}
+.score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-right: 20px;
+  border: solid 1px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: help;
+}
+.details {
+  flex-grow: 1;
+  width: 0;
+}
+.details > * {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
