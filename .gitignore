@@ -1,8 +1,0 @@
-# python
-__pycache__
-
-# emacs
-*~
-
-# virtual env
-server/venv/
