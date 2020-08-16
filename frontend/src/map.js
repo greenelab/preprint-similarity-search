@@ -38,29 +38,32 @@ export default ({ coordinates }) => {
 };
 
 const PcButtons = ({ selectedPc, setSelectedPc }) => {
-  const getSrc = (index) =>
-    pcImages.replace('XX', String(index).padStart(2, '0'));
-
   const images = [];
   for (let index = startImage; index < endImage; index++) {
     images.push(
-      <button
-        key={index}
-        className='pc_button'
-        data-selected={selectedPc === index}
-        onClick={() => setSelectedPc(index)}
-      >
-        <img
-          src={getSrc(index)}
-          title={'Principal component ' + index}
-          alt={'Principal component ' + index}
-        />
-      </button>
+      <PcButton key={index} {...{ index, selectedPc, setSelectedPc }} />
     );
   }
 
   return <p className='center'>{images}</p>;
 };
+
+const getPcImageSrc = (index) =>
+  pcImages.replace('XX', String(index).padStart(2, '0'));
+
+const PcButton = ({ index, selectedPc, setSelectedPc }) => (
+  <button
+    className='pc_button'
+    data-selected={selectedPc === index}
+    onClick={() => setSelectedPc(index)}
+  >
+    <img
+      src={getPcImageSrc(index)}
+      title={'Principal component ' + index}
+      alt={'Principal component ' + index}
+    />
+  </button>
+);
 
 const Map = ({ cells, selectedCell, setSelectedCell }) => {
   const svg = useRef();

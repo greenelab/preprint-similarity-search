@@ -3,22 +3,19 @@
   width: 50px;
   margin: 5px;
 }
+@media (hover: hover) {
+  .pc_button:hover {
+    z-index: 2;
+  }
+  .pc_button:hover img {
+    transform: scale(10);
+  }
+}
 .pc_button[data-selected='true'] {
   outline: solid 2px var(--black);
 }
-.pc_tooltip {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  transform: scale(1);
-  z-index: 2;
+.pc_button img {
   pointer-events: none;
-  transition: opacity var(--trans);
-}
-.pc_button:hover .pc_tooltip {
-  opacity: 1;
-  transform: scale(10);
 }
 .map {
   width: 100%;
