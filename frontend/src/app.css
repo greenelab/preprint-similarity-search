@@ -83,7 +83,7 @@ h3 {
 }
 
 /* icons */
-i {
+i:not(:only-child) {
   margin-right: 10px;
 }
 h3 i {
