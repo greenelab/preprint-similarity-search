@@ -164,10 +164,9 @@ const Map = ({
     const pc = cell.pcs.find((pc) => pc.name === getPcNum(selectedPc));
     cell.score = pc?.score || 0;
   }
-  const scores = cells.map((cell) => Math.abs(cell.score));
-  const maxScore = Math.max(...scores) || 1;
+  const absScore = Math.max(...cells.map((cell) => Math.abs(cell.score))) || 1;
   for (const cell of cells)
-    cell.scoreStrength = cell.score / maxScore;
+    cell.scoreStrength = cell.score / absScore;
 
   // set svg viewbox based on bbox of content in it, ie fit view
   useEffect(() => {
