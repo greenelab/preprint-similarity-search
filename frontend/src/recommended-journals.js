@@ -13,7 +13,7 @@ export default ({ recommendedJournals }) => (
     {recommendedJournals.map(({ journal, rank, distance, strength }, index) => (
       <div key={index} className='card'>
         <div
-          className='score'
+          className='card_score'
           title={'Distance score: ' + distance}
           style={{
             backgroundColor:
@@ -26,7 +26,7 @@ export default ({ recommendedJournals }) => (
         >
           {rank}
         </div>
-        <div className='details'>
+        <div className='card_details'>
           <a href={googleLink + journal}>{journal}</a>
         </div>
       </div>

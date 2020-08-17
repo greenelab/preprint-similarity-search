@@ -59,6 +59,24 @@
   stroke-width: 1;
   pointer-events: none;
 }
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legend > * {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+.legend > * > *:first-child {
+  display: inline-block;
+  border-radius: 999px;
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  background: red;
+}
 .cell_detail_row {
   display: flex;
   justify-content: center;

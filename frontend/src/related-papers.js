@@ -17,7 +17,7 @@ export default ({ relatedPapers }) => (
       ) => (
         <div key={index} className='card'>
           <div
-            className='score'
+            className='card_score'
             title={'Distance score: ' + distance}
             style={{
               backgroundColor:
@@ -30,7 +30,7 @@ export default ({ relatedPapers }) => (
           >
             {rank}
           </div>
-          <div className='details'>
+          <div className='card_details'>
             <a href={paperLink + id} title={title}>
               {title}
             </a>

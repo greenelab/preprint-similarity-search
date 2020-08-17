@@ -20,10 +20,14 @@ const mapData = './data/plot.json';
 // size of map cells in svg units
 const cellSize = 10;
 
-// map gradient colors
-const colorA = color('#ff9800');
-const colorB = color('#e0e0e0');
-const colorC = color('#2196f3');
+// map count color;
+const countColorA = color('#606060');
+const countColorB = color('#e0e0e0');
+
+// map principal component gradient colors
+const pcColorA = color('#ff9800');
+const pcColorB = color('#e0e0e0');
+const pcColorC = color('#2196f3');
 
 // map section component
 
@@ -48,6 +52,7 @@ export default ({ coordinates }) => {
       <Map
         {...{ cells, selectedPc, selectedCell, setSelectedCell, coordinates }}
       />
+      <Legend {...{ selectedPc }} />
       {selectedCell && (
         <SelectedCellDetails {...{ selectedCell, selectedPc, setSelectedPc }} />
       )}
@@ -178,54 +183,83 @@ const Map = ({
 
   // render
   return (
-    <svg ref={svg} viewBox={viewBox || undefined} className='map'>
-      {cells
-        // put selected cell last, so always be on top
-        .sort((a, b) => {
-          if (a === selectedCell)
-            return 1;
-          if (b === selectedCell)
-            return -1;
-          return 0;
-        })
-        .map((cell, number) => (
-          <rect
-            key={number}
-            className='cell'
-            x={cell.x * cellSize - cellSize / 2}
-            y={cell.y * cellSize - cellSize / 2}
-            width={cellSize}
-            height={cellSize}
-            data-selected={cell === selectedCell}
-            fill={
-              selectedPc ?
-                colorB
-                  .mix(
-                    cell.scoreStrength > 0 ? colorA : colorC,
-                    Math.abs(cell.scoreStrength)
-                  )
-                  .hex() :
-                '#000000'
-            }
-            fillOpacity={selectedPc ? 1 : 0.25 + cell.countStrength * 0.75}
-            onClick={() =>
-              cell === selectedCell ?
-                setSelectedCell(null) :
-                setSelectedCell(cell)
-            }
+    <p>
+      <svg ref={svg} viewBox={viewBox || undefined} className='map'>
+        {cells
+          // put selected cell last, so always be on top
+          .sort((a, b) => {
+            if (a === selectedCell)
+              return 1;
+            if (b === selectedCell)
+              return -1;
+            return 0;
+          })
+          .map((cell, number) => (
+            <rect
+              key={number}
+              className='cell'
+              x={cell.x * cellSize - cellSize / 2}
+              y={cell.y * cellSize - cellSize / 2}
+              width={cellSize}
+              height={cellSize}
+              data-selected={cell === selectedCell}
+              fill={
+                selectedPc ?
+                  pcColorB
+                    .mix(
+                      cell.scoreStrength > 0 ? pcColorA : pcColorC,
+                      Math.abs(cell.scoreStrength)
+                    )
+                    .hex() :
+                  countColorB.mix(countColorA, cell.countStrength)
+              }
+              onClick={() =>
+                cell === selectedCell ?
+                  setSelectedCell(null) :
+                  setSelectedCell(cell)
+              }
+            />
+          ))}
+        {coordinates.x && coordinates.y && (
+          <circle
+            className='marker'
+            cx={coordinates.x * cellSize}
+            cy={coordinates.y * cellSize}
+            r={cellSize / 3}
           />
-        ))}
-      {coordinates.x && coordinates.y && (
-        <circle
-          className='marker'
-          cx={coordinates.x * cellSize}
-          cy={coordinates.y * cellSize}
-          r={cellSize / 3}
-        />
-      )}
-    </svg>
+        )}
+      </svg>
+    </p>
   );
 };
+
+// may legend
+const Legend = ({ selectedPc }) => (
+  <p className='legend'>
+    {selectedPc && (
+      <>
+        <span>
+          <span style={{ backgroundColor: pcColorA }}></span>pos pc
+          {getPcNum(selectedPc)}
+        </span>
+        <span>
+          <span style={{ backgroundColor: pcColorC }}></span>neg pc
+          {getPcNum(selectedPc)}
+        </span>
+      </>
+    )}
+    {!selectedPc && (
+      <>
+        <span>
+          <span style={{ backgroundColor: countColorA }}></span>many papers
+        </span>
+        <span>
+          <span style={{ backgroundColor: countColorB }}></span>few papers
+        </span>
+      </>
+    )}
+  </p>
+);
 
 // details of selected cell section
 const SelectedCellDetails = ({ selectedCell, selectedPc, setSelectedPc }) => (
