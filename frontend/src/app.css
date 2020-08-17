@@ -52,6 +52,9 @@ header section,
 footer section {
   text-align: center;
 }
+p {
+  margin: 20px 0;
+}
 
 /* headings */
 h1,
@@ -62,13 +65,13 @@ h4 {
   margin: 0;
 }
 h1 {
-  font-size: 2em;
+  font-size: 2rem;
 }
 h2 {
-  font-size: 1em;
+  font-size: 1rem;
 }
 h3 {
-  font-size: 1.15em;
+  font-size: 1.15rem;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -82,20 +85,6 @@ h3 {
 }
 
 /* elements */
-p {
-  margin: 20px 0;
-}
-input,
-button {
-  font-size: 1em;
-}
-button {
-  border: none;
-  background: none;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-}
 a,
 a * {
   transition: color var(--trans);
@@ -106,6 +95,29 @@ a:hover *,
 a:focus * {
   color: var(--orange);
 }
+a[role='button'] {
+  text-decoration: underline;
+  cursor: pointer;
+}
+input,
+button {
+  font-size: 1rem;
+}
+button {
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--trans);
+}
+button:hover,
+button:focus {
+  color: var(--orange);
+}
 img {
   max-width: 100%;
+}
+*:focus {
+  outline: solid 2px var(--black);
 }

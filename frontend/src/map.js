@@ -24,8 +24,8 @@ const cellSize = 10;
 export default ({ coordinates }) => {
   // component state
   const [cells, setCells] = useState([]);
-  const [selectedCell, setSelectedCell] = useState(null);
   const [selectedPc, setSelectedPc] = useState(null);
+  const [selectedCell, setSelectedCell] = useState(null);
 
   // on app start, load map cell data
   useEffect(() => {
@@ -39,16 +39,17 @@ export default ({ coordinates }) => {
     <section>
       <h3>Map of PubMed Central</h3>
       <CloudButtons {...{ selectedPc, setSelectedPc }} />
-      <Map {...{ cells, selectedCell, setSelectedCell }} />
-      {coordinates.x && coordinates.y && <Marker {...{ coordinates }} />}
-      {selectedCell && <SelectedCellDetails {...{ selectedCell }} />}
+      <Map {...{ cells, selectedCell, setSelectedCell, coordinates }} />
+      {selectedCell && (
+        <SelectedCellDetails {...{ selectedCell, setSelectedPc }} />
+      )}
     </section>
   );
 };
 
 // util func to generate range between ints
 const range = (start, end) =>
-  Array.from({ length: end - start }, (_, i) => start + i);
+  Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
 // cloud image buttons section
 const CloudButtons = ({ selectedPc, setSelectedPc }) => (
@@ -59,9 +60,11 @@ const CloudButtons = ({ selectedPc, setSelectedPc }) => (
   </p>
 );
 
+// get cloud number padded with 0's
+const getCloudNum = (number) => String(number).padStart(2, '0');
+
 // get url of word cloud image
-const getCloudUrl = (number) =>
-  cloudImages.replace('XX', String(number).padStart(2, '0'));
+const getCloudUrl = (number) => cloudImages.replace('XX', getCloudNum(number));
 
 // cloud image button component
 const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
@@ -86,6 +89,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
       <button
         ref={setReference}
         className='cloud_button'
+        data-number={getCloudNum(number)}
         data-selected={selectedPc === number}
         onClick={() => setSelectedPc(number)}
         onMouseEnter={() => setHover(true)}
@@ -93,8 +97,8 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
       >
         <img
           src={getCloudUrl(number)}
-          title={'Principal component ' + number}
-          alt={'Principal component ' + number}
+          title={'Select principal component ' + getCloudNum(number)}
+          alt={'Select principal component ' + getCloudNum(number)}
           onLoad={update}
         />
       </button>
@@ -104,8 +108,8 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
             ref={setPopper}
             src={getCloudUrl(number)}
             className='cloud_enlarged'
-            title={'Principal component ' + number}
-            alt={'Principal component ' + number}
+            title={'Select principal component ' + getCloudNum(number)}
+            alt={'Select principal component ' + getCloudNum(number)}
             onLoad={update}
             style={styles.popper}
             {...attributes.popper}
@@ -117,7 +121,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
 };
 
 // pubmed central map section
-const Map = ({ cells, selectedCell, setSelectedCell }) => {
+const Map = ({ cells, selectedCell, setSelectedCell, coordinates }) => {
   // component state
   const svg = useRef();
   const [viewBox, setViewBox] = useState('');
@@ -152,22 +156,20 @@ const Map = ({ cells, selectedCell, setSelectedCell }) => {
           onClick={() => setSelectedCell(cell)}
         />
       ))}
+      {coordinates.x && coordinates.y && (
+        <circle
+          className='marker'
+          cx={coordinates.x * cellSize}
+          cy={coordinates.y * cellSize}
+          r={cellSize / 3}
+        />
+      )}
     </svg>
   );
 };
 
-// searched preprint marker on map
-const Marker = ({ coordinates }) => (
-  <circle
-    className='marker'
-    cx={coordinates.x * cellSize}
-    cy={coordinates.y * cellSize}
-    r={cellSize / 3}
-  />
-);
-
 // details of selected cell section
-const SelectedCellDetails = ({ selectedCell }) => (
+const SelectedCellDetails = ({ selectedCell, setSelectedPc }) => (
   <div>
     <h4>Papers</h4>
     <p>{selectedCell.papers.toLocaleString()}</p>
@@ -186,9 +188,9 @@ const SelectedCellDetails = ({ selectedCell }) => (
       {selectedCell.pcs.map(({ name, score }, number) => (
         <span key={number} className='cell_detail_row'>
           <a
-            href={cloudImages.replace('XX', name)}
-            target='_blank'
-            rel='noopener noreferrer'
+            role='button'
+            title={'Select principal component ' + getCloudNum(parseInt(name))}
+            onClick={() => setSelectedPc(parseInt(name))}
           >
             {name}
           </a>
