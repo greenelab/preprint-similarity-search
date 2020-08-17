@@ -74,6 +74,7 @@
   border-radius: 999px;
   width: 15px;
   height: 15px;
+  flex-shrink: 0;
   margin-right: 10px;
   background: red;
 }

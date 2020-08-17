@@ -52,7 +52,7 @@ export default ({ coordinates }) => {
       <Map
         {...{ cells, selectedPc, selectedCell, setSelectedCell, coordinates }}
       />
-      <Legend {...{ selectedPc }} />
+      <Legend {...{ selectedPc, coordinates }} />
       {selectedCell && (
         <SelectedCellDetails {...{ selectedCell, selectedPc, setSelectedPc }} />
       )}
@@ -234,7 +234,7 @@ const Map = ({
 };
 
 // may legend
-const Legend = ({ selectedPc }) => (
+const Legend = ({ selectedPc, coordinates }) => (
   <p className='legend'>
     {selectedPc && (
       <>
@@ -255,6 +255,13 @@ const Legend = ({ selectedPc }) => (
         </span>
         <span>
           <span style={{ backgroundColor: countColorB }}></span>few papers
+        </span>
+      </>
+    )}
+    {coordinates.x && coordinates.y && (
+      <>
+        <span>
+          <span style={{ backgroundColor: 'var(--red)' }}></span>your preprint
         </span>
       </>
     )}
