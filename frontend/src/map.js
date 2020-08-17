@@ -2,9 +2,10 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useMemo } from 'react';
 import { useRef } from 'react';
 import { usePopper } from 'react-popper';
+
+import color from 'color';
 
 import './map.css';
 
@@ -18,6 +19,11 @@ const endImage = 50;
 const mapData = './data/plot.json';
 // size of map cells in svg units
 const cellSize = 10;
+
+// map gradient colors
+const colorA = color('#ff9800');
+const colorB = color('#e0e0e0');
+const colorC = color('#2196f3');
 
 // map section component
 
@@ -39,9 +45,11 @@ export default ({ coordinates }) => {
     <section>
       <h3>Map of PubMed Central</h3>
       <CloudButtons {...{ selectedPc, setSelectedPc }} />
-      <Map {...{ cells, selectedCell, setSelectedCell, coordinates }} />
+      <Map
+        {...{ cells, selectedPc, selectedCell, setSelectedCell, coordinates }}
+      />
       {selectedCell && (
-        <SelectedCellDetails {...{ selectedCell, setSelectedPc }} />
+        <SelectedCellDetails {...{ selectedCell, selectedPc, setSelectedPc }} />
       )}
     </section>
   );
@@ -60,11 +68,11 @@ const CloudButtons = ({ selectedPc, setSelectedPc }) => (
   </p>
 );
 
-// get cloud number padded with 0's
-const getCloudNum = (number) => String(number).padStart(2, '0');
+// get principal component number padded with 0's
+const getPcNum = (number) => String(number).padStart(2, '0');
 
 // get url of word cloud image
-const getCloudUrl = (number) => cloudImages.replace('XX', getCloudNum(number));
+const getCloudUrl = (number) => cloudImages.replace('XX', getPcNum(number));
 
 // cloud image button component
 const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
@@ -72,6 +80,10 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
   const [hover, setHover] = useState(false);
   const [reference, setReference] = useState(null);
   const [popper, setPopper] = useState(null);
+
+  // tooltip delay
+  const delay = 100;
+  const timeout = useRef();
 
   // make tooltip
   const { styles, attributes, update } = usePopper(reference, popper, {
@@ -89,16 +101,24 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
       <button
         ref={setReference}
         className='cloud_button'
-        data-number={getCloudNum(number)}
+        data-number={getPcNum(number)}
         data-selected={selectedPc === number}
-        onClick={() => setSelectedPc(number)}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+        onClick={() =>
+          selectedPc === number ? setSelectedPc(null) : setSelectedPc(number)
+        }
+        onMouseEnter={() => {
+          window.clearTimeout(timeout.current);
+          timeout.current = window.setTimeout(() => setHover(true), delay);
+        }}
+        onMouseLeave={() => {
+          window.clearTimeout(timeout.current);
+          setHover(false);
+        }}
       >
         <img
           src={getCloudUrl(number)}
-          title={'Select principal component ' + getCloudNum(number)}
-          alt={'Select principal component ' + getCloudNum(number)}
+          title={'Select principal component ' + getPcNum(number)}
+          alt={'Select principal component ' + getPcNum(number)}
           onLoad={update}
         />
       </button>
@@ -108,8 +128,8 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
             ref={setPopper}
             src={getCloudUrl(number)}
             className='cloud_enlarged'
-            title={'Select principal component ' + getCloudNum(number)}
-            alt={'Select principal component ' + getCloudNum(number)}
+            title={'Select principal component ' + getPcNum(number)}
+            alt={'Select principal component ' + getPcNum(number)}
             onLoad={update}
             style={styles.popper}
             {...attributes.popper}
@@ -121,16 +141,33 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
 };
 
 // pubmed central map section
-const Map = ({ cells, selectedCell, setSelectedCell, coordinates }) => {
+const Map = ({
+  cells,
+  selectedPc,
+  selectedCell,
+  setSelectedCell,
+  coordinates
+}) => {
   // component state
   const svg = useRef();
   const [viewBox, setViewBox] = useState('');
 
-  // pre-compute some values
-  const counts = useMemo(() => cells.map((cell) => cell.papers), [cells]);
-  const minCount = useMemo(() => Math.min(...counts), [counts]);
-  const maxCount = useMemo(() => Math.max(...counts), [counts]);
-  const countRange = useMemo(() => maxCount - minCount, [minCount, maxCount]);
+  // normalize counts
+  const counts = cells.map((cell) => cell.count);
+  const minCount = Math.min(...counts);
+  const maxCount = Math.max(...counts);
+  for (const cell of cells)
+    cell.countStrength = (cell.count - minCount) / (maxCount - minCount);
+
+  // normalize pc scores
+  for (const cell of cells) {
+    const pc = cell.pcs.find((pc) => pc.name === getPcNum(selectedPc));
+    cell.score = pc?.score || 0;
+  }
+  const scores = cells.map((cell) => cell.score);
+  const maxScore = Math.max(...scores) || 1;
+  for (const cell of cells)
+    cell.scoreStrength = cell.score / maxScore;
 
   // set svg viewbox based on bbox of content in it, ie fit view
   useEffect(() => {
@@ -139,6 +176,10 @@ const Map = ({ cells, selectedCell, setSelectedCell, coordinates }) => {
     const { x, y, width, height } = svg.current.getBBox();
     setViewBox([x, y, width, height].join(' '));
   }, [cells]);
+
+  const selected = cells.filter((cell) => cell === selectedCell);
+  const rest = cells.filter((cell) => cell !== selectedCell);
+  cells = [...rest, ...selected];
 
   // render
   return (
@@ -152,8 +193,22 @@ const Map = ({ cells, selectedCell, setSelectedCell, coordinates }) => {
           width={cellSize}
           height={cellSize}
           data-selected={cell === selectedCell}
-          fillOpacity={0.25 + ((cell.papers - minCount) / countRange) * 0.75}
-          onClick={() => setSelectedCell(cell)}
+          fill={
+            selectedPc ?
+              colorB
+                .mix(
+                  cell.scoreStrength > 0 ? colorA : colorC,
+                  Math.abs(cell.scoreStrength)
+                )
+                .hex() :
+              '#000000'
+          }
+          fillOpacity={selectedPc ? 1 : 0.25 + cell.countStrength * 0.75}
+          onClick={() =>
+            cell === selectedCell ?
+              setSelectedCell(null) :
+              setSelectedCell(cell)
+          }
         />
       ))}
       {coordinates.x && coordinates.y && (
@@ -169,10 +224,10 @@ const Map = ({ cells, selectedCell, setSelectedCell, coordinates }) => {
 };
 
 // details of selected cell section
-const SelectedCellDetails = ({ selectedCell, setSelectedPc }) => (
+const SelectedCellDetails = ({ selectedCell, selectedPc, setSelectedPc }) => (
   <div>
     <h4>Papers</h4>
-    <p>{selectedCell.papers.toLocaleString()}</p>
+    <p>{selectedCell.count.toLocaleString()}</p>
     <h4>Top Journals</h4>
     <p>
       {selectedCell.journals.map(({ name, count }, number) => (
@@ -185,14 +240,17 @@ const SelectedCellDetails = ({ selectedCell, setSelectedPc }) => (
     </p>
     <h4>Top Principal Components</h4>
     <p>
-      {selectedCell.pcs.map(({ name, score }, number) => (
+      {selectedCell.pcs.slice(0, 5).map(({ name, score }, number) => (
         <span key={number} className='cell_detail_row'>
           <a
             role='button'
-            title={'Select principal component ' + getCloudNum(parseInt(name))}
+            title={'Select principal component ' + getPcNum(parseInt(name))}
             onClick={() => setSelectedPc(parseInt(name))}
           >
             {name}
+            {parseInt(name) === selectedPc && (
+              <i className='fas fa-check icon'></i>
+            )}
           </a>
           <span>{score.toFixed(2)} score</span>
           <br />
