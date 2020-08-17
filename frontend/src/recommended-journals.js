@@ -9,7 +9,9 @@ const googleLink = 'https://www.google.com/search?q=';
 
 export default ({ recommendedJournals }) => (
   <section>
-    <h3>Recommended Journals</h3>
+    <h3>
+      <i className='fas fa-bookmark'></i>Recommended Journals
+    </h3>
     {recommendedJournals.map(({ journal, rank, distance, strength }, index) => (
       <div key={index} className='card'>
         <div

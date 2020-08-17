@@ -9,7 +9,9 @@ const paperLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
 
 export default ({ relatedPapers }) => (
   <section>
-    <h3>Related Papers</h3>
+    <h3>
+      <i className='fas fa-scroll'></i>Related Papers
+    </h3>
     {relatedPapers.map(
       (
         { id, title, authors, year, journal, rank, distance, strength },

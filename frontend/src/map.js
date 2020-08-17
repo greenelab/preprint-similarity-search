@@ -47,7 +47,7 @@ export default ({ coordinates }) => {
   // render
   return (
     <section>
-      <h3>Map of PubMed Central</h3>
+      <h3><i className='fas fa-map'></i>Map of PubMed Central</h3>
       <CloudButtons {...{ selectedPc, setSelectedPc }} />
       <Map
         {...{ cells, selectedPc, selectedCell, setSelectedCell, coordinates }}
@@ -294,7 +294,7 @@ const SelectedCellDetails = ({ selectedCell, selectedPc, setSelectedPc }) => (
           >
             {name}
             {parseInt(name) === selectedPc && (
-              <i className='fas fa-check icon'></i>
+              <i className='fas fa-check'></i>
             )}
           </a>
           <span>{score.toFixed(2)} score</span>
