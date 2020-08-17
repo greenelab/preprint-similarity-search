@@ -8,6 +8,7 @@
   --shadow: #00000040;
   --light-orange: #ffcc80;
   --orange: #ff9800;
+  --blue: #2196f3;
   --red: #f44336;
   --trans: 0.2s ease;
 
@@ -21,7 +22,7 @@ body,
   margin: 0;
 }
 body {
-  line-height: 1.5;
+  line-height: 1.75;
   background: var(--white);
 }
 
@@ -80,8 +81,14 @@ h3 {
 .center {
   text-align: center;
 }
-.icon {
+
+/* icons */
+i:not(:only-child) {
   margin-right: 10px;
+}
+h3 i {
+  margin-right: 15px;
+  color: var(--light-orange);
 }
 
 /* elements */

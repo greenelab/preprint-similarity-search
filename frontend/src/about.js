@@ -4,7 +4,9 @@ import React from 'react';
 
 export default () => (
   <section>
-    <h3>What does this do?</h3>
+    <h3>
+      <i className='fas fa-question-circle'></i>What does this do?
+    </h3>
     <p>
       This tool uses a machine learning model trained on 1.7 million{' '}
       <a href='https://www.ncbi.nlm.nih.gov/pmc/'>PubMed Central</a> documents

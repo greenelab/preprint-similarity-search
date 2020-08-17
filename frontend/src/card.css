@@ -5,7 +5,7 @@
   margin: 20px 0;
   width: 100%;
 }
-.score {
+.card_score {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,11 +18,11 @@
   font-weight: 700;
   cursor: help;
 }
-.details {
+.card_details {
   flex-grow: 1;
   width: 0;
 }
-.details > * {
+.card_details > * {
   display: block;
   white-space: nowrap;
   overflow: hidden;

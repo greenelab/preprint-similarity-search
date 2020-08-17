@@ -2,12 +2,19 @@
   position: relative;
   width: 50px;
   margin: 5px;
+  color: var(--black) !important;
 }
 .cloud_button:hover {
-  outline: solid 2px var(--black);
+  opacity: 0.5;
 }
-.cloud_button[data-selected='true'] {
-  outline: solid 2px var(--black);
+.cloud_button[data-selected='true']:before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: '\f00c';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .cloud_button:after {
   content: attr(data-number);
@@ -37,19 +44,39 @@
   overflow: visible;
 }
 .cell {
-  fill: var(--dark-gray);
   cursor: pointer;
 }
-.cell:hover,
+.cell:hover {
+  opacity: 0.5;
+}
 .cell[data-selected='true'] {
   stroke: var(--black);
   stroke-width: 1;
 }
 .marker {
-  fill: var(--orange);
+  fill: var(--red);
   stroke: var(--black);
   stroke-width: 1;
   pointer-events: none;
+}
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legend > * {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+.legend > * > *:first-child {
+  display: inline-block;
+  border-radius: 999px;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-right: 10px;
+  background: red;
 }
 .cell_detail_row {
   display: flex;
@@ -65,4 +92,7 @@
 }
 .cell_detail_row > *:nth-child(2) {
   text-align: right;
+}
+.cell_detail_row i {
+  margin-left: 5px;
 }

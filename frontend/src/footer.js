@@ -7,10 +7,10 @@ export default () => (
     <section>
       <p>
         A project of the <a href='https://greenelab.com/'>Greene Lab</a>
-      </p>
-      <p>
+        <br />
         <a href='https://github.com/greenelab/annorxiver_journal_rec_app'>
-          <i className='fab fa-github icon'></i>View on GitHub
+          <i className='fab fa-github'></i>
+          <span>View on GitHub</span>
         </a>
       </p>
     </section>
