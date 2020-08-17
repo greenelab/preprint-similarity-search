@@ -164,7 +164,7 @@ const Map = ({
     const pc = cell.pcs.find((pc) => pc.name === getPcNum(selectedPc));
     cell.score = pc?.score || 0;
   }
-  const scores = cells.map((cell) => cell.score);
+  const scores = cells.map((cell) => Math.abs(cell.score));
   const maxScore = Math.max(...scores) || 1;
   for (const cell of cells)
     cell.scoreStrength = cell.score / maxScore;
@@ -177,40 +177,45 @@ const Map = ({
     setViewBox([x, y, width, height].join(' '));
   }, [cells]);
 
-  const selected = cells.filter((cell) => cell === selectedCell);
-  const rest = cells.filter((cell) => cell !== selectedCell);
-  cells = [...rest, ...selected];
-
   // render
   return (
     <svg ref={svg} viewBox={viewBox || undefined} className='map'>
-      {cells.map((cell, number) => (
-        <rect
-          key={number}
-          className='cell'
-          x={cell.x * cellSize - cellSize / 2}
-          y={cell.y * cellSize - cellSize / 2}
-          width={cellSize}
-          height={cellSize}
-          data-selected={cell === selectedCell}
-          fill={
-            selectedPc ?
-              colorB
-                .mix(
-                  cell.scoreStrength > 0 ? colorA : colorC,
-                  Math.abs(cell.scoreStrength)
-                )
-                .hex() :
-              '#000000'
-          }
-          fillOpacity={selectedPc ? 1 : 0.25 + cell.countStrength * 0.75}
-          onClick={() =>
-            cell === selectedCell ?
-              setSelectedCell(null) :
-              setSelectedCell(cell)
-          }
-        />
-      ))}
+      {cells
+        // put selected cell last, so always be on top
+        .sort((a, b) => {
+          if (a === selectedCell)
+            return 1;
+          if (b === selectedCell)
+            return -1;
+          return 0;
+        })
+        .map((cell, number) => (
+          <rect
+            key={number}
+            className='cell'
+            x={cell.x * cellSize - cellSize / 2}
+            y={cell.y * cellSize - cellSize / 2}
+            width={cellSize}
+            height={cellSize}
+            data-selected={cell === selectedCell}
+            fill={
+              selectedPc ?
+                colorB
+                  .mix(
+                    cell.scoreStrength > 0 ? colorA : colorC,
+                    Math.abs(cell.scoreStrength)
+                  )
+                  .hex() :
+                '#000000'
+            }
+            fillOpacity={selectedPc ? 1 : 0.25 + cell.countStrength * 0.75}
+            onClick={() =>
+              cell === selectedCell ?
+                setSelectedCell(null) :
+                setSelectedCell(cell)
+            }
+          />
+        ))}
       {coordinates.x && coordinates.y && (
         <circle
           className='marker'
