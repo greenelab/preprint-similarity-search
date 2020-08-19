@@ -15,10 +15,13 @@ const cloudImages =
 const startImage = 1;
 const endImage = 50;
 
+// tooltip open delay
+const delay = 500;
+
 // map cell data
 const mapData = './data/plot.json';
-// size of map cells in svg units
-const cellSize = 10;
+// size of map cells in svg units. match to bin width of plot data
+const cellSize = 0.45;
 
 // map count color;
 const countColorA = color('#606060');
@@ -88,8 +91,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
   const [reference, setReference] = useState(null);
   const [popper, setPopper] = useState(null);
 
-  // tooltip delay
-  const delay = 100;
+  // tooltip timer
   const timeout = useRef();
 
   // make tooltip
@@ -201,8 +203,8 @@ const Map = ({
             <rect
               key={number}
               className='cell'
-              x={cell.x * cellSize - cellSize / 2}
-              y={cell.y * cellSize - cellSize / 2}
+              x={cell.x - cellSize / 2}
+              y={cell.y - cellSize / 2}
               width={cellSize}
               height={cellSize}
               data-selected={cell === selectedCell}
@@ -226,8 +228,8 @@ const Map = ({
         {coordinates.x && coordinates.y && (
           <circle
             className='marker'
-            cx={coordinates.x * cellSize}
-            cy={coordinates.y * cellSize}
+            cx={coordinates.x}
+            cy={coordinates.y}
             r={cellSize / 3}
           />
         )}
