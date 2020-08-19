@@ -17,6 +17,6 @@
 .continue_arrow:hover {
   background: var(--orange);
 }
-.continue_arrow[data-show="true"] {
+.continue_arrow[data-show='true'] {
   opacity: 1;
 }
