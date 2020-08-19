@@ -21,7 +21,7 @@ const delay = 500;
 // map cell data
 const mapData = './data/plot.json';
 // size of map cells in svg units
-const cellSize = 0.45;
+const cellSize = 1.1;
 
 // map count color;
 const countColorA = color('#606060');

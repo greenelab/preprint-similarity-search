@@ -4,6 +4,9 @@
     // get input plot data from file upload button
     const inputData = JSON.parse(await event.target.files[0].text());
 
+    // width of bins
+    const binWidth = 0.4;
+
     // process data
     const outputData = inputData
       // remove data points with 0 counts
@@ -11,8 +14,8 @@
       // rebuild object with only needed info
       .map((d) => ({
         // coordinates
-        x: d.x,
-        y: d.y,
+        x: Math.round(d.x / binWidth),
+        y: Math.round(d.y / binWidth),
         // # of papers, to string with comma
         count: d.count,
         // journals
