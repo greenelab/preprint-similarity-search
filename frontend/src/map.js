@@ -228,8 +228,8 @@ const Map = ({
         {coordinates.x && coordinates.y && (
           <circle
             className='marker'
-            cx={coordinates.x * cellSize}
-            cy={coordinates.y * cellSize}
+            cx={coordinates.x}
+            cy={coordinates.y}
             r={cellSize / 3}
           />
         )}
