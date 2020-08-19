@@ -20,8 +20,8 @@ const delay = 500;
 
 // map cell data
 const mapData = './data/plot.json';
-// size of map cells in svg units
-const cellSize = 1.1;
+// size of map cells in svg units. match to bin width of plot data
+const cellSize = 0.45;
 
 // map count color;
 const countColorA = color('#606060');

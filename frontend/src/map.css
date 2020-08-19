@@ -51,12 +51,12 @@
 }
 .cell[data-selected='true'] {
   stroke: var(--black);
-  stroke-width: 0.25;
+  stroke-width: 0.05;
 }
 .marker {
   fill: var(--red);
   stroke: var(--black);
-  stroke-width: 1;
+  stroke-width: 0.05;
   pointer-events: none;
 }
 .legend {
