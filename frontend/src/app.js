@@ -8,6 +8,7 @@ import RecommendedJournals from './recommended-journals';
 import RelatedPapers from './related-papers';
 import Map from './map';
 import About from './about';
+import Continue from './continue';
 import Footer from './footer';
 
 import './app.css';
@@ -46,6 +47,7 @@ export default () => {
         {status === success && <RelatedPapers {...{ relatedPapers }} />}
         <Map {...{ coordinates }} />
         <About />
+        <Continue />
       </main>
       <Footer />
     </>

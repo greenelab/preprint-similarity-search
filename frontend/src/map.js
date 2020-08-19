@@ -47,7 +47,9 @@ export default ({ coordinates }) => {
   // render
   return (
     <section>
-      <h3><i className='fas fa-map'></i>Map of PubMed Central</h3>
+      <h3 id='map'>
+        <i className='fas fa-map'></i>Map of PubMed Central
+      </h3>
       <CloudButtons {...{ selectedPc, setSelectedPc }} />
       <Map
         {...{ cells, selectedPc, selectedCell, setSelectedCell, coordinates }}
@@ -96,7 +98,8 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
     modifiers: [
       // https://github.com/popperjs/popper-core/issues/1138
       { name: 'computeStyles', options: { adaptive: false } },
-      { name: 'offset', options: { offset: [0, 10] } }
+      { name: 'offset', options: { offset: [0, 10] } },
+      { name: 'flip', options: { rootBoundary: 'document' } }
     ]
   });
 
@@ -293,9 +296,7 @@ const SelectedCellDetails = ({ selectedCell, selectedPc, setSelectedPc }) => (
             onClick={() => setSelectedPc(parseInt(name))}
           >
             {name}
-            {parseInt(name) === selectedPc && (
-              <i className='fas fa-check'></i>
-            )}
+            {parseInt(name) === selectedPc && <i className='fas fa-check'></i>}
           </a>
           <span>{score.toFixed(2)} score</span>
           <br />
