@@ -230,7 +230,7 @@ const Map = ({
             className='marker'
             cx={coordinates.x}
             cy={coordinates.y}
-            r={cellSize / 3}
+            r={cellSize / 2}
           />
         )}
       </svg>
