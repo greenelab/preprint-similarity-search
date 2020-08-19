@@ -1,0 +1,45 @@
+<input type="file" />
+<script>
+  const onUpload = async (event) => {
+    // get input plot data from file upload button
+    const inputData = JSON.parse(await event.target.files[0].text());
+
+    // process data
+    const outputData = inputData
+      // remove data points with 0 counts
+      .filter((d) => d.count)
+      // rebuild object with only needed info
+      .map((d) => ({
+        // coordinates
+        x: Number(d.x.toFixed(2)),
+        y: Number(d.y.toFixed(2)),
+        // # of papers, to string with comma
+        count: d.count,
+        // journals
+        journals: Object.entries(d.journal || {})
+          // put sensible field names
+          .map(([name, count]) => ({ name, count }))
+          // sort by paper count
+          .sort((a, b) => b.count - a.count)
+          // cut list to top 5 to save space
+          .slice(0, 5),
+        // principal components
+        pcs: d.pc
+          // sort by absolute value of score
+          .sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
+          // put sensible field names
+          .map(({ pc, score }) => ({ name: pc, score }))
+      }));
+
+    // save output plot data to new file
+    const link = window.document.createElement('a');
+    link.href = window.URL.createObjectURL(
+      new Blob([JSON.stringify(outputData)], { type: 'text/json' })
+    );
+    link.download = 'plot.json';
+    link.click();
+  };
+
+  // add upload trigger
+  document.querySelector('input').addEventListener('change', onUpload);
+</script>
