@@ -51,7 +51,7 @@
 }
 .cell[data-selected='true'] {
   stroke: var(--black);
-  stroke-width: 1;
+  stroke-width: 0.05;
 }
 .marker {
   fill: var(--red);

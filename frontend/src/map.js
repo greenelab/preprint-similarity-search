@@ -18,7 +18,7 @@ const endImage = 50;
 // map cell data
 const mapData = './data/plot.json';
 // size of map cells in svg units
-const cellSize = 10;
+const cellSize = 0.18;
 
 // map count color;
 const countColorA = color('#606060');
@@ -201,8 +201,8 @@ const Map = ({
             <rect
               key={number}
               className='cell'
-              x={cell.x * cellSize - cellSize / 2}
-              y={cell.y * cellSize - cellSize / 2}
+              x={cell.x - cellSize / 2}
+              y={cell.y - cellSize / 2}
               width={cellSize}
               height={cellSize}
               data-selected={cell === selectedCell}
