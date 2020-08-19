@@ -13,7 +13,7 @@ newData = data
     x: d.x,
     y: d.y,
     // # of papers, to string with comma
-    papers: d.count,
+    count: d.count,
     // journals
     journals: Object.entries(d.journal || {})
       // put sensible field names
