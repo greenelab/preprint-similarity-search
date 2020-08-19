@@ -15,10 +15,13 @@ const cloudImages =
 const startImage = 1;
 const endImage = 50;
 
+// tooltip open delay
+const delay = 500;
+
 // map cell data
 const mapData = './data/plot.json';
 // size of map cells in svg units
-const cellSize = 0.18;
+const cellSize = 0.45;
 
 // map count color;
 const countColorA = color('#606060');
@@ -88,8 +91,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
   const [reference, setReference] = useState(null);
   const [popper, setPopper] = useState(null);
 
-  // tooltip delay
-  const delay = 100;
+  // tooltip timer
   const timeout = useRef();
 
   // make tooltip

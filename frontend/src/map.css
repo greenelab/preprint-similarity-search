@@ -39,8 +39,8 @@
 }
 .map {
   width: 100%;
-  height: 400px;
-  max-height: 75vh;
+  height: 500px;
+  max-height: 90vh;
   overflow: visible;
 }
 .cell {
