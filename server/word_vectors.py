@@ -3,7 +3,6 @@ import pickle
 from io import BytesIO, StringIO
 from gensim.parsing.preprocessing import remove_stopwords
 from pdfminer.high_level import extract_text, extract_text_to_fp
-import time
 
 word_model_wv = pickle.load(open('data/word2vec_model/word_model.wv.pkl', 'rb'))
 
@@ -21,7 +20,7 @@ def parse_content(content, maxpages=999):
     
     # Use this function to write pdf text to the file stream
     extract_text_to_fp(
-        BytesIO(content), out, 
+        BytesIO(content), text_to_process, 
         disable_caching=True, maxpages=maxpages
     )
     
