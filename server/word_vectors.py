@@ -1,12 +1,13 @@
 import numpy as np
 import pickle
-from io import BytesIO
+from io import BytesIO, StringIO
 from gensim.parsing.preprocessing import remove_stopwords
-from pdfminer.high_level import extract_text
+from pdfminer.high_level import extract_text, extract_text_to_fp
+import time
 
 word_model_wv = pickle.load(open('data/word2vec_model/word_model.wv.pkl', 'rb'))
 
-def parse_content(content):
+def parse_content(content, maxpages=999):
     """
     Parses input content and returns a vector based on the pre-loaded
     `word_model_wv`.
@@ -14,9 +15,18 @@ def parse_content(content):
     Args:
         content - a PDF file's contents to be parsed
     """
-
-    text_to_process = extract_text(BytesIO(content))
-    lines = text_to_process.lower().split("\n")
+    
+    # Have a faux file stream for parsing
+    text_to_process = StringIO()
+    
+    # Use this function to write pdf text to the file stream
+    extract_text_to_fp(
+        BytesIO(content), out, 
+        disable_caching=True, maxpages=maxpages
+    )
+    
+    # Convert text to word vectors and continue processing
+    lines = text_to_process.getvalue().lower().split("\n")
 
     word_vectors = []
     for line in lines:
