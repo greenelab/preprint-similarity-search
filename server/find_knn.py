@@ -97,7 +97,3 @@ def get_paper_knn(query_vec):
 
     paper_knn = sorted(paper_knn, key=lambda k: k['distance'])[:10]
     return paper_knn
-
-if __name__=="__main__":
-    #get_neighbors("10.1101/2020.06.16.154674")
-    get_neighbors("10.1101/566455")
