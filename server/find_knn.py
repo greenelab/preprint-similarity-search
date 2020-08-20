@@ -27,8 +27,8 @@ def get_neighbors(user_doi):
 
     content = get_doi_content(user_doi)
     server_log(f"Downloaded PDF content of {user_doi}")
-
     query_vec = parse_content(content)
+
     server_log(f"Start searching {user_doi}")
 
     paper_knn = get_paper_knn(query_vec)
