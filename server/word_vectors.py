@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 from io import BytesIO, StringIO
 from gensim.parsing.preprocessing import remove_stopwords
-from pdfminer.high_level import eextract_text_to_fp
+from pdfminer.high_level import extract_text_to_fp
 from pdfminer.layout import LAParams
 
 word_model_wv = pickle.load(open('data/word2vec_model/word_model.wv.pkl', 'rb'))
