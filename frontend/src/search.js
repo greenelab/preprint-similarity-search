@@ -22,21 +22,26 @@ export default ({
   const [query, setQuery] = useState(getUrl() || '10.1101/833400');
 
   // on type
-  const onChange = useCallback((event) => {
-    const newQuery = event.target.value.trim();
-    // remove everything before first number, eg "doi:"
-    const index = newQuery.search(/\d/);
-    // set updated query
-    if (index !== -1)
-      setQuery(newQuery.substr(index));
-    // if no number, can't be a valid doi, so set query to empty
-    else
-      setQuery('');
-  }, []);
+  const onChange = useCallback(
+    (event) => setQuery(event.target.value.trim()),
+    []
+  );
+
+  console.log(query);
 
   // search
   const search = useCallback(
     async (doi, updateUrl = true) => {
+      // clean doi
+      doi = cleanDoi(doi);
+
+      // update search box with cleaned doi
+      setQuery(doi);
+
+      // exit if doi query empty
+      if (!doi)
+        return;
+
       // set loading status
       setStatus(loading);
 
@@ -104,8 +109,7 @@ export default ({
         onSubmit={(event) => {
           // prevent page from navigating away/refreshing on submit
           event.preventDefault();
-          if (!query.trim())
-            return;
+          // run search
           search(query);
         }}
       >
@@ -129,6 +133,12 @@ export default ({
     </section>
   );
 };
+
+// clean what user types into search box for convenience
+// remove everything before first number, eg "doi:"
+// remove version at end, eg "v4"
+const cleanDoi = (query) =>
+  query.replace(/^\D*/g, '').replace(/v\d+$/g, '').trim();
 
 // get doi from url
 const getUrl = () =>
