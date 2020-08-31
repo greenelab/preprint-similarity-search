@@ -17,27 +17,25 @@ def get_doi_content(user_doi):
         response = requests.get(api_url)
     except Exception as e:
         message = f"Cannot connect to {api_url}"
-        server_log(f"{message}: {e}")
+        server_log(f"{message}: {e}\n")
         abort(404, message=message)
 
     if response.status_code != 200:
-        abort(
-            response.status_code,
-            message=f"Invalid response from {api_url}"
-        )
+        message = f"Invalid response from {api_url}"
+        server_log(f"{message}\n")
+        abort(response.status_code, message=message)
 
     try:
         content = response.json()
     except Exception as e:
         message = f"Cannot convert response from {api_url} to json format"
-        server_log(f"{message}: {e}")
+        server_log(f"{message}: {e}\n")
         abort(404, message=message)
 
     if len(content['collection']) < 1:
-        abort(
-            404,
-            message=f"Cannot find bioRxiv document: {user_doi}"
-        )
+        message = f"Cannot find bioRxiv document: {user_doi}"
+        server_log(f"{message}\n")
+        abort(404, message=message)
 
     # Grab latest version of PDF file
     latest_version = content['collection'][-1]['version']
@@ -46,13 +44,12 @@ def get_doi_content(user_doi):
         response = requests.get(pdf_url)
     except Exception as e:
         message = f"Cannot connect to {pdf_url}"
-        server_log(f"{message}: {e}")
+        server_log(f"{message}: {e}\n")
         abort(404, message=message)
 
     if response.status_code != 200:
-        abort(
-            response.status_code,
-            message=f"Invalid response from {pdf_url}"
-        )
+        message = f"Invalid response from {pdf_url}"
+        server_log(f"{message}\n")
+        abort(response.status_code, message=message)
 
     return response.content
