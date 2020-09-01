@@ -1,0 +1,20 @@
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legend > * {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+  line-height: 1.25;
+}
+.legend > * > *:first-child {
+  display: inline-block;
+  border-radius: 999px;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-right: 10px;
+  background: red;
+}

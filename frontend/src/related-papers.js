@@ -1,14 +1,18 @@
 import React from 'react';
 
+import color from 'color';
+
 import './card.css';
 
-const rankColor = '#ff9800';
+const rankColorA = color('#ff980020');
+const rankColorB = color('#ff9800');
+
 const paperLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
 
 // related papers section
 
 export default ({ relatedPapers }) => (
-  <section>
+  <section id='related-papers'>
     <h3>
       <i className='fas fa-scroll'></i>Related Papers
     </h3>
@@ -21,14 +25,7 @@ export default ({ relatedPapers }) => (
           <div
             className='card_score'
             title={'Distance score: ' + distance}
-            style={{
-              backgroundColor:
-                rankColor +
-                Math.floor((1 - strength) * 255)
-                  .toString(16)
-                  .padStart(2, '0'),
-              borderColor: rankColor
-            }}
+            style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
           >
             {rank}
           </div>
@@ -36,8 +33,10 @@ export default ({ relatedPapers }) => (
             <a href={paperLink + id} title={title}>
               {title}
             </a>
-            <div title={authors}>{authors}</div>
-            <div title={journal + ' · ' + year}>
+            <div title={authors} className='truncate'>
+              {authors}
+            </div>
+            <div title={journal + ' · ' + year} className='truncate'>
               {journal} · {year}
             </div>
           </div>

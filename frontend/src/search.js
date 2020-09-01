@@ -19,15 +19,13 @@ export default ({
   setCoordinates
 }) => {
   // default query
-  const [query, setQuery] = useState(getUrl() || '10.1101/833400');
+  const [query, setQuery] = useState(getUrl() || '');
 
   // on type
   const onChange = useCallback(
     (event) => setQuery(event.target.value.trim()),
     []
   );
-
-  console.log(query);
 
   // search
   const search = useCallback(
@@ -97,7 +95,7 @@ export default ({
 
   // render
   return (
-    <section>
+    <section id='search'>
       <p className='center'>
         <i>
           Enter the <a href='https://www.biorxiv.org/'>bioRxiv</a> DOI of your

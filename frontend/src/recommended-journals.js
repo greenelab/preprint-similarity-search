@@ -1,14 +1,18 @@
 import React from 'react';
 
+import color from 'color';
+
 import './card.css';
 
-const rankColor = '#ff9800';
+const rankColorA = color('#ff980020');
+const rankColorB = color('#ff9800');
+
 const googleLink = 'https://www.google.com/search?q=';
 
 // recommended journals section
 
 export default ({ recommendedJournals }) => (
-  <section>
+  <section id='recommended-journals'>
     <h3>
       <i className='fas fa-bookmark'></i>Recommended Journals
     </h3>
@@ -17,14 +21,7 @@ export default ({ recommendedJournals }) => (
         <div
           className='card_score'
           title={'Distance score: ' + distance}
-          style={{
-            backgroundColor:
-              rankColor +
-              Math.floor((1 - strength) * 255)
-                .toString(16)
-                .padStart(2, '0'),
-            borderColor: rankColor
-          }}
+          style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
         >
           {rank}
         </div>

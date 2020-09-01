@@ -39,6 +39,18 @@ section {
   padding: 0 20px;
   max-width: 600px;
 }
+hr {
+  margin: 40px auto;
+  padding: 0 20px;
+  max-width: 600px;
+  border: none;
+}
+hr:after {
+  content: '';
+  display: block;
+  width: 100%;
+  border-bottom: dotted 2px var(--light-gray);
+}
 header,
 footer {
   background: var(--light-orange);
@@ -81,12 +93,19 @@ h3 {
 .center {
   text-align: center;
 }
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* icons */
-i:not(:only-child) {
+i.far:not(:only-child),
+i.fas:not(:only-child) {
   margin-right: 10px;
 }
-h3 i {
+h3 i.far,
+h3 i.fas {
   margin-right: 15px;
   color: var(--light-orange);
 }

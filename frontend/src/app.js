@@ -3,12 +3,12 @@ import { useState } from 'react';
 
 import Header from './header';
 import Search from './search';
+import PreprintInfo from './preprint-info';
 import Status from './status';
 import RecommendedJournals from './recommended-journals';
 import RelatedPapers from './related-papers';
-import Map from './map';
+import MapSection from './map-section';
 import About from './about';
-import Continue from './continue';
 import Footer from './footer';
 
 import './app.css';
@@ -40,14 +40,23 @@ export default () => {
             setCoordinates
           }}
         />
+        {status === success && <PreprintInfo />}
         <Status {...{ status }} />
         {status === success && (
-          <RecommendedJournals {...{ recommendedJournals }} />
+          <>
+            <RecommendedJournals {...{ recommendedJournals }} />
+            <hr />
+          </>
         )}
-        {status === success && <RelatedPapers {...{ relatedPapers }} />}
-        <Map {...{ coordinates }} />
+        {status === success && (
+          <>
+            <RelatedPapers {...{ relatedPapers }} />
+            <hr />
+          </>
+        )}
+        <MapSection {...{ coordinates }} />
+        <hr />
         <About />
-        <Continue />
       </main>
       <Footer />
     </>

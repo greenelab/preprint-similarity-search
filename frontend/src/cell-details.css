@@ -1,0 +1,16 @@
+.cell_detail_row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cell_detail_row > *:first-child {
+  width: 65%;
+  padding-right: 5px;
+}
+.cell_detail_row > *:last-child {
+  width: 35%;
+  text-align: right;
+}
+.cell_detail_row i {
+  margin-left: 5px;
+}
