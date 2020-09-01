@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useCallback } from 'react';
 
-import { getNeighbors } from './neighbors';
-import { getMetadata } from './neighbors';
-import { cleanNeighbors } from './neighbors';
+import { getPreprintInfo } from './backend';
+import { getNeighbors } from './backend';
+import { getNeighborsMetadata } from './backend';
+import { cleanNeighbors } from './backend';
 import { loading, success, error } from './status';
 
 import './search.css';
@@ -12,6 +13,8 @@ import './search.css';
 // search box component
 
 export default ({
+  setPreprintTitle,
+  setPreprintUrl,
   status,
   setStatus,
   setRecommendedJournals,
@@ -48,12 +51,23 @@ export default ({
         setUrl(doi);
 
       try {
+        // get preprint info
+        const { preprintTitle, preprintUrl } = await getPreprintInfo(doi);
+
+        // set preprint info
+        setPreprintTitle(preprintTitle);
+        setPreprintUrl(preprintUrl);
+
         // get neighbor data
-        const {
+        let {
           recommendedJournals,
           relatedPapers,
           coordinates
-        } = await cleanNeighbors(await getMetadata(await getNeighbors(doi)));
+        } = await getNeighbors(doi);
+        recommendedJournals = await getNeighborsMetadata(recommendedJournals);
+        relatedPapers = await getNeighborsMetadata(relatedPapers);
+        recommendedJournals = cleanNeighbors(recommendedJournals);
+        relatedPapers = cleanNeighbors(relatedPapers);
 
         // set neighbor data
         setRecommendedJournals(recommendedJournals);
@@ -66,7 +80,14 @@ export default ({
         setStatus(error);
       }
     },
-    [setCoordinates, setRecommendedJournals, setRelatedPapers, setStatus]
+    [
+      setCoordinates,
+      setPreprintTitle,
+      setPreprintUrl,
+      setRecommendedJournals,
+      setRelatedPapers,
+      setStatus
+    ]
   );
 
   // when user navigates back/forward

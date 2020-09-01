@@ -29,17 +29,16 @@ export default ({
   const svg = useRef();
   const [viewBox, setViewBox] = useState('');
 
-  // if no selected pc, color cells by paper count
   if (!selectedPc) {
+    // if no selected pc, color cells by paper count
     // normalize counts
     const counts = cells.map((cell) => cell.count);
     const minCount = Math.min(...counts);
     const maxCount = Math.max(...counts);
     for (const cell of cells)
       cell.strength = (cell.count - minCount) / (maxCount - minCount);
-  }
-  // if pc selected, color cells by pc score
-  else {
+  } else {
+    // if pc selected, color cells by pc score
     // normalize pc scores
     for (const cell of cells) {
       const pc = cell.pcs.find((pc) => pc.name === getPcNum(selectedPc));

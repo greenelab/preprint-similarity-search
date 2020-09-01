@@ -100,12 +100,10 @@ h3 {
 }
 
 /* icons */
-i.far:not(:only-child),
-i.fas:not(:only-child) {
+.icon_with_text {
   margin-right: 10px;
 }
-h3 i.far,
-h3 i.fas {
+.heading_icon {
   margin-right: 15px;
   color: var(--light-orange);
 }

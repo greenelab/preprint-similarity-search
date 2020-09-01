@@ -46,7 +46,7 @@ export default ({ coordinates }) => {
   return (
     <section id='map'>
       <h3>
-        <i className='fas fa-map'></i>Map of PubMed Central
+        <i className='fas fa-map heading_icon'></i>Map of PubMed Central
       </h3>
       <CloudButtons {...{ selectedPc, setSelectedPc }} />
       <Map

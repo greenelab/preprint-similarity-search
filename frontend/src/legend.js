@@ -15,11 +15,19 @@ export default ({ selectedPc, coordinates }) => (
     {selectedPc && (
       <>
         <span>
-          <span style={{ backgroundColor: pcColorA }}></span>pos pc
+          <span
+            className='legend_square'
+            style={{ backgroundColor: pcColorA }}
+          ></span>
+          pos pc
           {getPcNum(selectedPc)}
         </span>
         <span>
-          <span style={{ backgroundColor: pcColorC }}></span>neg pc
+          <span
+            className='legend_square'
+            style={{ backgroundColor: pcColorC }}
+          ></span>
+          neg pc
           {getPcNum(selectedPc)}
         </span>
       </>
@@ -27,10 +35,18 @@ export default ({ selectedPc, coordinates }) => (
     {!selectedPc && (
       <>
         <span>
-          <span style={{ backgroundColor: countColorA }}></span>many papers
+          <span
+            className='legend_square'
+            style={{ backgroundColor: countColorA }}
+          ></span>
+          many papers
         </span>
         <span>
-          <span style={{ backgroundColor: countColorB }}></span>few papers
+          <span
+            className='legend_square'
+            style={{ backgroundColor: countColorB }}
+          ></span>
+          few papers
         </span>
       </>
     )}
@@ -38,10 +54,8 @@ export default ({ selectedPc, coordinates }) => (
       <>
         <span>
           <span
-            style={{
-              backgroundColor: 'var(--red)',
-              boxShadow: '0 0 0 2px var(--black) inset'
-            }}
+            className='legend_circle'
+            style={{ backgroundColor: 'var(--red)' }}
           ></span>
           your preprint
         </span>

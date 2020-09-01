@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Header from './header';
 import Search from './search';
 import PreprintInfo from './preprint-info';
-import Status from './status';
 import RecommendedJournals from './recommended-journals';
 import RelatedPapers from './related-papers';
 import MapSection from './map-section';
@@ -13,7 +12,7 @@ import Footer from './footer';
 
 import './app.css';
 
-import { empty, success } from './status';
+import { empty } from './status';
 
 // main app component
 
@@ -22,6 +21,8 @@ export default () => {
   const [status, setStatus] = useState(empty);
 
   // main data
+  const [preprintTitle, setPreprintTitle] = useState('');
+  const [preprintUrl, setPreprintUrl] = useState('');
   const [recommendedJournals, setRecommendedJournals] = useState([]);
   const [relatedPapers, setRelatedPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
@@ -33,6 +34,10 @@ export default () => {
       <main>
         <Search
           {...{
+            preprintTitle,
+            preprintUrl,
+            setPreprintTitle,
+            setPreprintUrl,
             status,
             setStatus,
             setRecommendedJournals,
@@ -40,22 +45,14 @@ export default () => {
             setCoordinates
           }}
         />
-        {status === success && <PreprintInfo />}
-        <Status {...{ status }} />
-        {status === success && (
-          <>
-            <RecommendedJournals {...{ recommendedJournals }} />
-            <hr />
-          </>
+        {preprintTitle && preprintUrl && (
+          <PreprintInfo {...{ preprintTitle, preprintUrl }} />
         )}
-        {status === success && (
-          <>
-            <RelatedPapers {...{ relatedPapers }} />
-            <hr />
-          </>
+        {status !== empty && (
+          <RecommendedJournals {...{ recommendedJournals, status }} />
         )}
+        {status !== empty && <RelatedPapers {...{ relatedPapers, status }} />}
         <MapSection {...{ coordinates }} />
-        <hr />
         <About />
       </main>
       <Footer />
