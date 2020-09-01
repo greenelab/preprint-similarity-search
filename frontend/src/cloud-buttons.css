@@ -1,0 +1,39 @@
+.cloud_button {
+  position: relative;
+  width: 50px;
+  margin: 5px;
+  color: var(--black) !important;
+}
+.cloud_button:hover {
+  opacity: 0.5;
+}
+.cloud_button[data-selected="true"]:before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f00c";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.cloud_button:after {
+  content: attr(data-number);
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: var(--white);
+}
+.cloud_enlarged {
+  width: 400px;
+  max-width: 90vw;
+  pointer-events: none;
+  outline: solid 2px var(--black);
+}

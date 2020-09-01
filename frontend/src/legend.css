@@ -1,0 +1,22 @@
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legend > * {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+  line-height: 1.25;
+}
+.legend_square,
+.legend_circle {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+.legend_circle {
+  border-radius: 999px;
+}

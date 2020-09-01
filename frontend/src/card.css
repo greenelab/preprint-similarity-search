@@ -6,6 +6,7 @@
   width: 100%;
 }
 .card_score {
+  font-family: 'Montserrat', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,7 +14,6 @@
   height: 30px;
   flex-shrink: 0;
   margin-right: 20px;
-  border: solid 1px;
   border-radius: 999px;
   font-weight: 700;
   cursor: help;
@@ -24,7 +24,6 @@
 }
 .card_details > * {
   display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.5;
+  margin-bottom: 5px;
 }

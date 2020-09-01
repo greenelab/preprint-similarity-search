@@ -3,7 +3,7 @@
   --black: #000000;
   --dark-gray: #606060;
   --gray: #a0a0a0;
-  --light-gray: #e8e8e8;
+  --light-gray: #e0e0e0;
   --white: #ffffff;
   --shadow: #00000040;
   --light-orange: #ffcc80;
@@ -38,6 +38,18 @@ section {
   margin: 40px auto;
   padding: 0 20px;
   max-width: 600px;
+}
+hr {
+  margin: 40px auto;
+  padding: 0 20px;
+  max-width: 600px;
+  border: none;
+}
+hr:after {
+  content: '';
+  display: block;
+  width: 100%;
+  border-bottom: dotted 2px var(--light-gray);
 }
 header,
 footer {
@@ -81,12 +93,17 @@ h3 {
 .center {
   text-align: center;
 }
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* icons */
-i:not(:only-child) {
+.icon_with_text {
   margin-right: 10px;
 }
-h3 i {
+.heading_icon {
   margin-right: 15px;
   color: var(--light-orange);
 }

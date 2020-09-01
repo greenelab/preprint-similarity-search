@@ -14,8 +14,8 @@ export default ({ status }) => {
   if (status === loading) {
     return (
       <section className='center'>
-        <div className='message loading'>
-          <i className='fas fa-spinner fa-spin'></i>
+        <div className='loading'>
+          <i className='fas fa-spinner fa-spin icon_with_text'></i>
           <span>Loading...</span>
         </div>
       </section>
@@ -26,7 +26,7 @@ export default ({ status }) => {
     return (
       <section className='center'>
         <div className='error'>
-          <i className='far fa-times-circle'></i>
+          <i className='far fa-times-circle icon_with_text'></i>
           <span>Couldn't get results</span>
         </div>
       </section>

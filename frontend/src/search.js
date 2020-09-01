@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useCallback } from 'react';
 
-import { getNeighbors } from './neighbors';
-import { getMetadata } from './neighbors';
-import { cleanNeighbors } from './neighbors';
+import { getPreprintInfo } from './backend';
+import { getNeighbors } from './backend';
+import { getNeighborsMetadata } from './backend';
+import { cleanNeighbors } from './backend';
 import { loading, success, error } from './status';
 
 import './search.css';
@@ -12,22 +13,22 @@ import './search.css';
 // search box component
 
 export default ({
+  setPreprintTitle,
+  setPreprintUrl,
   status,
   setStatus,
-  setRecommendedJournals,
-  setRelatedPapers,
+  setSimilarJournals,
+  setSimilarPapers,
   setCoordinates
 }) => {
   // default query
-  const [query, setQuery] = useState(getUrl() || '10.1101/833400');
+  const [query, setQuery] = useState(getUrl() || '');
 
   // on type
   const onChange = useCallback(
     (event) => setQuery(event.target.value.trim()),
     []
   );
-
-  console.log(query);
 
   // search
   const search = useCallback(
@@ -50,16 +51,27 @@ export default ({
         setUrl(doi);
 
       try {
+        // get preprint info
+        const { preprintTitle, preprintUrl } = await getPreprintInfo(doi);
+
+        // set preprint info
+        setPreprintTitle(preprintTitle);
+        setPreprintUrl(preprintUrl);
+
         // get neighbor data
-        const {
-          recommendedJournals,
-          relatedPapers,
+        let {
+          similarJournals,
+          similarPapers,
           coordinates
-        } = await cleanNeighbors(await getMetadata(await getNeighbors(doi)));
+        } = await getNeighbors(doi);
+        similarJournals = await getNeighborsMetadata(similarJournals);
+        similarPapers = await getNeighborsMetadata(similarPapers);
+        similarJournals = cleanNeighbors(similarJournals);
+        similarPapers = cleanNeighbors(similarPapers);
 
         // set neighbor data
-        setRecommendedJournals(recommendedJournals);
-        setRelatedPapers(relatedPapers);
+        setSimilarJournals(similarJournals);
+        setSimilarPapers(similarPapers);
         setCoordinates(coordinates);
         setStatus(success);
       } catch (errorMessage) {
@@ -68,7 +80,14 @@ export default ({
         setStatus(error);
       }
     },
-    [setCoordinates, setRecommendedJournals, setRelatedPapers, setStatus]
+    [
+      setCoordinates,
+      setPreprintTitle,
+      setPreprintUrl,
+      setSimilarJournals,
+      setSimilarPapers,
+      setStatus
+    ]
   );
 
   // when user navigates back/forward
@@ -97,7 +116,7 @@ export default ({
 
   // render
   return (
-    <section>
+    <section id='search'>
       <p className='center'>
         <i>
           Enter the <a href='https://www.biorxiv.org/'>bioRxiv</a> DOI of your

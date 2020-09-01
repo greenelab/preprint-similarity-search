@@ -3,17 +3,16 @@ import { useState } from 'react';
 
 import Header from './header';
 import Search from './search';
-import Status from './status';
-import RecommendedJournals from './recommended-journals';
-import RelatedPapers from './related-papers';
-import Map from './map';
+import PreprintInfo from './preprint-info';
+import SimilarJournals from './similar-journals';
+import SimilarPapers from './similar-papers';
+import MapSection from './map-section';
 import About from './about';
-import Continue from './continue';
 import Footer from './footer';
 
 import './app.css';
 
-import { empty, success } from './status';
+import { empty } from './status';
 
 // main app component
 
@@ -22,8 +21,10 @@ export default () => {
   const [status, setStatus] = useState(empty);
 
   // main data
-  const [recommendedJournals, setRecommendedJournals] = useState([]);
-  const [relatedPapers, setRelatedPapers] = useState([]);
+  const [preprintTitle, setPreprintTitle] = useState('');
+  const [preprintUrl, setPreprintUrl] = useState('');
+  const [similarJournals, setSimilarJournals] = useState([]);
+  const [similarPapers, setSimilarPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
 
   // render
@@ -33,21 +34,31 @@ export default () => {
       <main>
         <Search
           {...{
+            preprintTitle,
+            preprintUrl,
+            setPreprintTitle,
+            setPreprintUrl,
             status,
             setStatus,
-            setRecommendedJournals,
-            setRelatedPapers,
+            setSimilarJournals,
+            setSimilarPapers,
             setCoordinates
           }}
         />
-        <Status {...{ status }} />
-        {status === success && (
-          <RecommendedJournals {...{ recommendedJournals }} />
+        <hr />
+        {status !== empty && (
+          <>
+            <PreprintInfo {...{ preprintTitle, preprintUrl, status }} />
+            <hr />
+            <SimilarPapers {...{ similarPapers, status }} />
+            <hr />
+            <SimilarJournals {...{ similarJournals, status }} />
+            <hr />
+          </>
         )}
-        {status === success && <RelatedPapers {...{ relatedPapers }} />}
-        <Map {...{ coordinates }} />
+        <MapSection {...{ coordinates }} />
+        <hr />
         <About />
-        <Continue />
       </main>
       <Footer />
     </>
