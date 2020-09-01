@@ -48,10 +48,10 @@ export default () => {
         {preprintTitle && preprintUrl && (
           <PreprintInfo {...{ preprintTitle, preprintUrl }} />
         )}
+        {status !== empty && <RelatedPapers {...{ relatedPapers, status }} />}
         {status !== empty && (
           <RecommendedJournals {...{ recommendedJournals, status }} />
         )}
-        {status !== empty && <RelatedPapers {...{ relatedPapers, status }} />}
         <MapSection {...{ coordinates }} />
         <About />
       </main>
