@@ -45,14 +45,19 @@ export default () => {
             setCoordinates
           }}
         />
+        <hr />
         {status !== empty && (
-          <PreprintInfo {...{ preprintTitle, preprintUrl, status }} />
-        )}
-        {status !== empty && <SimilarPapers {...{ similarPapers, status }} />}
-        {status !== empty && (
-          <SimilarJournals {...{ similarJournals, status }} />
+          <>
+            <PreprintInfo {...{ preprintTitle, preprintUrl, status }} />
+            <hr />
+            <SimilarPapers {...{ similarPapers, status }} />
+            <hr />
+            <SimilarJournals {...{ similarJournals, status }} />
+            <hr />
+          </>
         )}
         <MapSection {...{ coordinates }} />
+        <hr />
         <About />
       </main>
       <Footer />
