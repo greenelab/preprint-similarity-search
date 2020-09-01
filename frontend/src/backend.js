@@ -22,8 +22,8 @@ export const getNeighbors = async (query) => {
   const neighbors = await (await fetch(backendServer + query)).json();
 
   // extract results
-  const recommendedJournals = neighbors.journal_neighbors || [];
-  const relatedPapers = neighbors.paper_neighbors || [];
+  const similarJournals = neighbors.journal_neighbors || [];
+  const similarPapers = neighbors.paper_neighbors || [];
   const coordinates = {
     x: neighbors['2d_coord'].dim1,
     y: neighbors['2d_coord'].dim2
@@ -32,11 +32,11 @@ export const getNeighbors = async (query) => {
   // remove "PMC" prefix from PMCID's
   const removePMC = (entry) =>
     (entry.pmcid = (entry.pmcid || entry.document || '').replace('PMC', ''));
-  recommendedJournals.forEach(removePMC);
-  relatedPapers.forEach(removePMC);
+  similarJournals.forEach(removePMC);
+  similarPapers.forEach(removePMC);
 
   // return results
-  return { recommendedJournals, relatedPapers, coordinates };
+  return { similarJournals, similarPapers, coordinates };
 };
 
 const metaLookup =

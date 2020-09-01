@@ -17,8 +17,8 @@ export default ({
   setPreprintUrl,
   status,
   setStatus,
-  setRecommendedJournals,
-  setRelatedPapers,
+  setSimilarJournals,
+  setSimilarPapers,
   setCoordinates
 }) => {
   // default query
@@ -60,18 +60,18 @@ export default ({
 
         // get neighbor data
         let {
-          recommendedJournals,
-          relatedPapers,
+          similarJournals,
+          similarPapers,
           coordinates
         } = await getNeighbors(doi);
-        recommendedJournals = await getNeighborsMetadata(recommendedJournals);
-        relatedPapers = await getNeighborsMetadata(relatedPapers);
-        recommendedJournals = cleanNeighbors(recommendedJournals);
-        relatedPapers = cleanNeighbors(relatedPapers);
+        similarJournals = await getNeighborsMetadata(similarJournals);
+        similarPapers = await getNeighborsMetadata(similarPapers);
+        similarJournals = cleanNeighbors(similarJournals);
+        similarPapers = cleanNeighbors(similarPapers);
 
         // set neighbor data
-        setRecommendedJournals(recommendedJournals);
-        setRelatedPapers(relatedPapers);
+        setSimilarJournals(similarJournals);
+        setSimilarPapers(similarPapers);
         setCoordinates(coordinates);
         setStatus(success);
       } catch (errorMessage) {
@@ -84,8 +84,8 @@ export default ({
       setCoordinates,
       setPreprintTitle,
       setPreprintUrl,
-      setRecommendedJournals,
-      setRelatedPapers,
+      setSimilarJournals,
+      setSimilarPapers,
       setStatus
     ]
   );

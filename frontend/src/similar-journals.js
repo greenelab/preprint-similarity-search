@@ -12,16 +12,16 @@ const rankColorB = color('#ff9800');
 
 const googleLink = 'https://www.google.com/search?q=';
 
-// recommended journals section
+// similar journals section
 
-export default ({ recommendedJournals, status }) => (
-  <section id='recommended-journals'>
+export default ({ similarJournals, status }) => (
+  <section id='similar-journals'>
     <h3>
-      <i className='fas fa-bookmark heading_icon'></i>Recommended Journals
+      <i className='fas fa-bookmark heading_icon'></i>Most Similar Journals
     </h3>
     {status !== success && <Status {...{ status }} />}
     {status === success &&
-      recommendedJournals.map(
+      similarJournals.map(
         ({ journal, rank, distance, strength }, index) => (
           <div key={index} className='card'>
             <div

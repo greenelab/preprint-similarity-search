@@ -14,14 +14,14 @@ const paperLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
 
 // related papers section
 
-export default ({ relatedPapers, status }) => (
-  <section id='related-papers'>
+export default ({ similarPapers, status }) => (
+  <section id='similar-papers'>
     <h3>
-      <i className='fas fa-scroll heading_icon'></i>Related Papers
+      <i className='fas fa-scroll heading_icon'></i>Most Similar Papers
     </h3>
     {status !== success && <Status {...{ status }} />}
     {status === success &&
-      relatedPapers.map(
+      similarPapers.map(
         (
           { id, title, authors, year, journal, rank, distance, strength },
           index

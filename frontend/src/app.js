@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Header from './header';
 import Search from './search';
 import PreprintInfo from './preprint-info';
-import RecommendedJournals from './recommended-journals';
-import RelatedPapers from './related-papers';
+import SimilarJournals from './similar-journals';
+import SimilarPapers from './similar-papers';
 import MapSection from './map-section';
 import About from './about';
 import Footer from './footer';
@@ -23,8 +23,8 @@ export default () => {
   // main data
   const [preprintTitle, setPreprintTitle] = useState('');
   const [preprintUrl, setPreprintUrl] = useState('');
-  const [recommendedJournals, setRecommendedJournals] = useState([]);
-  const [relatedPapers, setRelatedPapers] = useState([]);
+  const [similarJournals, setSimilarJournals] = useState([]);
+  const [similarPapers, setSimilarPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
 
   // render
@@ -40,17 +40,17 @@ export default () => {
             setPreprintUrl,
             status,
             setStatus,
-            setRecommendedJournals,
-            setRelatedPapers,
+            setSimilarJournals,
+            setSimilarPapers,
             setCoordinates
           }}
         />
-        {preprintTitle && preprintUrl && (
-          <PreprintInfo {...{ preprintTitle, preprintUrl }} />
-        )}
-        {status !== empty && <RelatedPapers {...{ relatedPapers, status }} />}
         {status !== empty && (
-          <RecommendedJournals {...{ recommendedJournals, status }} />
+          <PreprintInfo {...{ preprintTitle, preprintUrl, status }} />
+        )}
+        {status !== empty && <SimilarPapers {...{ similarPapers, status }} />}
+        {status !== empty && (
+          <SimilarJournals {...{ similarJournals, status }} />
         )}
         <MapSection {...{ coordinates }} />
         <About />
