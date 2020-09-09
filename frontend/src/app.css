@@ -62,11 +62,12 @@ footer {
   border-top: dotted 2px black;
 }
 header section,
-footer section {
+footer section p {
   text-align: center;
 }
 p {
   margin: 20px 0;
+  text-align: justify;
 }
 
 /* headings */
