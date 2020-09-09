@@ -17,8 +17,8 @@ export default () => (
     </p>
     <p>
       The tool also provides a "map" of the documents, grouped into bins based
-      on similar textual content, and shows you where your preprint falls on it.
-      Select a square to learn more about the papers in that bin.
+      on similar textual content, and shows you where your preprint falls on the
+      map. Select a square to learn more about the papers in that bin.
     </p>
     <p>
       The map also incorporates a set of 50{' '}
