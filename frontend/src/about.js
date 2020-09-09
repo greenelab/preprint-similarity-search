@@ -16,20 +16,21 @@ export default () => (
       <a href='https://www.biorxiv.org/'>bioRxiv</a> preprint.
     </p>
     <p>
-      The tool also provides a "map" of the documents, grouped into bins based
-      on similar textual content, and shows you where your preprint falls on the
-      map. Select a square to learn more about the papers in that bin.
+      The tool also provides a "map" of the PubMed Central documents, grouped
+      into bins based on similar textual content, and shows you where your
+      preprint falls on the map. Select a square to learn more about the papers
+      in that bin.
     </p>
     <p>
       The map also incorporates a set of 50{' '}
       <a href='https://en.wikipedia.org/wiki/Principal_component_analysis'>
         principal components
       </a>{' '}
-      (PCs) generated from the documents. Each PC represents two high level
-      concepts characterized by keywords of various strengths, illustrated in
-      the word cloud thumbnails above the map. Select a thumbnail to color the
-      map by that PC. Deeper orange cells will be papers that correlate more
-      with the orange keywords in the image, and vice versa for blue.
+      (PCs) generated from bioRxiv. Each PC represents two high level concepts
+      characterized by keywords of various strengths, illustrated in the word
+      cloud thumbnails above the map. Select a thumbnail to color the map by
+      that PC. Deeper orange cells will be papers that correlate more with the
+      orange keywords in the image, and vice versa for blue.
     </p>
     <p>
       For more information, see the{' '}
