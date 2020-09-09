@@ -1,6 +1,6 @@
 import requests
 from flask_restful import abort
-#from utils import server_log
+from utils import server_log
 
 def get_doi_content(user_doi):
     """
