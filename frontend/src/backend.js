@@ -1,6 +1,6 @@
 const crossRef = 'https://api.crossref.org/works/';
 
-// lookup metadata info for queried preprint from crossref
+// look up metadata info for queried preprint from crossref
 export const getPreprintInfo = async (query) => {
   // look up info
   const { message: info } = await (await fetch(crossRef + query)).json();
@@ -18,7 +18,7 @@ const backendServer = 'https://api-journal-rec.greenelab.com/doi/';
 
 // get neighbor and coordinate data from backend
 export const getNeighbors = async (query) => {
-  // lookup data from backend
+  // look up data from backend
   const neighbors = await (await fetch(backendServer + query)).json();
 
   // extract results
@@ -47,7 +47,7 @@ export const getNeighborsMetadata = async (array) => {
   // get pmcid's for looking up meta data
   const ids = array.map((entry) => entry.pmcid).filter((entry) => entry);
 
-  // lookup metadata
+  // look up metadata
   const metadata = (await (await fetch(metaLookup + ids.join(','))).json())
     .result;
 

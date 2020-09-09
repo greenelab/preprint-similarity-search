@@ -9,7 +9,7 @@ import './header.css';
 export default () => (
   <header>
     <section>
-      <h1>AnnoRxver</h1>
+      <h1>AnnoRxiver</h1>
       <h2>Journal Recommender</h2>
       <Logo className='logo' />
     </section>
