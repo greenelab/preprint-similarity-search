@@ -13,7 +13,7 @@ import { getCloudUrl } from './map-section';
 import './cloud-buttons.css';
 
 // tooltip open delay
-const delay = 500;
+const delay = 200;
 
 // cloud image button components
 

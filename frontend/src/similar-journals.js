@@ -26,9 +26,7 @@ export default ({ similarJournals, status }) => (
           <div
             className='card_score'
             title={'Distance score: ' + distance}
-            style={{
-              backgroundColor: rankColorB.mix(rankColorA, strength)
-            }}
+            style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
           >
             {rank}
           </div>
