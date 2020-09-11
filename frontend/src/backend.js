@@ -7,11 +7,19 @@ export const getPreprintInfo = async (query) => {
   console.log(info);
 
   // rename and normalize props
-  let { title: preprintTitle, URL: preprintUrl } = info;
-  preprintTitle = preprintTitle.flat().join(' ');
+  const preprint = {
+    title: (info.title || []).flat().join(''),
+    url: info.URL || '',
+    authors: (info.author || [])
+      .map((author) => (author.given || '') + ' ' + (author.family || ''))
+      .filter((name) => name)
+      .join(', '),
+    journal: info.publisher || '',
+    year: info.accepted?.['date-parts']?.[0]?.[0] || ''
+  };
 
   // return results
-  return { preprintTitle, preprintUrl };
+  return preprint;
 };
 
 const backendServer = 'https://api-journal-rec.greenelab.com/doi/';

@@ -21,8 +21,7 @@ export default () => {
   const [status, setStatus] = useState(empty);
 
   // main data
-  const [preprintTitle, setPreprintTitle] = useState('');
-  const [preprintUrl, setPreprintUrl] = useState('');
+  const [preprint, setPreprint] = useState('');
   const [similarJournals, setSimilarJournals] = useState([]);
   const [similarPapers, setSimilarPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
@@ -34,10 +33,8 @@ export default () => {
       <main>
         <Search
           {...{
-            preprintTitle,
-            preprintUrl,
-            setPreprintTitle,
-            setPreprintUrl,
+            preprint,
+            setPreprint,
             status,
             setStatus,
             setSimilarJournals,
@@ -48,7 +45,7 @@ export default () => {
         <hr />
         {status !== empty && (
           <>
-            <PreprintInfo {...{ preprintTitle, preprintUrl, status }} />
+            <PreprintInfo {...{ preprint, status }} />
             <hr />
             <SimilarPapers {...{ similarPapers, status }} />
             <hr />

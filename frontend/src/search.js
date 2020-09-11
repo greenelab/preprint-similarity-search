@@ -13,8 +13,7 @@ import './search.css';
 // search box component
 
 export default ({
-  setPreprintTitle,
-  setPreprintUrl,
+  setPreprint,
   status,
   setStatus,
   setSimilarJournals,
@@ -52,11 +51,10 @@ export default ({
 
       try {
         // get preprint info
-        const { preprintTitle, preprintUrl } = await getPreprintInfo(doi);
+        const preprint = await getPreprintInfo(doi);
 
         // set preprint info
-        setPreprintTitle(preprintTitle);
-        setPreprintUrl(preprintUrl);
+        setPreprint(preprint);
 
         // get neighbor data
         let {
@@ -81,12 +79,11 @@ export default ({
       }
     },
     [
-      setCoordinates,
-      setPreprintTitle,
-      setPreprintUrl,
+      setPreprint,
+      setStatus,
       setSimilarJournals,
       setSimilarPapers,
-      setStatus
+      setCoordinates
     ]
   );
 
@@ -119,8 +116,8 @@ export default ({
     <section id='search'>
       <p className='center'>
         <i>
-          Enter the <a href='https://www.biorxiv.org/'>bioRxiv</a> DOI of your
-          preprint
+          Enter the <a href='https://www.biorxiv.org/'>bioRxiv</a> or{' '}
+          <a href='https://www.medrxiv.org/'>medRxiv</a> DOI of your preprint
         </i>
       </p>
       <form

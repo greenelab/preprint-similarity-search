@@ -13,7 +13,7 @@ import { getPcNum } from './map-section';
 import './map.css';
 
 // size of map cells in svg units. match to bin width of plot data
-const cellSize = 0.4 + 0.005;
+const cellSize = 0.4 + 0.01;
 
 // map component
 
