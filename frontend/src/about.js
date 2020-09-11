@@ -13,7 +13,8 @@ export default () => (
         PubMed Central open access documents
       </a>{' '}
       to recommend suitable journals based on the textual content of your{' '}
-      <a href='https://www.biorxiv.org/'>bioRxiv</a> preprint.
+      <a href='https://www.biorxiv.org/'>bioRxiv</a> or{' '}
+      <a href='https://www.medrxiv.org/'>medRxiv</a> preprint.
     </p>
     <p>
       The tool also provides a "map" of the PubMed Central documents, grouped
