@@ -35,13 +35,21 @@ export default ({ similarPapers, status }) => (
               {rank}
             </div>
             <div className='card_details'>
-              <a href={paperLink + id} title={title}>
+              <a href={paperLink + id} title={title} className='card_detail'>
                 {title}
               </a>
-              <div title={authors} className='truncate'>
+              <div
+                title={authors}
+                className='card_detail truncate'
+                tabIndex='0'
+              >
                 {authors}
               </div>
-              <div title={journal + ' · ' + year} className='truncate'>
+              <div
+                title={journal + ' · ' + year}
+                className='card_detail truncate'
+                tabIndex='0'
+              >
                 {journal} · {year}
               </div>
             </div>

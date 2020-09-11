@@ -21,23 +21,23 @@ export default ({ similarJournals, status }) => (
     </h3>
     {status !== success && <Status {...{ status }} />}
     {status === success &&
-      similarJournals.map(
-        ({ journal, rank, distance, strength }, index) => (
-          <div key={index} className='card'>
-            <div
-              className='card_score'
-              title={'Distance score: ' + distance}
-              style={{
-                backgroundColor: rankColorB.mix(rankColorA, strength)
-              }}
-            >
-              {rank}
-            </div>
-            <div className='card_details'>
-              <a href={googleLink + journal}>{journal}</a>
-            </div>
+      similarJournals.map(({ journal, rank, distance, strength }, index) => (
+        <div key={index} className='card'>
+          <div
+            className='card_score'
+            title={'Distance score: ' + distance}
+            style={{
+              backgroundColor: rankColorB.mix(rankColorA, strength)
+            }}
+          >
+            {rank}
           </div>
-        )
-      )}
+          <div className='card_details'>
+            <a href={googleLink + journal} className='card_detail'>
+              {journal}
+            </a>
+          </div>
+        </div>
+      ))}
   </section>
 );
