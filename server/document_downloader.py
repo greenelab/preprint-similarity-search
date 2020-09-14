@@ -22,7 +22,7 @@ def get_doi_content(user_doi):
 
         # If no match at all then raise the red flag
         if content is None:
-            message = f"Cannot find document {user_doi} in either biorxiv nor medrxiv."
+            message = f"Cannot find document {user_doi} in either biorxiv or medrxiv."
             server_log(f"{message}\n")
             abort(404, message=message)
     
