@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useCallback } from 'react';
+import * as Sentry from '@sentry/react';
 
 import { getPreprintInfo } from './backend';
 import { getNeighbors } from './backend';
@@ -74,6 +76,8 @@ export default ({
         setStatus(success);
       } catch (errorMessage) {
         console.log(errorMessage);
+        // log error message and doi to Sentry
+        Sentry.captureException(errorMessage, { tags: { doi } });
         // set error status if any problem
         setStatus(error);
       }

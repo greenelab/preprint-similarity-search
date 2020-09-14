@@ -4,7 +4,7 @@ const crossRef = 'https://api.crossref.org/works/';
 export const getPreprintInfo = async (query) => {
   // look up info
   const { message: info } = await (await fetch(crossRef + query)).json();
-  console.log(info);
+  console.log('Preprint info:', info);
 
   // rename and normalize props
   const preprint = {

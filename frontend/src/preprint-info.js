@@ -9,7 +9,6 @@ export default ({ preprint, status }) => (
     <h3>
       <i className='fas fa-feather-alt heading_icon'></i>Your Preprint
     </h3>
-    {console.log(preprint)}
     {Object.keys(preprint).length === 0 && <Status {...{ status }} />}
     {Object.keys(preprint).length !== 0 && (
       <p>
