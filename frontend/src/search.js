@@ -77,7 +77,7 @@ export default ({
       } catch (errorMessage) {
         console.log(errorMessage);
         // log error message and doi to Sentry
-        Sentry.captureException(errorMessage, { extra: { doi } });
+        Sentry.captureException(errorMessage, { tags: { doi } });
         // set error status if any problem
         setStatus(error);
       }
