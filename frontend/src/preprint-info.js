@@ -10,7 +10,7 @@ export default ({ preprint }) => (
       <i className='fas fa-feather-alt heading_icon'></i>Your Preprint
     </h3>
     {typeof preprint === 'string' && <Status message={preprint} />}
-    {typeof preprint === 'object' && Object.keys(preprint).length !== 0 && (
+    {typeof preprint === 'object' && (
       <p>
         <a href={preprint.url} title={preprint.title} className='card_detail'>
           {preprint.title}
