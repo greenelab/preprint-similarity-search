@@ -9,21 +9,17 @@ import SimilarPapers from './similar-papers';
 import MapSection from './map-section';
 import About from './about';
 import Footer from './footer';
+import { empty } from './status';
 
 import './app.css';
-
-import { empty } from './status';
 
 // main app component
 
 export default () => {
-  // data status
-  const [status, setStatus] = useState(empty);
-
   // main data
-  const [preprint, setPreprint] = useState('');
-  const [similarJournals, setSimilarJournals] = useState([]);
-  const [similarPapers, setSimilarPapers] = useState([]);
+  const [preprint, setPreprint] = useState(empty);
+  const [similarJournals, setSimilarJournals] = useState(empty);
+  const [similarPapers, setSimilarPapers] = useState(empty);
   const [coordinates, setCoordinates] = useState({});
 
   // render
@@ -34,25 +30,21 @@ export default () => {
         <Search
           {...{
             preprint,
+            similarJournals,
+            similarPapers,
             setPreprint,
-            status,
-            setStatus,
             setSimilarJournals,
             setSimilarPapers,
             setCoordinates
           }}
         />
         <hr />
-        {status !== empty && (
-          <>
-            <PreprintInfo {...{ preprint, status }} />
-            <hr />
-            <SimilarPapers {...{ similarPapers, status }} />
-            <hr />
-            <SimilarJournals {...{ similarJournals, status }} />
-            <hr />
-          </>
-        )}
+        <PreprintInfo {...{ preprint }} />
+        <hr />
+        <SimilarPapers {...{ similarPapers }} />
+        <hr />
+        <SimilarJournals {...{ similarJournals }} />
+        <hr />
         <MapSection {...{ coordinates }} />
         <hr />
         <About />

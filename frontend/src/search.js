@@ -8,16 +8,18 @@ import { getPreprintInfo } from './backend';
 import { getNeighbors } from './backend';
 import { getNeighborsMetadata } from './backend';
 import { cleanNeighbors } from './backend';
-import { loading, success, error } from './status';
+
+import { loading } from './status';
 
 import './search.css';
 
 // search box component
 
 export default ({
+  preprint,
+  similarJournals,
+  similarPapers,
   setPreprint,
-  status,
-  setStatus,
   setSimilarJournals,
   setSimilarPapers,
   setCoordinates
@@ -44,21 +46,28 @@ export default ({
       if (!doi)
         return;
 
-      // set loading status
-      setStatus(loading);
-
       // update url based on search
       if (updateUrl)
         setUrl(doi);
 
+      // set loading status
+      setPreprint(loading);
+      setSimilarJournals(loading);
+      setSimilarPapers(loading);
+
+      // get preprint info
       try {
-        // get preprint info
         const preprint = await getPreprintInfo(doi);
-
-        // set preprint info
         setPreprint(preprint);
+      } catch (error) {
+        if (error.name !== 'CustomError')
+          error.message = "Couldn't get preprint info";
+        setPreprint(error.message);
+        Sentry.captureException(error, { tags: { doi } });
+      }
 
-        // get neighbor data
+      // get neighbor data
+      try {
         let {
           similarJournals,
           similarPapers,
@@ -68,27 +77,18 @@ export default ({
         similarPapers = await getNeighborsMetadata(similarPapers);
         similarJournals = cleanNeighbors(similarJournals);
         similarPapers = cleanNeighbors(similarPapers);
-
-        // set neighbor data
         setSimilarJournals(similarJournals);
         setSimilarPapers(similarPapers);
         setCoordinates(coordinates);
-        setStatus(success);
-      } catch (errorMessage) {
-        console.log(errorMessage);
-        // log error message and doi to Sentry
-        Sentry.captureException(errorMessage, { tags: { doi } });
-        // set error status if any problem
-        setStatus(error);
+      } catch (error) {
+        if (error.name !== 'CustomError')
+          error.message = "Couldn't get results";
+        setSimilarJournals(error.message);
+        setSimilarPapers(error.message);
+        Sentry.captureException(error, { tags: { doi } });
       }
     },
-    [
-      setPreprint,
-      setStatus,
-      setSimilarJournals,
-      setSimilarPapers,
-      setCoordinates
-    ]
+    [setPreprint, setSimilarJournals, setSimilarPapers, setCoordinates]
   );
 
   // when user navigates back/forward
@@ -139,13 +139,21 @@ export default ({
           onChange={onChange}
           type='text'
           placeholder='e.g. 10.1101/833400'
-          disabled={status === 'LOADING'}
+          disabled={
+            preprint === loading ||
+            similarJournals === loading ||
+            similarPapers === loading
+          }
         />
         <button
           className='search_button'
           type='submit'
           title='Search for related papers and journals'
-          disabled={status === 'LOADING'}
+          disabled={
+            preprint === loading ||
+            similarJournals === loading ||
+            similarPapers === loading
+          }
         >
           <i className='fas fa-search'></i>
         </button>

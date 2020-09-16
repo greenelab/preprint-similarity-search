@@ -3,7 +3,6 @@ import React from 'react';
 import color from 'color';
 
 import Status from './status';
-import { success } from './status';
 
 import './card.css';
 
@@ -14,13 +13,15 @@ const googleLink = 'https://www.google.com/search?q=';
 
 // similar journals section
 
-export default ({ similarJournals, status }) => (
+export default ({ similarJournals }) => (
   <section id='similar-journals'>
     <h3>
       <i className='fas fa-bookmark heading_icon'></i>Most Similar Journals
     </h3>
-    {status !== success && <Status {...{ status }} />}
-    {status === success &&
+    {typeof similarJournals === 'string' && (
+      <Status message={similarJournals} />
+    )}
+    {Array.isArray(similarJournals) &&
       similarJournals.map(({ journal, rank, distance, strength }, index) => (
         <div key={index} className='card'>
           <div

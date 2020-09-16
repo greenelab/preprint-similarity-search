@@ -3,7 +3,6 @@ import React from 'react';
 import color from 'color';
 
 import Status from './status';
-import { success } from './status';
 
 import './card.css';
 
@@ -14,13 +13,13 @@ const paperLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
 
 // related papers section
 
-export default ({ similarPapers, status }) => (
+export default ({ similarPapers }) => (
   <section id='similar-papers'>
     <h3>
       <i className='fas fa-scroll heading_icon'></i>Most Similar Papers
     </h3>
-    {status !== success && <Status {...{ status }} />}
-    {status === success &&
+    {typeof similarPapers === 'string' && <Status message={similarPapers} />}
+    {Array.isArray(similarPapers) &&
       similarPapers.map(
         (
           { id, title, authors, year, journal, rank, distance, strength },

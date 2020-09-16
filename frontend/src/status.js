@@ -3,35 +3,34 @@ import React from 'react';
 import './status.css';
 
 // status key codes
-export const empty = '';
+export const empty = 'EMPTY';
 export const loading = 'LOADING';
-export const error = 'ERROR';
-export const success = 'SUCCESS';
 
 // loading/error message component
 
-export default ({ status }) => {
-  if (status === loading) {
+export default ({ message }) => {
+  if (message === empty) {
     return (
-      <section className='center'>
-        <div className='loading'>
-          <i className='fas fa-spinner fa-spin icon_with_text'></i>
-          <span>Loading...</span>
-        </div>
+      <section className='center gray'>
+        <i className='fas fa-exclamation icon_with_text'></i>
+        <span>Search for a doi</span>
       </section>
     );
   }
 
-  if (status === error) {
+  if (message === loading) {
     return (
-      <section className='center'>
-        <div className='error'>
-          <i className='far fa-times-circle icon_with_text'></i>
-          <span>Couldn't get results</span>
-        </div>
+      <section className='center gray'>
+        <i className='fas fa-spinner fa-spin icon_with_text'></i>
+        <span>Loading...</span>
       </section>
     );
   }
 
-  return null;
+  return (
+    <section className='center red'>
+      <i className='far fa-times-circle icon_with_text'></i>
+      <span>{message || "Couldn't get results"}</span>
+    </section>
+  );
 };

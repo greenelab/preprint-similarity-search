@@ -95,7 +95,8 @@ export default ({
             />
           ))
         }
-        {coordinates.x && coordinates.y && (
+        {typeof coordinates.x === 'number' &&
+          typeof coordinates.y === 'number' && (
           <circle
             className='marker'
             strokeWidth={cellSize / 4}
