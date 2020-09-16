@@ -32,6 +32,8 @@ const backendServer = 'https://api-journal-rec.greenelab.com/doi/';
 export const getNeighbors = async (query) => {
   // look up data from backend
   const response = await fetch(backendServer + query);
+  if (!response.ok)
+    throw new Error();
   const neighbors = await response.json();
 
   // if error returned, throw error with message
