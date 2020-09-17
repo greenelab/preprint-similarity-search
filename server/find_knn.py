@@ -40,7 +40,7 @@ def get_neighbors(user_doi):
         "paper_neighbors": paper_knn,
         "journal_neighbors": journal_knn,
         "coordinates": coordinates,
-        "paper_info":paper_metadata
+        "paper_info": paper_metadata
     }
 
 
