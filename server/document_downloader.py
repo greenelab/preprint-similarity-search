@@ -1,6 +1,6 @@
 import requests
 from flask_restful import abort
-#from utils import server_log
+from utils import server_log
 
 def get_doi_content(user_doi):
     """
@@ -27,6 +27,7 @@ def get_doi_content(user_doi):
             abort(404, message=message)
     
     latest_paper = content['collection'][-1]
+    
     paper_metadata = {
         "title": latest_paper['title'],
         "authors": latest_paper['authors'],
