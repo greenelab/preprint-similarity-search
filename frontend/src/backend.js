@@ -43,10 +43,7 @@ export const getNeighbors = async (query) => {
   // extract results
   const similarJournals = neighbors.journal_neighbors || [];
   const similarPapers = neighbors.paper_neighbors || [];
-  const coordinates = {
-    x: neighbors['2d_coord'].dim1,
-    y: neighbors['2d_coord'].dim2
-  };
+  const coordinates = neighbors.coordinates || {};
 
   // remove "PMC" prefix from PMCID's
   const removePMC = (entry) =>

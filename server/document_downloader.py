@@ -26,9 +26,18 @@ def get_doi_content(user_doi):
             server_log(f"{message}\n")
             abort(404, message=message)
     
+    latest_paper = content['collection'][-1]
+    
+    paper_metadata = {
+        "title": latest_paper['title'],
+        "authors": latest_paper['authors'],
+        "doi": latest_paper['doi'],
+        "accepted_date": latest_paper['date'],
+        "publisher": "Cold Spring Harbor Laboratory"
+    }
+    
     # Grab latest version of PDF file
-    latest_version = content['collection'][-1]['version']
-    pdf_url = f"{pdf_url}/{user_doi}v{latest_version}.full.pdf"
+    pdf_url = f"{pdf_url}/{user_doi}v{latest_paper['version']}.full.pdf"
     try:
         response = requests.get(pdf_url)
     except Exception as e:
@@ -41,7 +50,7 @@ def get_doi_content(user_doi):
         server_log(f"{message}\n")
         abort(response.status_code, message=message)
 
-    return response.content
+    return response.content, paper_metadata
 
 def ping_biorxiv_or_medrxiv(doi, server="biorxiv"):
     """

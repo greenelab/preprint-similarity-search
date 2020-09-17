@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from document_downloader import get_doi_content
-from find_2d_coordinates import get_2d_coordinates
+from find_coordinates import get_coordinates
 from utils import create_journal_model, create_paper_models, server_log
 from word_vectors import parse_content
 
@@ -25,7 +25,7 @@ def get_neighbors(user_doi):
 
     server_log(f"Received user DOI ({user_doi})")
 
-    content = get_doi_content(user_doi)
+    content, paper_metadata = get_doi_content(user_doi)
     server_log(f"Downloaded PDF content of {user_doi}")
     query_vec = parse_content(content)
 
@@ -33,13 +33,14 @@ def get_neighbors(user_doi):
 
     paper_knn = get_paper_knn(query_vec)
     journal_knn = get_journal_knn(query_vec)
-    two_d_coord = get_2d_coordinates(query_vec)
+    coordinates = get_coordinates(query_vec)
     server_log(f"Finished searching {user_doi}\n")
 
     return {
         "paper_neighbors": paper_knn,
         "journal_neighbors": journal_knn,
-        "2d_coord": two_d_coord
+        "coordinates": coordinates,
+        "paper_info": paper_metadata
     }
 
 

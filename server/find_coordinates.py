@@ -2,7 +2,7 @@ from SAUCIE import SAUCIE, Loader
 import numpy as np
 
 
-def get_2d_coordinates(query_vector):
+def get_coordinates(query_vector):
     """
     Get the 2D coordinates for the query document
     Arguments:
@@ -16,8 +16,8 @@ def get_2d_coordinates(query_vector):
         )
     )
     return {
-        "dim1": np.float64(coordinates[0][0]),
-        "dim2": np.float64(coordinates[0][1])
+        "x": np.float64(coordinates[0][0]),
+        "y": np.float64(coordinates[0][1])
     }
 
 
