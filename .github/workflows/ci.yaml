@@ -1,7 +1,7 @@
 name: ci
 
 env:
- CI: true
+ CI: false
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         run: yarn install
         working-directory: frontend
       - name: Build app
-        run: CI=false yarn build
+        run: yarn build
         working-directory: frontend
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

@@ -12,11 +12,9 @@
 }
 .cell[data-selected='true'] {
   stroke: var(--black);
-  stroke-width: 0.1;
 }
 .marker {
   fill: var(--red);
   stroke: var(--black);
-  stroke-width: 0.1;
   pointer-events: none;
 }

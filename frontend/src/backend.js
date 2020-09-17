@@ -1,10 +1,14 @@
+import { CustomError } from './error';
+
 const crossRef = 'https://api.crossref.org/works/';
 
 // look up metadata info for queried preprint from crossref
 export const getPreprintInfo = async (query) => {
   // look up info
-  const { message: info } = await (await fetch(crossRef + query)).json();
-  console.log('Preprint info:', info);
+  const response = await fetch(crossRef + query);
+  if (!response.ok)
+    throw new Error();
+  const info = (await response.json()).message;
 
   // rename and normalize props
   const preprint = {
@@ -27,7 +31,14 @@ const backendServer = 'https://api-journal-rec.greenelab.com/doi/';
 // get neighbor and coordinate data from backend
 export const getNeighbors = async (query) => {
   // look up data from backend
-  const neighbors = await (await fetch(backendServer + query)).json();
+  const response = await fetch(backendServer + query);
+  if (!response.ok)
+    throw new Error();
+  const neighbors = await response.json();
+
+  // if error returned, throw error with message
+  if (neighbors.message)
+    throw new CustomError(neighbors.message);
 
   // extract results
   const similarJournals = neighbors.journal_neighbors || [];

@@ -9,11 +9,14 @@ import { pcColorC } from './map-section';
 import { countColorA } from './map-section';
 import { countColorB } from './map-section';
 import { getPcNum } from './map-section';
+import { boost } from './math';
 
 import './map.css';
 
 // size of map cells in svg units. match to bin width of plot data
-const cellSize = 0.85 + 0.01;
+let cellSize = 0.85;
+// increase by small % to reduce anti-alias gaps between cells
+cellSize *= 1.02;
 
 // map component
 
@@ -35,8 +38,10 @@ export default ({
     const counts = cells.map((cell) => cell.count);
     const minCount = Math.min(...counts);
     const maxCount = Math.max(...counts);
-    for (const cell of cells)
+    for (const cell of cells) {
       cell.strength = (cell.count - minCount) / (maxCount - minCount);
+      cell.strength = boost(cell.strength, 1);
+    }
   } else {
     // if pc selected, color cells by pc score
     // normalize pc scores
@@ -81,6 +86,7 @@ export default ({
                   ) :
                   countColorB.mix(countColorA, cell.strength)
               }
+              strokeWidth={cellSize / 4}
               onClick={() =>
                 cell === selectedCell ?
                   setSelectedCell(null) :
@@ -89,9 +95,11 @@ export default ({
             />
           ))
         }
-        {coordinates.x && coordinates.y && (
+        {typeof coordinates.x === 'number' &&
+          typeof coordinates.y === 'number' && (
           <circle
             className='marker'
+            strokeWidth={cellSize / 4}
             cx={coordinates.x}
             cy={coordinates.y}
             r={cellSize / 2}

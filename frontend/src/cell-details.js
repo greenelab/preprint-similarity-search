@@ -7,7 +7,7 @@ import './cell-details.css';
 // details of selected cell component
 
 export default ({ selectedCell, selectedPc, setSelectedPc }) => (
-  <div>
+  <>
     <h4>Papers</h4>
     <p>{selectedCell.count.toLocaleString()}</p>
     <h4>Top Journals</h4>
@@ -35,5 +35,5 @@ export default ({ selectedCell, selectedPc, setSelectedPc }) => (
         </span>
       ))}
     </p>
-  </div>
+  </>
 );
