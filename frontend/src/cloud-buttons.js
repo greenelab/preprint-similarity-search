@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import { usePopper } from 'react-popper';
 
-import { startImage } from './map-section';
-import { endImage } from './map-section';
-import { range } from './map-section';
-import { getPcNum } from './map-section';
-import { getCloudUrl } from './map-section';
+import { startImage } from './map-sections';
+import { endImage } from './map-sections';
+import { range } from './map-sections';
+import { getPcNum } from './map-sections';
+import { getCloudUrl } from './map-sections';
 
 import './cloud-buttons.css';
 

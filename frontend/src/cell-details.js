@@ -1,39 +1,100 @@
 import React from 'react';
+import { Fragment } from 'react';
 
-import { getPcNum } from './map-section';
+import { useViewBox } from './hooks';
 
 import './cell-details.css';
 
+// lemma plot settings
+const maxChars = 20;
+
 // details of selected cell component
 
-export default ({ selectedCell, selectedPc, setSelectedPc }) => (
-  <>
-    <h4>Papers</h4>
-    <p>{selectedCell.count.toLocaleString()}</p>
-    <h4>Top Journals</h4>
-    <p>
-      {selectedCell.journals.map(({ name, count }, number) => (
-        <span key={number} className='cell_detail_row'>
-          <span className='truncate'>{name}</span>
-          <span className='truncate'>{count.toLocaleString()} papers</span>
-        </span>
-      ))}
-    </p>
-    <h4>Top Principal Components</h4>
-    <p>
-      {selectedCell.pcs.slice(0, 5).map(({ name, score }, number) => (
-        <span key={number} className='cell_detail_row'>
-          <a
-            role='button'
-            title={'Select principal component ' + getPcNum(parseInt(name))}
-            onClick={() => setSelectedPc(parseInt(name))}
+export default ({ selectedCell }) => {
+  // get lemmas from selected cell
+  const lemmas = selectedCell.lemmas || [];
+
+  // component state
+  const [svg, viewBox] = useViewBox(lemmas);
+
+  // normalize lemma scores
+  const scores = lemmas.map((lemma) => lemma.score);
+  const minScore = Math.min(...scores);
+  const maxScore = Math.max(...scores);
+  for (const lemma of lemmas)
+    lemma.strength = (lemma.score - minScore) / (maxScore - minScore) || 0;
+
+  // height of rows and font size of text
+  const size = 10;
+  // all dimensions/positions are in terms of this, so this only changes how
+  // big things are in SVG units, which doesn't matter because viewBox is fit
+  // to contents. the purpose of this is to be a baseline for proportions
+
+  // plot area boundaries
+  const left = 0;
+  const top = 0;
+  const right = lemmas.length * size + size;
+  const bottom = lemmas.length * size + size;
+  // min width of bars
+  const minWidth = size / 2;
+
+  return (
+    <>
+      <h4>Papers</h4>
+      <p>{selectedCell.count.toLocaleString()}</p>
+      <h4>Top Journals</h4>
+      <p>
+        {selectedCell.journals.map(({ name, count }, number) => (
+          <span key={number} className='cell_detail_row'>
+            <span className='truncate'>{name}</span>
+            <span className='truncate'>{count.toLocaleString()} papers</span>
+          </span>
+        ))}
+      </p>
+      <h4>Top Lemmas</h4>
+      <p>
+        <svg ref={svg} viewBox={viewBox} className='chart'>
+          {lemmas.map((lemma, index) => {
+            const width = Math.max(lemma.strength * (right - left), minWidth);
+            const y = top + (index + 1) * size;
+            return (
+              <Fragment key={index}>
+                <text
+                  x={left - size * 0.75}
+                  y={y}
+                  textAnchor='end'
+                  dominantBaseline='middle'
+                  fontSize={size}
+                  title={lemma.name}
+                >
+                  {lemma.name.length > maxChars ?
+                    lemma.name.substr(0, maxChars) + '...' :
+                    lemma.name}
+                </text>
+                <rect
+                  x={left}
+                  y={y - size / 4}
+                  width={width}
+                  height={size / 2}
+                />
+              </Fragment>
+            );
+          })}
+          <path
+            d={`M ${left} ${top} L ${left} ${bottom} L ${right} ${bottom}`}
+            strokeWidth={size / 10}
+          />
+          <text
+            x={(left + right) / 2}
+            y={bottom + size * 0.75}
+            textAnchor='middle'
+            dominantBaseline='hanging'
+            fontSize={size}
           >
-            {name}
-            {parseInt(name) === selectedPc && <i className='fas fa-check'></i>}
-          </a>
-          <span>{score.toFixed(2)} score</span>
-        </span>
-      ))}
-    </p>
-  </>
-);
+            Association Strength
+          </text>
+        </svg>
+      </p>
+    </>
+  );
+};

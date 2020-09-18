@@ -1,15 +1,13 @@
 import React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useRef } from 'react';
 
-import { pcColorA } from './map-section';
-import { pcColorB } from './map-section';
-import { pcColorC } from './map-section';
-import { countColorA } from './map-section';
-import { countColorB } from './map-section';
-import { getPcNum } from './map-section';
+import { pcColorA } from './map-sections';
+import { pcColorB } from './map-sections';
+import { pcColorC } from './map-sections';
+import { countColorA } from './map-sections';
+import { countColorB } from './map-sections';
+import { getPcNum } from './map-sections';
 import { boost } from './math';
+import { useViewBox } from './hooks';
 
 import './map.css';
 
@@ -29,8 +27,7 @@ export default ({
   coordinates
 }) => {
   // component state
-  const svg = useRef();
-  const [viewBox, setViewBox] = useState('');
+  const [svg, viewBox] = useViewBox(cells);
 
   if (!selectedPc) {
     // if no selected pc, color cells by paper count
@@ -39,7 +36,7 @@ export default ({
     const minCount = Math.min(...counts);
     const maxCount = Math.max(...counts);
     for (const cell of cells) {
-      cell.strength = (cell.count - minCount) / (maxCount - minCount);
+      cell.strength = (cell.count - minCount) / (maxCount - minCount) || 0;
       cell.strength = boost(cell.strength, 1);
     }
   } else {
@@ -52,21 +49,13 @@ export default ({
     const absScore =
       Math.max(...cells.map((cell) => Math.abs(cell.score))) || 1;
     for (const cell of cells)
-      cell.strength = cell.score / absScore;
+      cell.strength = cell.score / absScore || 0;
   }
-
-  // set svg viewbox based on bbox of content in it, ie fit view
-  useEffect(() => {
-    if (!svg.current)
-      return;
-    const { x, y, width, height } = svg.current.getBBox();
-    setViewBox([x, y, width, height].join(' '));
-  }, [cells]);
 
   // render
   return (
     <p>
-      <svg ref={svg} viewBox={viewBox || undefined} className='map'>
+      <svg ref={svg} viewBox={viewBox} className='map'>
         {
           // put extra selected cell last, so it will always be on top
           cells.concat(selectedCell || []).map((cell, number) => (

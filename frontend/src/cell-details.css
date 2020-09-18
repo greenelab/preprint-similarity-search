@@ -14,3 +14,16 @@
 .cell_detail_row i {
   margin-left: 5px;
 }
+.chart {
+  width: 100%;
+  height: 300px;
+  max-height: 90vh;
+  overflow: visible;
+}
+.chart path {
+  fill: none;
+  stroke: var(--gray);
+}
+.chart rect {
+  fill: var(--red);
+}

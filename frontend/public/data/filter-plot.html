@@ -1,3 +1,4 @@
+<!-- script to cut down the size of plot-full.json, and keep only what we need -->
 <input type="file" />
 <script>
   const onUpload = async (event) => {
@@ -28,7 +29,13 @@
           // sort by absolute value of score
           .sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
           // put sensible field names
-          .map(({ pc, score }) => ({ name: pc, score }))
+          .map(({ pc, score }) => ({ name: pc, score })),
+        // lemma odds ratios
+        lemmas: d.bin_odds
+          // put sensible field names
+          .map((odds) => ({ name: odds.lemma, score: odds.odds_ratio }))
+          // sort by absolute value of score
+          .sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
       }))
       // sort data points by coordinates
       .sort((a, b) => a.y - b.y || a.x - b.x);

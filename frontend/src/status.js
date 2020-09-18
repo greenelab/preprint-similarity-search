@@ -5,11 +5,12 @@ import './status.css';
 // status key codes
 export const empty = 'EMPTY';
 export const loading = 'LOADING';
+export const success = 'SUCCESS';
 
-// loading/error message component
+// loading/error status component
 
-export default ({ message }) => {
-  if (message === empty) {
+export default ({ status }) => {
+  if (status === empty) {
     return (
       <section className='center gray'>
         <i className='fas fa-exclamation icon_with_text'></i>
@@ -18,7 +19,7 @@ export default ({ message }) => {
     );
   }
 
-  if (message === loading) {
+  if (status === loading) {
     return (
       <section className='center gray'>
         <i className='fas fa-spinner fa-spin icon_with_text'></i>
@@ -27,10 +28,13 @@ export default ({ message }) => {
     );
   }
 
+  if (status === success)
+    return null;
+
   return (
     <section className='center red'>
       <i className='far fa-times-circle icon_with_text'></i>
-      <span>{message || "Couldn't get results"}</span>
+      <span>{status || "Couldn't get results"}</span>
     </section>
   );
 };

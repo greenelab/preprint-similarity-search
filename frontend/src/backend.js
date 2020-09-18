@@ -1,31 +1,5 @@
 import { CustomError } from './error';
 
-const crossRef = 'https://api.crossref.org/works/';
-
-// look up metadata info for queried preprint from crossref
-export const getPreprintInfo = async (query) => {
-  // look up info
-  const response = await fetch(crossRef + query);
-  if (!response.ok)
-    throw new Error();
-  const info = (await response.json()).message;
-
-  // rename and normalize props
-  const preprint = {
-    title: (info.title || []).flat().join(''),
-    url: info.URL || '',
-    authors: (info.author || [])
-      .map((author) => (author.given || '') + ' ' + (author.family || ''))
-      .filter((name) => name)
-      .join(', '),
-    journal: info.publisher || '',
-    year: info.accepted?.['date-parts']?.[0]?.[0] || ''
-  };
-
-  // return results
-  return preprint;
-};
-
 const backendServer = 'https://api-journal-rec.greenelab.com/doi/';
 
 // get neighbor and coordinate data from backend
@@ -41,6 +15,7 @@ export const getNeighbors = async (query) => {
     throw new CustomError(neighbors.message);
 
   // extract results
+  const preprint = neighbors.paper_info || {};
   const similarJournals = neighbors.journal_neighbors || [];
   const similarPapers = neighbors.paper_neighbors || [];
   const coordinates = neighbors.coordinates || {};
@@ -52,7 +27,7 @@ export const getNeighbors = async (query) => {
   similarPapers.forEach(removePMC);
 
   // return results
-  return { similarJournals, similarPapers, coordinates };
+  return { preprint, similarJournals, similarPapers, coordinates };
 };
 
 const metaLookup =
@@ -74,6 +49,20 @@ export const getNeighborsMetadata = async (array) => {
   // return results
   return array;
 };
+
+// clean preprint data to handle more conveniently
+export const cleanPreprint = (preprint) => ({
+  // doi
+  id: preprint.doi || null,
+  // name of paper
+  title: preprint.title || '',
+  // authors of paper
+  authors: (preprint.authors || []).split('; ').join(', '),
+  // name of journal
+  journal: preprint.publisher || '',
+  // year of publication
+  year: preprint.accepted_date.split('-')[0] || ''
+});
 
 // clean journal or paper neighbor data to handle more conveniently
 export const cleanNeighbors = (array) => {

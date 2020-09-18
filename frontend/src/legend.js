@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { pcColorA } from './map-section';
-import { pcColorC } from './map-section';
-import { countColorA } from './map-section';
-import { countColorB } from './map-section';
-import { getPcNum } from './map-section';
+import { pcColorA } from './map-sections';
+import { pcColorC } from './map-sections';
+import { countColorA } from './map-sections';
+import { countColorB } from './map-sections';
+import { getPcNum } from './map-sections';
 
 import './legend.css';
 
