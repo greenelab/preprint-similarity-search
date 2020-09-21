@@ -89,6 +89,9 @@ h3 {
   text-align: center;
   margin-bottom: 20px;
 }
+h4 {
+  margin-bottom: -10px;
+}
 
 /* general util classes */
 .center {

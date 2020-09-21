@@ -6,20 +6,25 @@ import Search from './search';
 import PreprintInfo from './preprint-info';
 import SimilarJournals from './similar-journals';
 import SimilarPapers from './similar-papers';
-import MapSection from './map-section';
+import MapSections from './map-sections';
 import About from './about';
 import Footer from './footer';
+import Status from './status';
 import { empty } from './status';
+import { success } from './status';
 
 import './app.css';
 
 // main app component
 
 export default () => {
+  // status state
+  const [status, setStatus] = useState(empty);
+
   // main data
-  const [preprint, setPreprint] = useState(empty);
-  const [similarJournals, setSimilarJournals] = useState(empty);
-  const [similarPapers, setSimilarPapers] = useState(empty);
+  const [preprint, setPreprint] = useState({});
+  const [similarJournals, setSimilarJournals] = useState([]);
+  const [similarPapers, setSimilarPapers] = useState([]);
   const [coordinates, setCoordinates] = useState({});
 
   // render
@@ -29,23 +34,27 @@ export default () => {
       <main>
         <Search
           {...{
-            preprint,
-            similarJournals,
-            similarPapers,
+            status,
+            setStatus,
             setPreprint,
             setSimilarJournals,
             setSimilarPapers,
             setCoordinates
           }}
         />
+        <Status {...{ status }} />
         <hr />
-        <PreprintInfo {...{ preprint }} />
-        <hr />
-        <SimilarPapers {...{ similarPapers }} />
-        <hr />
-        <SimilarJournals {...{ similarJournals }} />
-        <hr />
-        <MapSection {...{ coordinates }} />
+        {status === success && (
+          <>
+            <PreprintInfo {...{ preprint }} />
+            <hr />
+            <SimilarPapers {...{ similarPapers }} />
+            <hr />
+            <SimilarJournals {...{ similarJournals }} />
+            <hr />
+          </>
+        )}
+        <MapSections {...{ coordinates }} />
         <hr />
         <About />
       </main>

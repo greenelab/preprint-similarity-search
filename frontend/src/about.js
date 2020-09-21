@@ -30,7 +30,7 @@ export default () => (
       (PCs) generated from bioRxiv. Each PC represents two high level concepts
       characterized by keywords of various strengths, illustrated in the word
       cloud thumbnails above the map. Select a thumbnail to color the map by
-      that PC. Deeper orange cells will be papers that correlate more with the
+      that PC. Deeper orange squares will be papers that correlate more with the
       orange keywords in the image, and vice versa for blue.
     </p>
     <p>

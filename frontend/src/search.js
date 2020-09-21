@@ -4,28 +4,30 @@ import { useState } from 'react';
 import { useCallback } from 'react';
 import * as Sentry from '@sentry/react';
 
-import { getPreprintInfo } from './backend';
 import { getNeighbors } from './backend';
 import { getNeighborsMetadata } from './backend';
+import { cleanPreprint } from './backend';
 import { cleanNeighbors } from './backend';
 
 import { loading } from './status';
+import { success } from './status';
 
 import './search.css';
+
+const defaultSearch = 'e.g. 10.1101/833400';
 
 // search box component
 
 export default ({
-  preprint,
-  similarJournals,
-  similarPapers,
+  status,
+  setStatus,
   setPreprint,
   setSimilarJournals,
   setSimilarPapers,
   setCoordinates
 }) => {
   // default query
-  const [query, setQuery] = useState(getUrl() || '');
+  const [query, setQuery] = useState(getUrl() || defaultSearch);
 
   // on type
   const onChange = useCallback(
@@ -51,44 +53,44 @@ export default ({
         setUrl(doi);
 
       // set loading status
-      setPreprint(loading);
-      setSimilarJournals(loading);
-      setSimilarPapers(loading);
+      setStatus(loading);
 
-      // get preprint info
-      try {
-        const preprint = await getPreprintInfo(doi);
-        setPreprint(preprint);
-      } catch (error) {
-        if (error.name !== 'CustomError')
-          error.message = "Couldn't get preprint info";
-        setPreprint(error.message);
-        Sentry.captureException(error, { tags: { doi } });
-      }
-
-      // get neighbor data
+      // get preprint info and neighbor data
       try {
         let {
+          preprint,
           similarJournals,
           similarPapers,
           coordinates
         } = await getNeighbors(doi);
+        preprint = cleanPreprint(preprint);
         similarJournals = await getNeighborsMetadata(similarJournals);
         similarPapers = await getNeighborsMetadata(similarPapers);
         similarJournals = cleanNeighbors(similarJournals);
         similarPapers = cleanNeighbors(similarPapers);
+        setStatus(success);
+        setPreprint(preprint);
         setSimilarJournals(similarJournals);
         setSimilarPapers(similarPapers);
         setCoordinates(coordinates);
       } catch (error) {
         if (error.name !== 'CustomError')
           error.message = "Couldn't get results";
-        setSimilarJournals(error.message);
-        setSimilarPapers(error.message);
+        setStatus(error.message);
+        setPreprint({});
+        setSimilarJournals([]);
+        setSimilarPapers([]);
+        setCoordinates({});
         Sentry.captureException(error, { tags: { doi } });
       }
     },
-    [setPreprint, setSimilarJournals, setSimilarPapers, setCoordinates]
+    [
+      setStatus,
+      setPreprint,
+      setSimilarJournals,
+      setSimilarPapers,
+      setCoordinates
+    ]
   );
 
   // when user navigates back/forward
@@ -139,21 +141,13 @@ export default ({
           onChange={onChange}
           type='text'
           placeholder='e.g. 10.1101/833400'
-          disabled={
-            preprint === loading ||
-            similarJournals === loading ||
-            similarPapers === loading
-          }
+          disabled={status === loading}
         />
         <button
           className='search_button'
           type='submit'
           title='Search for related papers and journals'
-          disabled={
-            preprint === loading ||
-            similarJournals === loading ||
-            similarPapers === loading
-          }
+          disabled={status === loading}
         >
           <i className='fas fa-search'></i>
         </button>
