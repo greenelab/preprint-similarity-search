@@ -24,12 +24,12 @@ export default ({ selectedCell }) => {
   for (const lemma of lemmas)
     lemma.strength = (lemma.score - minScore) / (maxScore - minScore) || 0;
 
-  // height of rows and font size of text
-  const size = 10;
-  // all dimensions/positions are in terms of this, so this only changes how
-  // big things are in SVG units, which doesn't matter because viewBox is fit
-  // to contents. the purpose of this is to be a baseline for proportions
+  // height of rows and font size of text in svg units (and pixels, because
+  // width of svg is matched to view box which is fit to contents)
+  const size = 15;
 
+  // width of svg, based on view box
+  const width = (viewBox || '').split(' ')[2] || 0;
   // plot area boundaries
   const left = 0;
   const top = 0;
@@ -53,7 +53,12 @@ export default ({ selectedCell }) => {
       </p>
       <h4>Top Lemmas</h4>
       <p>
-        <svg ref={svg} viewBox={viewBox} className='chart'>
+        <svg
+          ref={svg}
+          viewBox={viewBox}
+          className='chart'
+          style={{ width: width + 'px' }}
+        >
           {lemmas.map((lemma, index) => {
             const width = Math.max(lemma.strength * (right - left), minWidth);
             const y = top + (index + 1) * size;
