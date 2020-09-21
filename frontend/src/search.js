@@ -14,6 +14,8 @@ import { success } from './status';
 
 import './search.css';
 
+const defaultSearch = 'e.g. 10.1101/833400';
+
 // search box component
 
 export default ({
@@ -25,8 +27,7 @@ export default ({
   setCoordinates
 }) => {
   // default query
-  // const [query, setQuery] = useState(getUrl() || '');
-  const [query, setQuery] = useState('e.g. 10.1101/833400'); // for testing
+  const [query, setQuery] = useState(getUrl() || defaultSearch);
 
   // on type
   const onChange = useCallback(
