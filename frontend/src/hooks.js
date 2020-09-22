@@ -6,7 +6,6 @@ import { useRef } from 'react';
 export const useViewBox = (rerender) => {
   const svg = useRef();
   const [viewBox, setViewBox] = useState(undefined);
-  console.log(viewBox);
 
   useEffect(() => {
     // if svg not mounted yet, exit

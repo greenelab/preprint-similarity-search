@@ -36,6 +36,8 @@
           .map((odds) => ({ name: odds.lemma, score: odds.odds_ratio }))
           // sort by absolute value of score
           .sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
+          // cut list to top 10 to save space
+          .slice(0, 10)
       }))
       // sort data points by coordinates
       .sort((a, b) => a.y - b.y || a.x - b.x);
