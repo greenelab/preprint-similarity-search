@@ -14,7 +14,7 @@ import './map.css';
 // size of map cells in svg units. match to bin width of plot data
 let cellSize = 0.85;
 // increase by small % to reduce anti-alias gaps between cells
-cellSize *= 1.02;
+cellSize *= 1.05;
 
 // map component
 
@@ -62,8 +62,8 @@ export default ({
             <rect
               key={number}
               className='cell'
-              x={cell.x - cellSize / 2}
-              y={cell.y - cellSize / 2}
+              x={cell.x}
+              y={cell.y}
               width={cellSize}
               height={cellSize}
               data-selected={cell === selectedCell}
