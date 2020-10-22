@@ -31,7 +31,7 @@ export const getNeighbors = async (query) => {
 };
 
 const metaLookup =
-  'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pmc&tool=AnnoRxivir&email=greenescientist@gmail.com&retmode=json&id=';
+  'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pmc&email=greenescientist@gmail.com&retmode=json&id=';
 
 // look up journal or paper metadata from nih.gov
 export const getNeighborsMetadata = async (array) => {

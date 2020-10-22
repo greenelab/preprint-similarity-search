@@ -12,9 +12,11 @@ export default () => (
       <a href='https://www.ncbi.nlm.nih.gov/pmc/tools/openftlist/'>
         PubMed Central open access documents
       </a>{' '}
-      to recommend suitable journals based on the textual content of your{' '}
+      to find similar papers and journals based on the textual content of your{' '}
       <a href='https://www.biorxiv.org/'>bioRxiv</a> or{' '}
-      <a href='https://www.medrxiv.org/'>medRxiv</a> preprint.
+      <a href='https://www.medrxiv.org/'>medRxiv</a> preprint. These results can
+      be used as a starting point when searching for a place to publish your
+      paper.
     </p>
     <p>
       The tool also provides a "map" of the PubMed Central documents, grouped
@@ -35,7 +37,7 @@ export default () => (
     </p>
     <p>
       For more information, see the{' '}
-      <a href='https://github.com/greenelab/annorxiver-journal-recommender#annorxiver-journal-recommender'>
+      <a href='https://github.com/greenelab/preprint-similarity-search'>
         readme on GitHub
       </a>
       .
