@@ -22,7 +22,7 @@ api = Api(app)
 # Quick test
 @app.route('/')
 def index():
-    return "Hello from preprint-similarity-search\n"
+    return "Hello from journal-rec-app\n"
 
 
 class JournalRecommendation(Resource):
