@@ -22,7 +22,7 @@ api = Api(app)
 # Quick test
 @app.route('/')
 def index():
-    return "Hello from journal-rec-app\n"
+    return "Hello from API server\n"
 
 
 class JournalRecommendation(Resource):
