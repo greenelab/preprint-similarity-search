@@ -9,13 +9,13 @@
 
 # (1) Clone the repository and submodule
 cd $HOME
-git clone https://github.com/greenelab/annorxiver-journal-recommender.git
-cd annorxiver-journal-recommender/server
+git clone https://github.com/greenelab/preprint-similarity-search.git
+cd preprint-similarity-search/server
 git submodule update --init
 
 # (2) Copy data files from AWS S3 to local `server/data/` directory
 mkdir data
-aws s3 cp --recursive s3://journal-rec-app/data_for_deployment ./data
+aws s3 cp --recursive s3://preprint-similarity-search/data_for_deployment ./data
 
 # (3) Set up virtualenv
 virtualenv -p python3 venv
@@ -31,7 +31,7 @@ sudo apt update
 
 # (1) Install `certbot` to manage SSL certificates,
 EMAIL="team@greenelab.com"
-DOMAIN_NAME="api-journal-rec.greenelab.com"
+DOMAIN_NAME="api-preprint-similarity-search.greenelab.com"
 
 sudo apt install certbot python-certbot-nginx -y
 sudo certbot certonly --nginx --noninteractive --no-eff-email --agree-tos \
@@ -39,12 +39,12 @@ sudo certbot certonly --nginx --noninteractive --no-eff-email --agree-tos \
 
 # (2) Set up `supervisor` to manage a Gunicorn process that starts Flask app
 sudo apt install supervisor -y
-sudo cp supervisor.conf /etc/supervisor/conf.d/
+sudo cp supervisor.conf /etc/supervisor/conf.d/gunicorn.conf
 sudo systemctl restart supervisor  # restart supervisor
 
 # (3) Set up Nginx web server
 sudo apt install nginx -y
 sudo rm -f /etc/nginx/sites-enabled/default
-sudo cp nginx.conf /etc/nginx/sites-available/journal_rec_app.conf
-sudo ln -s /etc/nginx/sites-available/journal_rec_app.conf /etc/nginx/sites-enabled/
+sudo cp nginx.conf /etc/nginx/sites-available/preprint-similarity-search.conf
+sudo ln -s /etc/nginx/sites-available/preprint-similarity-search.conf /etc/nginx/sites-enabled/
 sudo systemctl restart nginx  # restart nginx
