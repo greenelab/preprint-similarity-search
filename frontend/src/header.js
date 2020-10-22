@@ -9,8 +9,8 @@ import './header.css';
 export default () => (
   <header>
     <section>
-      <h1>AnnoRxiver</h1>
-      <h2>Journal Recommender</h2>
+      <h1>Preprint</h1>
+      <h2>Similarity Search</h2>
       <Logo className='logo' />
     </section>
   </header>
