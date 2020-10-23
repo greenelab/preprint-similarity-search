@@ -18,8 +18,8 @@ mkdir data
 aws s3 cp --recursive s3://preprint-similarity-search/data_for_deployment ./data
 
 # (3) Set up virtualenv
-virtualenv -p python3 venv
-source venv/bin/activate
+python3 -m venv ~/venv
+source ~/venv/bin/activate
 pip install -r requirements.txt
 
 # =============================================================================

@@ -9,5 +9,6 @@ pdfminer.six==20200517
 requests==2.23.0
 scikit-learn==0.22.1
 sentry-sdk[flask]==0.17.0
+setuptools>=41.0.0
 tables==3.6.1
 tensorflow==1.15.4
