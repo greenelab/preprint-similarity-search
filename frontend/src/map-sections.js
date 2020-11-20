@@ -14,7 +14,7 @@ const mapData = './data/plot.json';
 
 // word cloud "principal component" (pc) images
 export const cloudImages =
-  'https://raw.githubusercontent.com/greenelab/annorxiver/master/biorxiv/pca_association_experiment/output/word_pca_similarity/figures/pca_XX_cossim_word_cloud.png';
+  'https://raw.githubusercontent.com/greenelab/annorxiver/master/biorxiv/pca_association_experiment/output/word_pca_similarity/figure_pieces/pca_XX_cossim_word_cloud.png';
 export const startImage = 1;
 export const endImage = 50;
 
