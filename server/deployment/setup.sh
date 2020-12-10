@@ -13,6 +13,15 @@ git clone https://github.com/greenelab/preprint-similarity-search.git
 cd preprint-similarity-search/server
 git submodule update --init
 
+# If the PR `https://github.com/KrishnaswamyLab/SAUCIE/pull/38` hasn't
+# been merged, please change the following line in `SAUCIE/utils.py`:
+#     import tensorflow as tf
+# into:
+#     import tensorflow as tf
+#     if not tf.__version__.startswith("1."):
+#         import tensorflow.compat.v1 as tf
+#         tf.disable_eager_execution()
+
 # (2) Copy data files from AWS S3 to local `server/data/` directory
 mkdir data
 aws s3 cp --recursive s3://preprint-similarity-search/data_for_deployment ./data
@@ -31,9 +40,9 @@ sudo apt update
 
 # (1) Install `certbot` to manage SSL certificates,
 EMAIL="team@greenelab.com"
-DOMAIN_NAME="api-preprint-similarity-search.greenelab.com"
+DOMAIN_NAME="api-pss.greenelab.com"
 
-sudo apt install certbot python-certbot-nginx -y
+sudo apt install certbot python3-certbot-nginx -y
 sudo certbot certonly --nginx --noninteractive --no-eff-email --agree-tos \
      --email $EMAIL --domains ${DOMAIN_NAME}
 

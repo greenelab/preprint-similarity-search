@@ -1,6 +1,6 @@
 import { CustomError } from './error';
 
-const backendServer = 'https://api-preprint-similarity-search.greenelab.com/doi/';
+const backendServer = 'https://api-pss.greenelab.com/doi/';
 
 // get neighbor and coordinate data from backend
 export const getNeighbors = async (query) => {
