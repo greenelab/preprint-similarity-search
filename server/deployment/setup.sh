@@ -22,9 +22,9 @@ git submodule update --init
 #         import tensorflow.compat.v1 as tf
 #         tf.disable_eager_execution()
 
-# (2) Copy data files from AWS S3 to local `server/data/` directory
+# (2) Copy data files from Google Cloud Storage bucket to local `server/data/` directory
 mkdir data
-aws s3 cp --recursive s3://preprint-similarity-search/data_for_deployment ./data
+gsutil cp -r gs://preprint-similarity-search/data_for_deployment/* ./data
 
 # (3) Set up virtualenv
 python3 -m venv ~/venv
