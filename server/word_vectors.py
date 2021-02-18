@@ -1,10 +1,10 @@
 import numpy as np
 import pickle
-from io import BytesIO, StringIO
-from gensim.parsing.preprocessing import remove_stopwords
-from pdfminer.high_level import extract_text_to_fp
-from pdfminer.layout import LAParams
+from io import BytesIO
+import spacy
+import fitz
 
+nlp = spacy.load("en_core_web_sm")
 word_model_wv = pickle.load(open('data/word2vec_model/word_model.wv.pkl', 'rb'))
 
 def parse_content(content, maxpages=999):
@@ -17,25 +17,22 @@ def parse_content(content, maxpages=999):
     """
     
     # Have a faux file stream for parsing
-    text_to_process = StringIO()
+    text_to_process = BytesIO(content)
     
     # Use this function to write pdf text to the file stream
-    extract_text_to_fp(
-        BytesIO(content), text_to_process, 
-        disable_caching=True, maxpages=maxpages,
-        laparams=LAParams()
+    pdf_parser = fitz.open(
+        stream=text_to_process, 
+        filetype="pdf"
     )
     
     # Convert text to word vectors and continue processing
-    lines = text_to_process.getvalue().lower().split("\n")
-
     word_vectors = []
-    for line in lines:
-        preprocessed_line = remove_stopwords(line)
+    for page in pdf_parser:
+        tokens = list(map(str, nlp(page.getText())))
         word_vectors += [
             word_model_wv[tok]
-            for tok in preprocessed_line.split(" ")
-            if tok in word_model_wv
+            for tok in tokens
+            if tok in word_model_wv and tok not in nlp.Defaults.stop_words
         ]
 
     word_embedd = np.stack(word_vectors)
