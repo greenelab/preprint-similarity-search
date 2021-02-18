@@ -22,8 +22,9 @@ def get_coordinates(query_vector):
 
 
 if __name__ == "__main__":
+    np.random.seed(100)
     print(
-        get_2d_coordinates(
+        get_coordinates(
             np.random.randint(1,10,(1,300))
         )
     )

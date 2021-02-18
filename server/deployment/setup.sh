@@ -30,6 +30,7 @@ gsutil cp -r gs://preprint-similarity-search/data_for_deployment/* ./data
 python3 -m venv ~/venv
 source ~/venv/bin/activate
 pip install -r requirements.txt
+python -m spacy download en_core_web_sm
 
 # =============================================================================
 #        The following section needs `sudo` privilege:
