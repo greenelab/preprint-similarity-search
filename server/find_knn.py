@@ -4,7 +4,7 @@ import pickle
 from sklearn.neighbors import KNeighborsClassifier
 from document_downloader import get_doi_content
 from find_coordinates import get_coordinates
-from utils import create_journal_model, create_paper_models, server_log
+from utils import create_journal_model, create_paper_models, server_log, timeout
 from word_vectors import parse_content
 
 N_NEIGHBORS = 10          # number of closest neighbors to find
@@ -16,6 +16,7 @@ journal_df, journal_model = create_journal_model(N_NEIGHBORS)
 paper_models = create_paper_models(N_NEIGHBORS)
 
 
+@timeout(seconds=240)
 def get_neighbors(user_doi):
     """
     Find the closest papers and journals given an input paper's DOI.
