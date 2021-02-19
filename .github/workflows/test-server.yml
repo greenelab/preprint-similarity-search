@@ -1,0 +1,21 @@
+name: Test server
+
+on:
+  push:
+
+jobs:
+  test-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check default preprint
+        id: check
+        run: |
+          output=$(curl "https://api-pss.greenelab.com/doi/10.1101/833400" | jq '.paper_neighbors[0].distance')
+          if [[ $output = null ]]; then
+            exit 1
+          fi
+      - name: Create issue if error
+        if: ${{ failure() }}
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
