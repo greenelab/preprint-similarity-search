@@ -7,9 +7,10 @@ from find_knn import get_neighbors
 # Sentry config
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
+
 sentry_sdk.init(
     dsn="https://b1183a2fe86f4a8f951e9bb67341c07f@o7983.ingest.sentry.io/5407669",
-    integrations=[FlaskIntegration()]
+    integrations=[FlaskIntegration()],
 )
 
 
@@ -20,7 +21,7 @@ api = Api(app)
 
 
 # Quick test
-@app.route('/')
+@app.route("/")
 def index():
     return "Hello from API server\n"
 
@@ -31,17 +32,14 @@ class JournalRecommendation(Resource):
         return neighbors
 
 
-api.add_resource(
-    JournalRecommendation,
-    '/doi/<path:user_doi>'
-)
+api.add_resource(JournalRecommendation, "/doi/<path:user_doi>")
 
 
 # Sentry verification
-@app.route('/debug-sentry')
+@app.route("/debug-sentry")
 def trigger_error():
     division_by_zero = 1 / 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()

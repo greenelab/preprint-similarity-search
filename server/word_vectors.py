@@ -37,6 +37,7 @@ def parse_content(content, xml_file=True):
     Args:
         content - a PDF file's contents to be parsed
     """
+
     word_vectors = []
     if xml_file:
         biorxiv_xpath_str = (
