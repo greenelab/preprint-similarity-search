@@ -7,7 +7,7 @@ from find_coordinates import get_coordinates
 from utils import create_journal_model, create_paper_models, server_log, timeout
 from word_vectors import parse_content
 
-N_NEIGHBORS = 10          # number of closest neighbors to find
+N_NEIGHBORS = 10  # number of closest neighbors to find
 
 # Pre-load journal_model
 journal_df, journal_model = create_journal_model(N_NEIGHBORS)
@@ -41,22 +41,19 @@ def get_neighbors(user_doi):
         "paper_neighbors": paper_knn,
         "journal_neighbors": journal_knn,
         "coordinates": coordinates,
-        "paper_info": paper_metadata
+        "paper_info": paper_metadata,
     }
 
 
 def get_journal_knn(query_vec):
     """Find the K nearest journals."""
 
-    A_journal = journal_model.kneighbors_graph(query_vec, mode='distance')
+    A_journal = journal_model.kneighbors_graph(query_vec, mode="distance")
     cols = A_journal.nonzero()[1]
     journal_data = list(
         zip(
             A_journal.data,
-            journal_df
-             .reset_index()
-             .document[cols]
-             .tolist(),
+            journal_df.reset_index().document[cols].tolist(),
         )
     )
 
@@ -76,7 +73,7 @@ def get_paper_knn(query_vec):
 
     paper_knn = list()
     for id, sub_model in enumerate(paper_models, start=1):
-        sub_papers = sub_model.kneighbors_graph(query_vec, mode='distance')
+        sub_papers = sub_model.kneighbors_graph(query_vec, mode="distance")
         cols = sub_papers.nonzero()[1]
 
         dataset_rows = list(cols)
@@ -84,18 +81,18 @@ def get_paper_knn(query_vec):
 
         # Load h5 file into a store
         h5_filename = f"data/paper_dataset/sub{id}.h5"
-        store = pd.HDFStore(h5_filename, mode='r')
+        store = pd.HDFStore(h5_filename, mode="r")
         for idx, row in enumerate(dataset_rows):
             neighbor = store.select(
-                key='data', columns=['document', 'journal'], start=row, stop=row+1
+                key="data", columns=["document", "journal"], start=row, stop=row + 1
             )
             node = {
-                'distance': distances[idx],
-                'pmcid': neighbor.iloc[0].document,
+                "distance": distances[idx],
+                "pmcid": neighbor.iloc[0].document,
             }
             paper_knn.append(node)
 
         store.close()
 
-    paper_knn = sorted(paper_knn, key=lambda k: k['distance'])[:10]
+    paper_knn = sorted(paper_knn, key=lambda k: k["distance"])[:10]
     return paper_knn

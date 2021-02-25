@@ -2,6 +2,7 @@ import requests
 from flask_restful import abort
 from utils import server_log
 
+
 def get_doi_content(user_doi):
     """
     This function is designed to render the paper-journal
@@ -10,13 +11,13 @@ def get_doi_content(user_doi):
     Args:
         user_doi - a biorxiv doi that grabs the most current version of a preprint
     """
-    
+
     # Try pinging biorxiv server first
     content = ping_biorxiv_or_medrxiv(user_doi, server="biorxiv")
     pdf_url = f"http://biorxiv.org/content"
-    
+
     # If no match found try medrxiv
-    if content is None: 
+    if content is None:
         content = ping_biorxiv_or_medrxiv(user_doi, server="medrxiv")
         pdf_url = f"http://medrxiv.org/content"
 
@@ -25,17 +26,17 @@ def get_doi_content(user_doi):
             message = f"Cannot find document {user_doi} in either biorxiv or medrxiv."
             server_log(f"{message}\n")
             abort(404, message=message)
-    
-    latest_paper = content['collection'][-1]
-    
+
+    latest_paper = content["collection"][-1]
+
     paper_metadata = {
-        "title": latest_paper['title'],
-        "authors": latest_paper['authors'],
-        "doi": latest_paper['doi'],
-        "accepted_date": latest_paper['date'],
-        "publisher": "Cold Spring Harbor Laboratory"
+        "title": latest_paper["title"],
+        "authors": latest_paper["authors"],
+        "doi": latest_paper["doi"],
+        "accepted_date": latest_paper["date"],
+        "publisher": "Cold Spring Harbor Laboratory",
     }
-    
+
     # Grab latest version of PDF file
     pdf_url = f"{pdf_url}/{user_doi}v{latest_paper['version']}.full.pdf"
     try:
@@ -52,16 +53,17 @@ def get_doi_content(user_doi):
 
     return response.content, paper_metadata
 
+
 def ping_biorxiv_or_medrxiv(doi, server="biorxiv"):
     """
     This function pings biorxiv or medrxiv to see if doi exists
     within their repository
-    
+
     Args:
         doi - a doi that grabs the most current version of a preprint
     """
     api_url = f"https://api.biorxiv.org/details/{server}/{doi}"
-    
+
     try:
         response = requests.get(api_url)
     except Exception as e:
@@ -73,7 +75,7 @@ def ping_biorxiv_or_medrxiv(doi, server="biorxiv"):
         message = f"Invalid response from {api_url}"
         server_log(f"{message}\n")
         abort(response.status_code, message=message)
-    
+
     try:
         content = response.json()
     except Exception as e:
@@ -81,7 +83,7 @@ def ping_biorxiv_or_medrxiv(doi, server="biorxiv"):
         server_log(f"{message}: {e}\n")
         abort(404, message=message)
 
-    if len(content['collection']) < 1:
+    if len(content["collection"]) < 1:
         return None
-    
+
     return content
