@@ -67,85 +67,84 @@ def gather_new_papers(
 
     with open(temp_dir_filename, "w") as dir_file, open(
         temp_embed_filename, "w"
-    ) as embed_file:
-        with open(temp_token_counter, "w") as word_file:
-            dir_writer = csv.DictWriter(
-                dir_file, delimiter="\t", fieldnames=["tarfile", "file_path"]
+    ) as embed_file, open(temp_token_counter, "w") as word_file:
+        dir_writer = csv.DictWriter(
+            dir_file, delimiter="\t", fieldnames=["tarfile", "file_path"]
+        )
+        dir_writer.writeheader()
+
+        embed_writer = csv.DictWriter(
+            embed_file,
+            delimiter="\t",
+            fieldnames=["journal", "document"]
+            + [f"feat_{idx}" for idx in range(300)],
+        )
+        embed_writer.writeheader()
+
+        count_writer = csv.DictWriter(
+            word_file, delimiter="\t", fieldnames=["document", "lemma", "count"]
+        )
+        count_writer.writeheader()
+
+        # Cycle through each tar file on the server
+        for tar_file in tqdm.tqdm(tar_files):
+
+            # If not xml files skip
+            if all([suffix != ".xml" for suffix in Path(tar_file).suffixes]):
+                continue
+
+            # Grab the file from the tarfile
+            print(f"Requesting {pmc_open_access_url}{tar_file}....")
+            requested_file_stream = request.urlopen(
+                f"{pmc_open_access_url}{tar_file}"
             )
-            dir_writer.writeheader()
+            open_stream = tarfile.open(fileobj=requested_file_stream, mode="r|gz")
 
-            embed_writer = csv.DictWriter(
-                embed_file,
-                delimiter="\t",
-                fieldnames=["journal", "document"]
-                + [f"feat_{idx}" for idx in range(300)],
-            )
-            embed_writer.writeheader()
+            # Cycle through paper members
+            # Grab new papers and get the document vectors
+            while True:
 
-            count_writer = csv.DictWriter(
-                word_file, delimiter="\t", fieldnames=["document", "lemma", "count"]
-            )
-            count_writer.writeheader()
+                pmc_paper = open_stream.next()
 
-            # Cycle through each tar file on the server
-            for tar_file in tqdm.tqdm(tar_files):
+                if pmc_paper is None:
+                    break
 
-                # If not xml files skip
-                if all([suffix != ".xml" for suffix in Path(tar_file).suffixes]):
+                if pmc_paper.isdir():
                     continue
 
-                # Grab the file from the tarfile
-                print(f"Requesting {pmc_open_access_url}{tar_file}....")
-                requested_file_stream = request.urlopen(
-                    f"{pmc_open_access_url}{tar_file}"
+                if pmc_paper.name in current_pmc_set:
+                    continue
+
+                new_paper = open_stream.extractfile(pmc_paper)
+                doc_vector, word_counter = generate_vector_counts(
+                    word_model, new_paper, "//abstract/sec/*|//body/sec/*"
                 )
-                open_stream = tarfile.open(fileobj=requested_file_stream, mode="r|gz")
 
-                # Cycle through paper members
-                # Grab new papers and get the document vectors
-                while True:
+                dir_writer.writerow(
+                    {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
+                )
 
-                    pmc_paper = open_stream.next()
+                embed_writer.writerow(
+                    {
+                        "document": Path(pmc_paper.name).stem,
+                        "journal": str(Path(pmc_paper.name).parent),
+                        **dict(
+                            zip([f"feat_{idx}" for idx in range(300)], doc_vector)
+                        ),
+                    }
+                )
 
-                    if pmc_paper is None:
-                        break
-
-                    if pmc_paper.isdir():
-                        continue
-
-                    if pmc_paper.name in current_pmc_set:
-                        continue
-
-                    new_paper = open_stream.extractfile(pmc_paper)
-                    doc_vector, word_counter = generate_vector_counts(
-                        word_model, new_paper, "//abstract/sec/*|//body/sec/*"
-                    )
-
-                    dir_writer.writerow(
-                        {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
-                    )
-
-                    embed_writer.writerow(
+                for tok in word_counter:
+                    count_writer.writerow(
                         {
                             "document": Path(pmc_paper.name).stem,
-                            "journal": str(Path(pmc_paper.name).parent),
-                            **dict(
-                                zip([f"feat_{idx}" for idx in range(300)], doc_vector)
-                            ),
+                            "lemma": tok,
+                            "count": word_counter[tok],
                         }
                     )
 
-                    for tok in word_counter:
-                        count_writer.writerow(
-                            {
-                                "document": Path(pmc_paper.name).stem,
-                                "lemma": tok,
-                                "count": word_counter[tok],
-                            }
-                        )
-
-                open_stream.close()
-                requested_file_stream.close()
+            open_stream.close()
+            requested_file_stream.close()
 
 
 def generate_vector_counts(model, document_path, xpath, filter_tags=filter_tag_list):
