@@ -76,8 +76,7 @@ def gather_new_papers(
         embed_writer = csv.DictWriter(
             embed_file,
             delimiter="\t",
-            fieldnames=["journal", "document"]
-            + [f"feat_{idx}" for idx in range(300)],
+            fieldnames=["journal", "document"] + [f"feat_{idx}" for idx in range(300)],
         )
         embed_writer.writeheader()
 
@@ -95,56 +94,62 @@ def gather_new_papers(
 
             # Grab the file from the tarfile
             print(f"Requesting {pmc_open_access_url}{tar_file}....")
-            requested_file_stream = request.urlopen(
-                f"{pmc_open_access_url}{tar_file}"
-            )
+            requested_file_stream = request.urlopen(f"{pmc_open_access_url}{tar_file}")
             open_stream = tarfile.open(fileobj=requested_file_stream, mode="r|gz")
 
             # Cycle through paper members
             # Grab new papers and get the document vectors
             while True:
+                try:
 
-                pmc_paper = open_stream.next()
+                    pmc_paper = open_stream.next()
 
-                if pmc_paper is None:
-                    break
+                    if pmc_paper is None:
+                        break
 
-                if pmc_paper.isdir():
-                    continue
+                    if pmc_paper.isdir():
+                        continue
 
-                if pmc_paper.name in current_pmc_set:
-                    continue
+                    if pmc_paper.name in current_pmc_set:
+                        continue
 
-                new_paper = open_stream.extractfile(pmc_paper)
-                doc_vector, word_counter = generate_vector_counts(
-                    word_model, new_paper, "//abstract/sec/*|//body/sec/*"
-                )
+                    new_paper = open_stream.extractfile(pmc_paper)
+                    doc_vector, word_counter = generate_vector_counts(
+                        word_model, new_paper, "//abstract/sec/*|//body/sec/*"
+                    )
 
-                dir_writer.writerow(
-                    {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
-                )
+                    dir_writer.writerow(
+                        {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
+                    )
 
-                embed_writer.writerow(
-                    {
-                        "document": Path(pmc_paper.name).stem,
-                        "journal": str(Path(pmc_paper.name).parent),
-                        **dict(
-                            zip([f"feat_{idx}" for idx in range(300)], doc_vector)
-                        ),
-                    }
-                )
-                
-                if word_counter is None:
-                    continue
-
-                for tok in word_counter:
-                    count_writer.writerow(
+                    embed_writer.writerow(
                         {
                             "document": Path(pmc_paper.name).stem,
-                            "lemma": tok,
-                            "count": word_counter[tok],
+                            "journal": str(Path(pmc_paper.name).parent),
+                            **dict(
+                                zip([f"feat_{idx}" for idx in range(300)], doc_vector)
+                            ),
                         }
                     )
+
+                    if word_counter is None:
+                        continue
+
+                    for tok in word_counter:
+                        count_writer.writerow(
+                            {
+                                "document": Path(pmc_paper.name).stem,
+                                "lemma": tok,
+                                "count": word_counter[tok],
+                            }
+                        )
+
+                except tarfile.ReadError as e:
+                    print(
+                        f"File {pmc_open_access_url}{tar_file} achieved an error: {str(e)}"
+                    )
+                    print("Skipping...")
+                    break
 
             open_stream.close()
             requested_file_stream.close()
