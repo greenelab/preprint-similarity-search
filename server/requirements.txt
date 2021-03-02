@@ -1,8 +1,7 @@
-black==20.8b1
 flask==1.1.2
 flask-cors==3.0.8
 flask_restful==0.3.8
-gensim==3.8.2
+gensim==3.8.3
 gsutil==4.59
 gunicorn==20.0.4
 lxml==4.6.2
@@ -19,3 +18,4 @@ spacy==3.0.3
 tables==3.6.1
 tensorflow==2.4.1
 tqdm==4.56.2
+wheel

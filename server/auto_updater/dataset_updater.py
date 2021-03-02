@@ -133,6 +133,9 @@ def gather_new_papers(
                         ),
                     }
                 )
+                
+                if word_counter is None:
+                    continue
 
                 for tok in word_counter:
                     count_writer.writerow(
