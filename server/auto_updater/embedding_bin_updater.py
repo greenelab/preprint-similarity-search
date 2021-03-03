@@ -1,3 +1,4 @@
+import csv
 from collections import defaultdict, Counter
 import lzma
 from pathlib import Path
@@ -15,7 +16,7 @@ sys.path.append(str(Path("..").resolve()))
 from SAUCIE import SAUCIE, Loader
 
 
-def generate_centroid_dataset(paper_dataset_file):
+def generate_centroid_dataset(paper_dataset_file, output_file="centroid_dataset.tsv"):
     """
     This function calculates each journal's centroid value
     by grouping each paper embedding by the journal string and calculating
@@ -23,15 +24,54 @@ def generate_centroid_dataset(paper_dataset_file):
 
     Parameters:
         paper_dataset_file - the file that contains all the paper embeddings
+        output_file - the file that contains the journal centroids
     """
 
-    (
-        pd.read_csv(paper_dataset_file, sep="\t")
-        .groupby("journal")
-        .agg("mean")
-        .reset_index()
-        .to_csv("centroid.tsv", index=False, sep="\t")
-    )
+    journal_centroid = defaultdict(dict)
+    if Path(paper_dataset_file).suffix == ".xz":
+        infile = lzma.open(paper_dataset_file, "rt")
+    else:
+        infile = open(paper_dataset_file, "r")
+
+    reader = csv.DictReader(infile, delimiter="\t")
+
+    for line_num, line in tqdm.tqdm(enumerate(reader)):
+        if line_num == 0:
+            dim = len(line) - 2
+
+        if line["journal"] not in journal_centroid:
+            journal_centroid[line["journal"]] = {
+                "journal": line["journal"],
+                "vector": np.array([float(line[f"feat_{idx}"]) for idx in range(dim)]),
+                "counter": 1,
+            }
+
+        else:
+            journal_centroid[line["journal"]]["counter"] += 1
+            journal_centroid[line["journal"]]["vector"] += np.array(
+                [float(line[f"feat_{idx}"]) for idx in range(dim)]
+            )
+
+    infile.close()
+
+    with open(output_file, "w") as outfile:
+        writer = csv.DictWriter(
+            outfile,
+            fieldnames=["journal"] + [f"feat_{idx}" for idx in range(dim)],
+            delimiter="\t",
+        )
+        writer.writeheader()
+
+        for journal in journal_centroid:
+            mean_vec = (
+                journal_centroid[journal]["vector"]
+                / journal_centroid[journal]["counter"]
+            )
+            output_dict = {
+                f"feat_{idx}": mean_vec[idx] for idx in range(mean_vec.shape[0])
+            }
+            output_dict["journal"] = journal
+            writer.writerow(output_dict)
 
 
 def generate_SAUCIE_coordinates(
@@ -248,4 +288,10 @@ def update_paper_bins_stats(
         square_plot_df.merge(pd.DataFrame.from_records(bin_stat_records), on="bin_id")
         .reset_index(drop=True)
         .to_json(paper_landscape_json_file, orient="records", lines=False)
+    )
+
+
+if __name__ == "__main__":
+    generate_centroid_dataset(
+        "local_data/paper_dataset_full.tsv.xz", "local_data/centroid.tsv"
     )
