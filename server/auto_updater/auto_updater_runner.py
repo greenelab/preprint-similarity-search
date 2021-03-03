@@ -23,6 +23,7 @@ if __name__ == "__main__":
     current_pmc_dir_filename = "local_data/pmc_oa_file_list.tsv"
     paper_dataset_filename = "local_data/paper_dataset_full.tsv.xz"
     paper_landscape_file = "local_data/paper_dataset_tsne_square.tsv"
+    centroid_dataset_filename = "local_data/centroid_dataset.tsv"
 
     # PC AXES
     pca_axes_file = "local_data/pca_components.tsv"
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 
     # Update centroid dataset
     print("Updating centroid dataset....")
-    generate_centroid_dataset(paper_dataset_filename)
+    generate_centroid_dataset(paper_dataset_filename, centroid_dataset_filename)
 
     # merge global word counter file
     print("Merging Token Counts....")
