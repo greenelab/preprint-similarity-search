@@ -4,6 +4,7 @@ import lzma
 from pathlib import Path
 import pickle
 import sys
+import time
 
 import numpy as np
 import pandas as pd
@@ -144,26 +145,17 @@ def generate_SAUCIE_coordinates(
     )
 
 
-def get_pca_sim(landscape_df, pca_axes_df):
+def get_pca_sim(landscape_vector, pca_axes):
     """
     This function calculates the cosine similarity between
     papers within each bin and the 50 principal components generated via PCA.
 
     Parameters:
-        landscape_df - the dataframe containing the paper embeddings within each bin
-        pca_axes_df - the dataframe containing the 50 principal component axes
+        landscape_vector - the vector containing the paper embeddings within each bin
+        pca_axes - the matrix containing the 50 principal component axes
     """
 
-    bin_pca_dist = 1 - cdist(
-        pca_axes_df.values,
-        (
-            landscape_df.drop(["journal", "document"], axis=1)
-            .mean(axis=0)
-            .values[:, np.newaxis]
-            .T
-        ),
-        "cosine",
-    )
+    bin_pca_dist = 1 - cdist(pca_axes, landscape_vector, "cosine")
 
     pca_sim_df = pd.DataFrame(
         {
@@ -179,7 +171,7 @@ def get_pca_sim(landscape_df, pca_axes_df):
     return pca_sim_df
 
 
-def get_odds_ratio(bin_dict, background_dict):
+def get_odds_ratio(bin_dict, background_dict, background_sum, bin_sum, cutoff_score=20):
     """
     This function calculates the odds ratio between
     tokens within each bin and background token distribution.
@@ -188,14 +180,22 @@ def get_odds_ratio(bin_dict, background_dict):
     Parameters:
         bin_dict - the dictionary containing tokens within a given bin and their respective counts
         background_dict - the dictionary containing tokens and their respective counts
+        background_sum - total number of tokens
+        bin_sum - total number of tokens in a given bin
+        cutoff_score - a threshold to remove tokens
     """
+    # Try and filter out low count tokens to speed function up
+    filtered_bin_dict = {
+        lemma: bin_dict[lemma] for lemma in bin_dict if bin_dict[lemma] > cutoff_score
+    }
 
+    if len(filtered_bin_dict) > 0:
+        bin_dict = filtered_bin_dict
+
+    # Calculate odds ratio
     bin_words = set(bin_dict.keys())
     background_words = set(background_dict.keys())
     words_to_compute = bin_words & background_words
-
-    bin_sum = np.sum(list(bin_dict.values()))
-    background_sum = np.sum(list(background_dict.values()))
 
     word_odd_ratio_records = []
     for idx, word in enumerate(words_to_compute):
@@ -205,7 +205,7 @@ def get_odds_ratio(bin_dict, background_dict):
             {"lemma": word, "odds_ratio": np.log(top / bottom)}
         )
 
-    return pd.DataFrame.from_records(word_odd_ratio_records)
+    return word_odd_ratio_records
 
 
 def update_paper_bins_stats(
@@ -233,26 +233,57 @@ def update_paper_bins_stats(
     # PCA
     pca_axes_df = pd.read_csv(pca_axes_file, sep="\t")
     landscape_df = pd.read_csv(f"{paper_landscape_file}", sep="\t")
-    embeddings_df = pd.read_csv(f"{paper_embeddings_file}", sep="\t")
+    doc_bin_mapper = dict(zip(landscape_df["document"], landscape_df["squarebin_id"]))
 
     # Word Counts
     background_dict = pickle.load(open(global_word_counter_file, "rb"))
+    background_sum = np.sum(list(background_dict.values()))
+
+    # Read embeddings into dictionary
+    bin_centroid = defaultdict(dict)
+    if Path(paper_embeddings_file).suffix == ".xz":
+        infile = lzma.open(paper_embeddings_file, "rt")
+    else:
+        infile = open(paper_embeddings_file, "r")
+
+    reader = csv.DictReader(infile, delimiter="\t")
+
+    for line_num, line in tqdm.tqdm(enumerate(reader)):
+        if line_num == 0:
+            dim = len(line) - 2
+
+        bin_key = doc_bin_mapper[line["document"]]
+        if bin_key not in bin_centroid:
+            bin_centroid[bin_key] = {
+                "vector": np.array([float(line[f"feat_{idx}"]) for idx in range(dim)]),
+                "counter": 1,
+                "journal": Counter([line["journal"]]),
+            }
+
+        else:
+            bin_centroid[bin_key]["counter"] += 1
+            bin_centroid[bin_key]["vector"] += np.array(
+                [float(line[f"feat_{idx}"]) for idx in range(dim)]
+            )
+            bin_centroid[bin_key]["journal"].update(Counter([line["journal"]]))
+
+    infile.close()
 
     # data records
     bin_stat_records = []
 
     # Iterate through each bin
-    bin_iterator = landscape_df.squarebin_id.unique().tolist()
-    max_num = len(str(max(bin_iterator)))
-    for squarebin_id in tqdm.tqdm(bin_iterator):
-        documents = landscape_df.query(
-            f"squarebin_id == {squarebin_id}"
-        ).document.tolist()
+    max_num = len(str(max(list(bin_centroid.keys()))))
+    for squarebin_id in tqdm.tqdm(bin_centroid):
 
-        square_bin_df = embeddings_df.query(f"document in {documents}")
-        pca_sim_df = get_pca_sim(square_bin_df, pca_axes_df)
+        bin_vector = (
+            bin_centroid[squarebin_id]["vector"] / bin_centroid[squarebin_id]["counter"]
+        )
+
+        pca_sim_df = get_pca_sim([bin_vector], pca_axes_df.values)
 
         bin_num_str = "0" * (max_num - len(str(squarebin_id)))
+        start = time.time()
         bin_count_dict = pickle.load(
             open(
                 "bin_counters/" f"word_bin_{bin_num_str+str(squarebin_id)}_count.pkl",
@@ -260,25 +291,22 @@ def update_paper_bins_stats(
             )
         )
 
-        word_odds_ratios = (
-            get_odds_ratio(
-                bin_count_dict,
-                background_dict,
-            )
-            .sort_values("odds_ratio", ascending=False)
-            .head(20)
+        bin_sum = np.sum(list(bin_count_dict.values()))
+
+        word_odds_ratios = get_odds_ratio(
+            bin_count_dict, background_dict, background_sum, bin_sum
+        )
+        word_odds_ratios = sorted(
+            word_odds_ratios, key=lambda x: x["odds_ratio"], reverse=True
         )
 
         bin_stat_records.append(
             {
                 "bin_id": squarebin_id,
                 "pc": pca_sim_df.to_dict(orient="records"),
-                "count": landscape_df.shape[0],
-                "journal": dict(Counter(landscape_df.journal.tolist()).items()),
-                "bin_odds": [
-                    dict(lemma=pair[0], odds=pair[1])
-                    for pair in zip(word_odds_ratios.lemma, word_odds_ratios.odds_ratio)
-                ],
+                "count": bin_centroid[squarebin_id]["counter"],
+                "journal": dict(bin_centroid[squarebin_id]["journal"].items()),
+                "bin_odds": word_odds_ratios[:20],
             }
         )
 
@@ -288,10 +316,4 @@ def update_paper_bins_stats(
         square_plot_df.merge(pd.DataFrame.from_records(bin_stat_records), on="bin_id")
         .reset_index(drop=True)
         .to_json(paper_landscape_json_file, orient="records", lines=False)
-    )
-
-
-if __name__ == "__main__":
-    generate_centroid_dataset(
-        "local_data/paper_dataset_full.tsv.xz", "local_data/centroid.tsv"
     )

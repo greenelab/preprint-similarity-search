@@ -118,6 +118,9 @@ def gather_new_papers(
                         word_model, new_paper, "//abstract/sec/*|//body/sec/*"
                     )
 
+                    if word_counter is None:
+                        continue
+
                     dir_writer.writerow(
                         {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
                     )
@@ -131,9 +134,6 @@ def gather_new_papers(
                             ),
                         }
                     )
-
-                    if word_counter is None:
-                        continue
 
                     for tok in word_counter:
                         count_writer.writerow(
@@ -265,16 +265,21 @@ def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
     pickle.dump(global_word_counter_obj, open(global_word_obj, "wb"))
 
     # Get max number of characters
-    max_num = len(str(max(list(bin_dict.values()))))
-    bin_num_str = "0" * (max_num - len(str(squarebin_id)))
+    max_num = len(str(max(all_paper_bins["squarebin_id"].tolist())))
 
     # For each bin update the token count
     for square_bin in token_bin_dictionaries:
+        bin_num_str = "0" * (max_num - len(str(square_bin)))
+
         object_to_be_updated = pickle.load(
-            open(f"bin_counters/word_bin_{square_bin}_count.pkl", "rb")
+            open(
+                f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl", "rb"
+            )
         )
         object_to_be_updated.update(token_bin_dictionaries[square_bin])
         pickle.dump(
             object_to_be_updated,
-            open(f"bin_counters/word_bin_{square_bin}_count.pkl", "wb"),
+            open(
+                f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl", "wb"
+            ),
         )
