@@ -44,8 +44,8 @@ const PreprintInfo = ({
               <span ref={tooltipRef} {...tooltipProps} className="tooltip">
                 These results were generated using the PDF version of the
                 preprint, which is less reliable and can reduce the accuracy of
-                predictions. Check back later when the HTML version is
-                available.
+                predictions. Check back later when the full-text version is
+                available from bioRxiv.
               </span>,
               document.body
             )}
