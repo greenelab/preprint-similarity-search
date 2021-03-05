@@ -13,7 +13,7 @@ export default ({ status }) => {
   if (status === empty) {
     return (
       <section className='center gray'>
-        <i className='fas fa-exclamation icon_with_text'></i>
+        <i className='fas fa-exclamation'></i>
         <span>Search for a doi</span>
       </section>
     );
@@ -22,7 +22,7 @@ export default ({ status }) => {
   if (status === loading) {
     return (
       <section className='center gray'>
-        <i className='fas fa-spinner fa-spin icon_with_text'></i>
+        <i className='fas fa-spinner fa-spin'></i>
         <span>Loading...</span>
       </section>
     );
@@ -33,7 +33,7 @@ export default ({ status }) => {
 
   return (
     <section className='center red'>
-      <i className='far fa-times-circle icon_with_text'></i>
+      <i className='far fa-times-circle'></i>
       <span>{status || "Couldn't get results"}</span>
     </section>
   );

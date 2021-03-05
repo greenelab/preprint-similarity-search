@@ -47,7 +47,8 @@ export default ({ coordinates }) => {
     <>
       <section id='map'>
         <h3>
-          <i className='fas fa-map heading_icon'></i>Map of PubMed Central
+          <i className='fas fa-map'></i>
+          <span>Map of PubMed Central</span>
         </h3>
         <CloudButtons {...{ selectedPc, setSelectedPc }} />
         <Map
@@ -60,7 +61,8 @@ export default ({ coordinates }) => {
           <hr />
           <section id='cell-details'>
             <h3>
-              <i className='fas fa-square heading_icon'></i>Selected Square
+              <i className='fas fa-square'></i>
+              <span>Selected Square</span>
             </h3>
             <CellDetails {...{ selectedCell, selectedPc, setSelectedPc }} />
           </section>

@@ -14,7 +14,8 @@ const link = 'https://www.ncbi.nlm.nih.gov/pmc/articles/';
 export default ({ similarPapers }) => (
   <section id='similar-papers'>
     <h3>
-      <i className='fas fa-scroll heading_icon'></i>Most Similar Papers
+      <i className='fas fa-scroll'></i>
+      <span>Most Similar Papers</span>
     </h3>
     {similarPapers.map(
       (

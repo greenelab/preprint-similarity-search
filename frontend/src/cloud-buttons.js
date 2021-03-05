@@ -1,19 +1,14 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { useState } from 'react';
-import { useRef } from 'react';
-import { usePopper } from 'react-popper';
 
 import { startImage } from './map-sections';
 import { endImage } from './map-sections';
 import { range } from './map-sections';
 import { getPcNum } from './map-sections';
 import { getCloudUrl } from './map-sections';
+import { useTooltip } from './hooks';
 
 import './cloud-buttons.css';
-
-// tooltip open delay
-const delay = 200;
 
 // cloud image button components
 
@@ -27,44 +22,20 @@ export default ({ selectedPc, setSelectedPc }) => (
 
 // cloud image button component
 const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
-  // component state
-  const [hover, setHover] = useState(false);
-  const [reference, setReference] = useState(null);
-  const [popper, setPopper] = useState(null);
-
-  // tooltip timer
-  const timeout = useRef();
-
-  // make tooltip
-  const { styles, attributes, update } = usePopper(reference, popper, {
-    placement: 'top',
-    modifiers: [
-      // https://github.com/popperjs/popper-core/issues/1138
-      { name: 'computeStyles', options: { adaptive: false } },
-      { name: 'offset', options: { offset: [0, 10] } },
-      { name: 'flip', options: { rootBoundary: 'document' } }
-    ]
-  });
+  // tooltip
+  const { show, anchorRef, tooltipRef, tooltipProps, update } = useTooltip();
 
   // render
   return (
     <>
       <button
-        ref={setReference}
+        ref={anchorRef}
         className='cloud_button'
         data-number={getPcNum(number)}
         data-selected={selectedPc === number}
         onClick={() =>
           selectedPc === number ? setSelectedPc(null) : setSelectedPc(number)
         }
-        onMouseEnter={() => {
-          window.clearTimeout(timeout.current);
-          timeout.current = window.setTimeout(() => setHover(true), delay);
-        }}
-        onMouseLeave={() => {
-          window.clearTimeout(timeout.current);
-          setHover(false);
-        }}
       >
         <img
           src={getCloudUrl(number)}
@@ -73,17 +44,16 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
           onLoad={update}
         />
       </button>
-      {hover &&
+      {show &&
         createPortal(
           <img
-            ref={setPopper}
+            ref={tooltipRef}
             src={getCloudUrl(number)}
             className='cloud_enlarged'
             title={'Select principal component ' + getPcNum(number)}
             alt={'Select principal component ' + getPcNum(number)}
             onLoad={update}
-            style={styles.popper}
-            {...attributes.popper}
+            {...tooltipProps}
           />,
           document.body
         )}

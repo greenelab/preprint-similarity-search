@@ -16,6 +16,7 @@ export const getNeighbors = async (query) => {
 
   // extract results
   const preprint = neighbors.paper_info || {};
+  preprint.xml_found = neighbors.xml_found;
   const similarJournals = neighbors.journal_neighbors || [];
   const similarPapers = neighbors.paper_neighbors || [];
   const coordinates = neighbors.coordinates || {};
@@ -61,7 +62,9 @@ export const cleanPreprint = (preprint) => ({
   // name of journal
   journal: preprint.publisher || '',
   // year of publication
-  year: preprint.accepted_date.split('-')[0] || ''
+  year: preprint.accepted_date.split('-')[0] || '',
+  // is preliminary (PDF) result or XML/HTML result
+  prelim: preprint.xml_found ? false : true
 });
 
 // clean journal or paper neighbor data to handle more conveniently

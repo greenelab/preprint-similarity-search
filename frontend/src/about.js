@@ -5,7 +5,8 @@ import React from 'react';
 export default () => (
   <section id='help'>
     <h3>
-      <i className='fas fa-question-circle heading_icon'></i>About this tool
+      <i className='fas fa-question-circle'></i>
+      <span>About this tool</span>
     </h3>
     <p>
       This tool uses a machine learning model trained on 1.7 million{' '}

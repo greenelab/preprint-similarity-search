@@ -14,7 +14,8 @@ const link = 'https://www.google.com/search?q=';
 export default ({ similarJournals }) => (
   <section id='similar-journals'>
     <h3>
-      <i className='fas fa-bookmark heading_icon'></i>Most Similar Journals
+      <i className='fas fa-bookmark'></i>
+      <span>Most Similar Journals</span>
     </h3>
     {similarJournals.map(({ journal, rank, distance, strength }, index) => (
       <div key={index} className='card'>
