@@ -1,22 +1,20 @@
-import React from 'react';
+import { pcColorA } from "./map-sections";
+import { pcColorC } from "./map-sections";
+import { countColorA } from "./map-sections";
+import { countColorB } from "./map-sections";
+import { getPcNum } from "./map-sections";
 
-import { pcColorA } from './map-sections';
-import { pcColorC } from './map-sections';
-import { countColorA } from './map-sections';
-import { countColorB } from './map-sections';
-import { getPcNum } from './map-sections';
-
-import './legend.css';
+import "./legend.css";
 
 // map legend component
 
-export default ({ selectedPc, coordinates }) => (
-  <p className='legend'>
+const Legend = ({ selectedPc, coordinates }) => (
+  <p className="legend">
     {selectedPc && (
       <>
         <span>
           <span
-            className='legend_square'
+            className="legend_square"
             style={{ backgroundColor: pcColorA }}
           ></span>
           pos pc
@@ -24,7 +22,7 @@ export default ({ selectedPc, coordinates }) => (
         </span>
         <span>
           <span
-            className='legend_square'
+            className="legend_square"
             style={{ backgroundColor: pcColorC }}
           ></span>
           neg pc
@@ -36,14 +34,14 @@ export default ({ selectedPc, coordinates }) => (
       <>
         <span>
           <span
-            className='legend_square'
+            className="legend_square"
             style={{ backgroundColor: countColorA }}
           ></span>
           many papers
         </span>
         <span>
           <span
-            className='legend_square'
+            className="legend_square"
             style={{ backgroundColor: countColorB }}
           ></span>
           few papers
@@ -54,8 +52,8 @@ export default ({ selectedPc, coordinates }) => (
       <>
         <span>
           <span
-            className='legend_circle'
-            style={{ backgroundColor: 'var(--red)' }}
+            className="legend_circle"
+            style={{ backgroundColor: "var(--red)" }}
           ></span>
           your preprint
         </span>
@@ -63,3 +61,5 @@ export default ({ selectedPc, coordinates }) => (
     )}
   </p>
 );
+
+export default Legend;

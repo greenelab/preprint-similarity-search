@@ -1,16 +1,15 @@
-import React from 'react';
-import { Fragment } from 'react';
+import { Fragment } from "react";
 
-import { useViewBox } from './hooks';
+import { useViewBox } from "./hooks";
 
-import './cell-details.css';
+import "./cell-details.css";
 
 // lemma plot settings
 const maxChars = 20;
 
 // details of selected cell component
 
-export default ({ selectedCell }) => {
+const CellDetails = ({ selectedCell }) => {
   // get lemmas from selected cell
   const lemmas = selectedCell.lemmas || [];
 
@@ -29,7 +28,7 @@ export default ({ selectedCell }) => {
   const size = 15;
 
   // width of svg, based on view box
-  const width = (viewBox || '').split(' ')[2] || 0;
+  const width = (viewBox || "").split(" ")[2] || 0;
   // plot area boundaries
   const left = 0;
   const top = 0;
@@ -45,9 +44,9 @@ export default ({ selectedCell }) => {
       <h4>Top Journals</h4>
       <p>
         {selectedCell.journals.map(({ name, count }, number) => (
-          <span key={number} className='cell_detail_row'>
-            <span className='truncate'>{name}</span>
-            <span className='truncate'>{count.toLocaleString()} papers</span>
+          <span key={number} className="cell_detail_row">
+            <span className="truncate">{name}</span>
+            <span className="truncate">{count.toLocaleString()} papers</span>
           </span>
         ))}
       </p>
@@ -56,8 +55,8 @@ export default ({ selectedCell }) => {
         <svg
           ref={svg}
           viewBox={viewBox}
-          className='chart'
-          style={{ width: width + 'px' }}
+          className="chart"
+          style={{ width: width + "px" }}
         >
           {lemmas.map((lemma, index) => {
             const width = Math.max(lemma.strength * (right - left), minWidth);
@@ -67,14 +66,14 @@ export default ({ selectedCell }) => {
                 <text
                   x={left - size * 0.75}
                   y={y}
-                  textAnchor='end'
-                  dominantBaseline='middle'
+                  textAnchor="end"
+                  dominantBaseline="middle"
                   fontSize={size}
                   title={lemma.name}
                 >
-                  {lemma.name.length > maxChars ?
-                    lemma.name.substr(0, maxChars) + '...' :
-                    lemma.name}
+                  {lemma.name.length > maxChars
+                    ? lemma.name.substr(0, maxChars) + "..."
+                    : lemma.name}
                 </text>
                 <rect
                   x={left}
@@ -92,8 +91,8 @@ export default ({ selectedCell }) => {
           <text
             x={(left + right) / 2}
             y={bottom + size * 0.75}
-            textAnchor='middle'
-            dominantBaseline='hanging'
+            textAnchor="middle"
+            dominantBaseline="hanging"
             fontSize={size}
           >
             Association Strength
@@ -103,3 +102,5 @@ export default ({ selectedCell }) => {
     </>
   );
 };
+
+export default CellDetails;

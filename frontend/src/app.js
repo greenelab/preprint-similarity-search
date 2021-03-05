@@ -1,23 +1,22 @@
-import React from 'react';
-import { useState } from 'react';
+import { useState } from "react";
 
-import Header from './header';
-import Search from './search';
-import PreprintInfo from './preprint-info';
-import SimilarJournals from './similar-journals';
-import SimilarPapers from './similar-papers';
-import MapSections from './map-sections';
-import About from './about';
-import Footer from './footer';
-import Status from './status';
-import { empty } from './status';
-import { success } from './status';
+import Header from "./header";
+import Search from "./search";
+import PreprintInfo from "./preprint-info";
+import SimilarJournals from "./similar-journals";
+import SimilarPapers from "./similar-papers";
+import MapSections from "./map-sections";
+import About from "./about";
+import Footer from "./footer";
+import Status from "./status";
+import { empty } from "./status";
+import { success } from "./status";
 
-import './app.css';
+import "./app.css";
 
 // main app component
 
-export default () => {
+const App = () => {
   // status state
   const [status, setStatus] = useState(empty);
 
@@ -39,7 +38,7 @@ export default () => {
             setPreprint,
             setSimilarJournals,
             setSimilarPapers,
-            setCoordinates
+            setCoordinates,
           }}
         />
         <Status {...{ status }} />
@@ -62,3 +61,5 @@ export default () => {
     </>
   );
 };
+
+export default App;
