@@ -45,7 +45,7 @@ const PreprintInfo = ({
                 These results were generated using the PDF version of the
                 preprint, which is less reliable and can reduce the accuracy of
                 predictions. Check back later when the full-text version is
-                available from bioRxiv.
+                available.
               </span>,
               document.body
             )}
