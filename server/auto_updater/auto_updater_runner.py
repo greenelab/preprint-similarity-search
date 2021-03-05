@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     # Load the word model
     word_model = Word2Vec.load("../data/word2vec_model/biorxiv_300.model")
-
+    """
     # Run the pipeline
     # Gather new papers from pmc
     print("Gathering Papers....")
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     update_dictionaries(
         global_word_counter_file_obj, paper_landscape_file, temp_token_count_filename
     )
-
+    """
     # Update landscape file
     print("Updating Paper Landscape....")
     update_paper_bins_stats(
