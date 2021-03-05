@@ -246,7 +246,9 @@ def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
             all_paper_bins["document"].tolist(), all_paper_bins["squarebin_id"].tolist()
         )
     )
-    global_word_counter_obj = pickle.load(open(global_word_obj, "rb"))
+    with open(global_word_obj, "rb") as word_count_file:
+        global_word_counter_obj = pickle.load(word_count_file)
+
     token_bin_dictionaries = defaultdict(Counter)
 
     with open(new_word_counts, "r") as infile:
@@ -261,8 +263,9 @@ def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
                 {line["lemma"]: int(line["count"])}
             )
             global_word_counter_obj[line["lemma"]] += int(line["count"])
-
-    pickle.dump(global_word_counter_obj, open(global_word_obj, "wb"))
+    
+    with open(global_word_obj, "wb") as word_count_file:
+        pickle.dump(global_word_counter_obj, word_count_file)
 
     # Get max number of characters
     max_num = len(str(max(all_paper_bins["squarebin_id"].tolist())))
