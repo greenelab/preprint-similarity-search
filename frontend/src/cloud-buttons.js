@@ -1,24 +1,25 @@
-import React from 'react';
-import { createPortal } from 'react-dom';
+import { createPortal } from "react-dom";
 
-import { startImage } from './map-sections';
-import { endImage } from './map-sections';
-import { range } from './map-sections';
-import { getPcNum } from './map-sections';
-import { getCloudUrl } from './map-sections';
-import { useTooltip } from './hooks';
+import { startImage } from "./map-sections";
+import { endImage } from "./map-sections";
+import { range } from "./map-sections";
+import { getPcNum } from "./map-sections";
+import { getCloudUrl } from "./map-sections";
+import { useTooltip } from "./hooks";
 
-import './cloud-buttons.css';
+import "./cloud-buttons.css";
 
 // cloud image button components
 
-export default ({ selectedPc, setSelectedPc }) => (
-  <p className='center'>
+const CloudButtons = ({ selectedPc, setSelectedPc }) => (
+  <p className="center">
     {range(startImage, endImage).map((number) => (
       <CloudButton key={number} {...{ number, selectedPc, setSelectedPc }} />
     ))}
   </p>
 );
+
+export default CloudButtons;
 
 // cloud image button component
 const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
@@ -30,7 +31,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
     <>
       <button
         ref={anchorRef}
-        className='cloud_button'
+        className="cloud_button"
         data-number={getPcNum(number)}
         data-selected={selectedPc === number}
         onClick={() =>
@@ -39,8 +40,8 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
       >
         <img
           src={getCloudUrl(number)}
-          title={'Select principal component ' + getPcNum(number)}
-          alt={'Select principal component ' + getPcNum(number)}
+          title={"Select principal component " + getPcNum(number)}
+          alt={"Select principal component " + getPcNum(number)}
           onLoad={update}
         />
       </button>
@@ -49,9 +50,9 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
           <img
             ref={tooltipRef}
             src={getCloudUrl(number)}
-            className='cloud_enlarged'
-            title={'Select principal component ' + getPcNum(number)}
-            alt={'Select principal component ' + getPcNum(number)}
+            className="cloud_enlarged"
+            title={"Select principal component " + getPcNum(number)}
+            alt={"Select principal component " + getPcNum(number)}
             onLoad={update}
             {...tooltipProps}
           />,

@@ -1,33 +1,31 @@
-import React from 'react';
+import color from "color";
 
-import color from 'color';
+import "./card.css";
 
-import './card.css';
+const rankColorA = color("#ff980020");
+const rankColorB = color("#ff9800");
 
-const rankColorA = color('#ff980020');
-const rankColorB = color('#ff9800');
-
-const link = 'https://www.google.com/search?q=';
+const link = "https://www.google.com/search?q=";
 
 // similar journals section
 
-export default ({ similarJournals }) => (
-  <section id='similar-journals'>
+const SimilarJournals = ({ similarJournals }) => (
+  <section id="similar-journals">
     <h3>
-      <i className='fas fa-bookmark'></i>
+      <i className="fas fa-bookmark"></i>
       <span>Most Similar Journals</span>
     </h3>
     {similarJournals.map(({ journal, rank, distance, strength }, index) => (
-      <div key={index} className='card'>
+      <div key={index} className="card">
         <div
-          className='card_score'
-          title={'Distance score: ' + distance}
+          className="card_score"
+          title={"Distance score: " + distance}
           style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
         >
           {rank}
         </div>
-        <div className='card_details'>
-          <a href={link + journal} className='card_detail'>
+        <div className="card_details">
+          <a href={link + journal} className="card_detail">
             {journal}
           </a>
         </div>
@@ -35,3 +33,5 @@ export default ({ similarJournals }) => (
     ))}
   </section>
 );
+
+export default SimilarJournals;

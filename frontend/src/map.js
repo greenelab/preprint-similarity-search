@@ -1,15 +1,13 @@
-import React from 'react';
+import { pcColorA } from "./map-sections";
+import { pcColorB } from "./map-sections";
+import { pcColorC } from "./map-sections";
+import { countColorA } from "./map-sections";
+import { countColorB } from "./map-sections";
+import { getPcNum } from "./map-sections";
+import { boost } from "./math";
+import { useViewBox } from "./hooks";
 
-import { pcColorA } from './map-sections';
-import { pcColorB } from './map-sections';
-import { pcColorC } from './map-sections';
-import { countColorA } from './map-sections';
-import { countColorB } from './map-sections';
-import { getPcNum } from './map-sections';
-import { boost } from './math';
-import { useViewBox } from './hooks';
-
-import './map.css';
+import "./map.css";
 
 // size of map cells in svg units. match to bin width of plot data
 let cellSize = 0.85;
@@ -19,12 +17,12 @@ cellSize *= 1.05;
 // map component
 
 // pubmed central map section
-export default ({
+const Map = ({
   cells,
   selectedPc,
   selectedCell,
   setSelectedCell,
-  coordinates
+  coordinates,
 }) => {
   // component state
   const [svg, viewBox] = useViewBox(cells);
@@ -48,53 +46,54 @@ export default ({
     }
     const absScore =
       Math.max(...cells.map((cell) => Math.abs(cell.score))) || 1;
-    for (const cell of cells)
-      cell.strength = cell.score / absScore || 0;
+    for (const cell of cells) cell.strength = cell.score / absScore || 0;
   }
 
   // render
   return (
     <p>
-      <svg ref={svg} viewBox={viewBox} className='map'>
+      <svg ref={svg} viewBox={viewBox} className="map">
         {
           // put extra selected cell last, so it will always be on top
           cells.concat(selectedCell || []).map((cell, number) => (
             <rect
               key={number}
-              className='cell'
+              className="cell"
               x={cell.x}
               y={cell.y}
               width={cellSize}
               height={cellSize}
               data-selected={cell === selectedCell}
               fill={
-                selectedPc ?
-                  pcColorB.mix(
-                    cell.strength > 0 ? pcColorA : pcColorC,
-                    Math.abs(cell.strength)
-                  ) :
-                  countColorB.mix(countColorA, cell.strength)
+                selectedPc
+                  ? pcColorB.mix(
+                      cell.strength > 0 ? pcColorA : pcColorC,
+                      Math.abs(cell.strength)
+                    )
+                  : countColorB.mix(countColorA, cell.strength)
               }
               strokeWidth={cellSize / 4}
               onClick={() =>
-                cell === selectedCell ?
-                  setSelectedCell(null) :
-                  setSelectedCell(cell)
+                cell === selectedCell
+                  ? setSelectedCell(null)
+                  : setSelectedCell(cell)
               }
             />
           ))
         }
-        {typeof coordinates.x === 'number' &&
-          typeof coordinates.y === 'number' && (
-          <circle
-            className='marker'
-            strokeWidth={cellSize / 4}
-            cx={coordinates.x}
-            cy={coordinates.y}
-            r={cellSize / 2}
-          />
-        )}
+        {typeof coordinates.x === "number" &&
+          typeof coordinates.y === "number" && (
+            <circle
+              className="marker"
+              strokeWidth={cellSize / 4}
+              cx={coordinates.x}
+              cy={coordinates.y}
+              r={cellSize / 2}
+            />
+          )}
       </svg>
     </p>
   );
 };
+
+export default Map;

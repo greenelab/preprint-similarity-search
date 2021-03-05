@@ -1,30 +1,29 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useCallback } from 'react';
-import * as Sentry from '@sentry/react';
+import { useEffect } from "react";
+import { useState } from "react";
+import { useCallback } from "react";
+import * as Sentry from "@sentry/react";
 
-import { getNeighbors } from './backend';
-import { getNeighborsMetadata } from './backend';
-import { cleanPreprint } from './backend';
-import { cleanNeighbors } from './backend';
+import { getNeighbors } from "./backend";
+import { getNeighborsMetadata } from "./backend";
+import { cleanPreprint } from "./backend";
+import { cleanNeighbors } from "./backend";
 
-import { loading } from './status';
-import { success } from './status';
+import { loading } from "./status";
+import { success } from "./status";
 
-import './search.css';
+import "./search.css";
 
-const defaultSearch = 'e.g. 10.1101/833400';
+const defaultSearch = "e.g. 10.1101/833400";
 
 // search box component
 
-export default ({
+const Search = ({
   status,
   setStatus,
   setPreprint,
   setSimilarJournals,
   setSimilarPapers,
-  setCoordinates
+  setCoordinates,
 }) => {
   // default query
   const [query, setQuery] = useState(getUrl() || defaultSearch);
@@ -45,12 +44,10 @@ export default ({
       setQuery(doi);
 
       // exit if doi query empty
-      if (!doi)
-        return;
+      if (!doi) return;
 
       // update url based on search
-      if (updateUrl)
-        setUrl(doi);
+      if (updateUrl) setUrl(doi);
 
       // set loading status
       setStatus(loading);
@@ -61,7 +58,7 @@ export default ({
           preprint,
           similarJournals,
           similarPapers,
-          coordinates
+          coordinates,
         } = await getNeighbors(doi);
         preprint = cleanPreprint(preprint);
         similarJournals = await getNeighborsMetadata(similarJournals);
@@ -74,7 +71,7 @@ export default ({
         setSimilarPapers(similarPapers);
         setCoordinates(coordinates);
       } catch (error) {
-        if (error.name !== 'CustomError')
+        if (error.name !== "CustomError")
           error.message = "Couldn't get results";
         setStatus(error.message);
         setPreprint({});
@@ -89,7 +86,7 @@ export default ({
       setPreprint,
       setSimilarJournals,
       setSimilarPapers,
-      setCoordinates
+      setCoordinates,
     ]
   );
 
@@ -97,8 +94,7 @@ export default ({
   const onNav = useCallback(() => {
     // get new doi
     const doi = getUrl();
-    if (!doi)
-      return;
+    if (!doi) return;
     // put doi in search box
     setQuery(doi);
     // run search, without updating url since browser does this automatically
@@ -107,27 +103,26 @@ export default ({
 
   // search for doi in url if any on first load
   useEffect(() => {
-    if (getUrl())
-      search(getUrl());
+    if (getUrl()) search(getUrl());
   }, [search]);
 
   // listen for user back/forward nav
   useEffect(() => {
-    window.addEventListener('popstate', onNav);
-    return () => window.removeEventListener('popstate', onNav);
+    window.addEventListener("popstate", onNav);
+    return () => window.removeEventListener("popstate", onNav);
   }, [onNav, search]);
 
   // render
   return (
-    <section id='search'>
-      <p className='center'>
+    <section id="search">
+      <p className="center">
         <i>
-          Enter the <a href='https://www.biorxiv.org/'>bioRxiv</a> or{' '}
-          <a href='https://www.medrxiv.org/'>medRxiv</a> DOI of your preprint
+          Enter the <a href="https://www.biorxiv.org/">bioRxiv</a> or{" "}
+          <a href="https://www.medrxiv.org/">medRxiv</a> DOI of your preprint
         </i>
       </p>
       <form
-        className='search'
+        className="search"
         onSubmit={(event) => {
           // prevent page from navigating away/refreshing on submit
           event.preventDefault();
@@ -136,20 +131,20 @@ export default ({
         }}
       >
         <input
-          className='search_input'
+          className="search_input"
           value={query}
           onChange={onChange}
-          type='text'
-          placeholder='e.g. 10.1101/833400'
+          type="text"
+          placeholder="e.g. 10.1101/833400"
           disabled={status === loading}
         />
         <button
-          className='search_button'
-          type='submit'
-          title='Search for related papers and journals'
+          className="search_button"
+          type="submit"
+          title="Search for related papers and journals"
           disabled={status === loading}
         >
-          <i className='fas fa-search'></i>
+          <i className="fas fa-search"></i>
         </button>
       </form>
     </section>
@@ -160,18 +155,19 @@ export default ({
 // remove everything before first number, eg "doi:"
 // remove version at end, eg "v4"
 const cleanDoi = (query) =>
-  query.replace(/^\D*/g, '').replace(/v\d+$/g, '').trim();
+  query.replace(/^\D*/g, "").replace(/v\d+$/g, "").trim();
 
 // get doi from url
 const getUrl = () =>
-  new URLSearchParams(window.location.search.substring(1)).get('doi');
+  new URLSearchParams(window.location.search.substring(1)).get("doi");
 
 // put doi in url as param
 const setUrl = (doi) => {
   const oldUrl = window.location.href;
   const base = window.location.href.split(/[?#]/)[0];
-  const newUrl = base + '?doi=' + doi;
+  const newUrl = base + "?doi=" + doi;
   // compare old to new url to prevent duplicate history entries when refreshing
-  if (oldUrl !== newUrl)
-    window.history.pushState(null, null, newUrl);
+  if (oldUrl !== newUrl) window.history.pushState(null, null, newUrl);
 };
+
+export default Search;
