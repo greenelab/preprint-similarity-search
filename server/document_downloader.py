@@ -27,7 +27,7 @@ def get_doi_content(user_doi):
             abort(404, message=message)
 
     latest_paper = content["collection"][-1]
-    print(latest_paper)
+
     paper_metadata = {
         "title": latest_paper["title"],
         "authors": latest_paper["authors"],
@@ -67,7 +67,6 @@ def get_doi_content(user_doi):
         server_log(f"{message}\n")
         abort(response.status_code, message=message)
 
-    print(xml_found)
     return response.content, paper_metadata, xml_found
 
 
