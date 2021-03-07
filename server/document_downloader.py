@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import requests
 from flask_restful import abort
 from utils import server_log
@@ -29,7 +27,7 @@ def get_doi_content(user_doi):
             abort(404, message=message)
 
     latest_paper = content["collection"][-1]
-
+    print(latest_paper)
     paper_metadata = {
         "title": latest_paper["title"],
         "authors": latest_paper["authors"],
@@ -40,7 +38,7 @@ def get_doi_content(user_doi):
 
     # Grab latest version of the XML file if available
     accepted_date = latest_paper["date"].replace("-", "/")
-    file_url = f"{doc_url}/early/{accepted_date}/{str(Path(user_doi).stem)}.source.xml"
+    file_url = f"{doc_url}/early/{accepted_date}/{user_doi.split('/')[-1]}.source.xml"
     xml_found = False
 
     try:
@@ -69,6 +67,7 @@ def get_doi_content(user_doi):
         server_log(f"{message}\n")
         abort(response.status_code, message=message)
 
+    print(xml_found)
     return response.content, paper_metadata, xml_found
 
 
