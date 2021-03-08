@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import requests
 from flask_restful import abort
 from utils import server_log
@@ -40,7 +38,7 @@ def get_doi_content(user_doi):
 
     # Grab latest version of the XML file if available
     accepted_date = latest_paper["date"].replace("-", "/")
-    file_url = f"{doc_url}/early/{accepted_date}/{str(Path(user_doi).stem)}.source.xml"
+    file_url = f"{doc_url}/early/{accepted_date}/{user_doi.split('/')[-1]}.source.xml"
     xml_found = False
 
     try:
