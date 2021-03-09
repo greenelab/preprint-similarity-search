@@ -137,6 +137,7 @@ const Search = ({
           type="text"
           placeholder="e.g. 10.1101/833400"
           disabled={status === loading}
+          onFocus={({ target }) => target.select()}
         />
         <button
           className="search_button"
