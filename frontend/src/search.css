@@ -23,6 +23,7 @@
   background: var(--orange);
 }
 .search_input {
+  width: 0;
   flex-grow: 1;
   padding-left: 10px;
   padding-right: 10px;
@@ -31,6 +32,8 @@
 .search_button {
   background: var(--light-orange);
   width: 50px;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 .search_input[disabled],
 .search_button[disabled] {
