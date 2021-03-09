@@ -2,8 +2,8 @@
 
 [⭐ OPEN THE APP ⭐](https://greenelab.github.io/preprint-similarity-search/)
 
-Also available as a web server:
-`https://api-preprint-similarity-search.greenelab.com/doi/[YOUR DOI HERE]`
+**Also available as an API:
+`https://api-preprint-similarity-search.greenelab.com/doi/[YOUR DOI HERE]`**
 
 ### About this tool
 

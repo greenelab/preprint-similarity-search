@@ -2,8 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: stretch;
-  width: 280px;
-  max-width: 100%;
+  width: 100%;
   height: 40px;
   margin: 20px auto;
 }
@@ -27,6 +26,7 @@
   flex-grow: 1;
   padding-left: 10px;
   padding-right: 10px;
+  text-align: center;
 }
 .search_button {
   background: var(--light-orange);
