@@ -89,7 +89,11 @@ def gather_new_papers(
         for tar_file in tqdm.tqdm(tar_files):
 
             # If not xml files skip
-            if all([suffix != ".xml" for suffix in Path(tar_file).suffixes]):
+            if all(suffix != ".xml" for suffix in Path(tar_file).suffixes):
+                continue
+            
+            # If temp file skip
+            if Path(tar_file).suffix == ".tmp":
                 continue
 
             # Grab the file from the tarfile
