@@ -12,7 +12,16 @@ import pandas as pd
 import spacy
 import tqdm
 
-nlp = spacy.load("en_core_web_sm")
+disabled_pipelines = [
+    "tagger",
+    "parser",
+    "ner",
+    "lemmatizer",
+    "attribute_ruler",
+    "tok2vec",
+]
+nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
+
 filter_tag_list = [
     "sc",
     "italic",
@@ -91,7 +100,7 @@ def gather_new_papers(
             # If not xml files skip
             if all(suffix != ".xml" for suffix in Path(tar_file).suffixes):
                 continue
-            
+
             # If temp file skip
             if Path(tar_file).suffix == ".tmp":
                 continue
@@ -267,7 +276,7 @@ def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
                 {line["lemma"]: int(line["count"])}
             )
             global_word_counter_obj[line["lemma"]] += int(line["count"])
-    
+
     with open(global_word_obj, "wb") as word_count_file:
         pickle.dump(global_word_counter_obj, word_count_file)
 
