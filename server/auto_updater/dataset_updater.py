@@ -187,6 +187,10 @@ def generate_vector_counts(model, document_path, xpath, filter_tags=filter_tag_l
     ET.strip_tags(tree, *filter_tags)
 
     root = tree.getroot()
+    
+    if root.attrib['article-type'].strip() != 'research-article':
+        return [], None
+    
     all_text = root.xpath(xpath)
     all_text = list(map(lambda x: "".join(list(x.itertext())), all_text))
     all_text = " ".join(all_text)
