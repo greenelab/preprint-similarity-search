@@ -128,15 +128,15 @@ def gather_new_papers(
 
                     new_paper = open_stream.extractfile(pmc_paper)
                     doc_vector, word_counter = generate_vector_counts(
-                        word_model, new_paper, "//abstract/sec/*|//body/sec/*"
+                        word_model, new_paper, "//abstract/sec/*|//abstract/p|//body/sec/*|//body/p"
+                    )
+                    
+                    dir_writer.writerow(
+                        {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
                     )
 
                     if word_counter is None:
                         continue
-
-                    dir_writer.writerow(
-                        {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
-                    )
 
                     embed_writer.writerow(
                         {
