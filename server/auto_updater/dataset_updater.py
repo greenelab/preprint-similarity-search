@@ -291,15 +291,16 @@ def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
     for square_bin in token_bin_dictionaries:
         bin_num_str = "0" * (max_num - len(str(square_bin)))
 
-        object_to_be_updated = pickle.load(
-            open(
-                f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl", "rb"
-            )
-        )
+        pkl_filename = f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl"
+        if os.path.exists(pkl_filename):
+            object_to_be_updated = pickle.load(open(pkl_filename, "rb"))
+        else:
+            object_to_be_updated = Counter()
+
         object_to_be_updated.update(token_bin_dictionaries[square_bin])
         pickle.dump(
             object_to_be_updated,
             open(
-                f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl", "wb"
+                pkl_filename, "wb"
             ),
         )
