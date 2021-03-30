@@ -128,9 +128,11 @@ def gather_new_papers(
 
                     new_paper = open_stream.extractfile(pmc_paper)
                     doc_vector, word_counter = generate_vector_counts(
-                        word_model, new_paper, "//abstract/sec/*|//abstract/p|//body/sec/*|//body/p"
+                        word_model,
+                        new_paper,
+                        "//abstract/sec/*|//abstract/p|//body/sec/*|//body/p",
                     )
-                    
+
                     dir_writer.writerow(
                         {"tarfile": tar_file, "file_path": str(pmc_paper.name)}
                     )
@@ -187,10 +189,10 @@ def generate_vector_counts(model, document_path, xpath, filter_tags=filter_tag_l
     ET.strip_tags(tree, *filter_tags)
 
     root = tree.getroot()
-    
-    if root.attrib['article-type'].strip() != 'research-article':
+
+    if root.attrib["article-type"].strip() != "research-article":
         return [], None
-    
+
     all_text = root.xpath(xpath)
     all_text = list(map(lambda x: "".join(list(x.itertext())), all_text))
     all_text = " ".join(all_text)
@@ -291,16 +293,13 @@ def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
     for square_bin in token_bin_dictionaries:
         bin_num_str = "0" * (max_num - len(str(square_bin)))
 
-        pkl_filename = f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl"
-        if os.path.exists(pkl_filename):
+        pkl_filename = (
+            f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl"
+        )
+        if Path(pkl_filename).exists():
             object_to_be_updated = pickle.load(open(pkl_filename, "rb"))
         else:
             object_to_be_updated = Counter()
 
         object_to_be_updated.update(token_bin_dictionaries[square_bin])
-        pickle.dump(
-            object_to_be_updated,
-            open(
-                pkl_filename, "wb"
-            ),
-        )
+        pickle.dump(object_to_be_updated, open(pkl_filename, "wb"))
