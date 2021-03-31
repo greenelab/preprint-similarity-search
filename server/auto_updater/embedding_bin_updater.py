@@ -135,7 +135,7 @@ def generate_SAUCIE_coordinates(
         )
 
     # Write updated file to disk
-    (mapped_data_df.to_csv(paper_landscape_file, sep="\t", index=False))
+    mapped_data_df.to_csv(paper_landscape_file, sep="\t", index=False)
 
     # Write updated bin plot to disk
     (
@@ -209,9 +209,9 @@ def get_odds_ratio(bin_dict, background_dict, background_sum, bin_sum, cutoff_sc
 
 
 def update_paper_bins_stats(
-    paper_landscape_file,
+    word_bin_dict,
+    background_dict,
     paper_embeddings_file,
-    global_word_counter_file,
     pca_axes_file,
     paper_landscape_json_file,
 ):
@@ -222,9 +222,9 @@ def update_paper_bins_stats(
     Lastly, it writes out all calculated statistics into a json file for the front end to use.
 
     Parameters:
-        paper_landscape_file - the file that contains papers mapped to bins
+        word_bin_dict - the dicionary containing token counts for word bins
+        background_dict - the dictionary containing token counts for all papers
         paper_embeddings_file - the file that contains papers and their respective embeddings
-        global_word_counter_file - the background pickle file
         pca_axes_file- the file containing the PC axes
         paper_landscape_json_file - the file containing the json file the front end uses
     """
@@ -232,12 +232,6 @@ def update_paper_bins_stats(
     # Grab the PCA axes and Word counts
     # PCA
     pca_axes_df = pd.read_csv(pca_axes_file, sep="\t")
-    landscape_df = pd.read_csv(f"{paper_landscape_file}", sep="\t")
-    doc_bin_mapper = dict(zip(landscape_df["document"], landscape_df["squarebin_id"]))
-
-    # Word Counts
-    background_dict = pickle.load(open(global_word_counter_file, "rb"))
-    background_sum = np.sum(list(background_dict.values()))
 
     # Read embeddings into dictionary
     bin_centroid = defaultdict(dict)
@@ -269,37 +263,31 @@ def update_paper_bins_stats(
 
     infile.close()
 
+    # Word Counts
+    background_sum = np.sum(list(background_dict.values()))
+
     # data records
     bin_stat_records = []
 
     # Iterate through each bin
-    max_num = len(str(max(list(bin_centroid.keys()))))
-    for squarebin_id in tqdm.tqdm(bin_centroid):
+    for squarebin_id in tqdm.tqdm(word_bin_dict):
 
-        bin_vector = (
-            bin_centroid[squarebin_id]["vector"] / bin_centroid[squarebin_id]["counter"]
-        )
-
-        pca_sim_df = get_pca_sim([bin_vector], pca_axes_df.values)
-
-        bin_num_str = "0" * (max_num - len(str(squarebin_id)))
-        start = time.time()
-        bin_count_dict = pickle.load(
-            open(
-                "bin_counters/" f"word_bin_{bin_num_str+str(squarebin_id)}_count.pkl",
-                "rb",
-            )
-        )
-
-        bin_sum = np.sum(list(bin_count_dict.values()))
-
+        # Calculate bin token odds
+        bin_sum = np.sum(list(word_bin_dict[squarebin_id].values()))
         word_odds_ratios = get_odds_ratio(
-            bin_count_dict, background_dict, background_sum, bin_sum
+            word_bin_dict[squarebin_id], background_dict, background_sum, bin_sum
         )
         word_odds_ratios = sorted(
             word_odds_ratios, key=lambda x: x["odds_ratio"], reverse=True
         )
 
+        # Calculate pca enrichment
+        bin_vector = (
+            bin_centroid[squarebin_id]["vector"] / bin_centroid[squarebin_id]["counter"]
+        )
+        pca_sim_df = get_pca_sim([bin_vector], pca_axes_df.values)
+
+        # Write stats as records
         bin_stat_records.append(
             {
                 "bin_id": squarebin_id,

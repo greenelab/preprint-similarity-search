@@ -2,7 +2,7 @@ from dataset_updater import (
     gather_new_papers,
     generate_vector_counts,
     merge_files,
-    update_dictionaries,
+    calculate_token_counts,
 )
 
 from embedding_bin_updater import (
@@ -30,8 +30,8 @@ if __name__ == "__main__":
 
     # Word count Dicts
     global_word_counter_file = "local_data/global_doc_word_counter.tsv.xz"
-    global_word_counter_file_obj = "local_data/background_token_counter.pkl"
 
+    # Paper landscape
     paper_landscape_json_file = "local_data/pmc_square_plot.json"
 
     # Load the word model
@@ -73,16 +73,16 @@ if __name__ == "__main__":
 
     # Update the dictionaries
     print("Updating Token/Token bin Counts....")
-    update_dictionaries(
-        global_word_counter_file_obj, paper_landscape_file, temp_token_count_filename
+    background_dict, word_bin_dict = calculate_token_counts(
+        global_word_counter_file, paper_landscape_file
     )
 
     # Update landscape file
     print("Updating Paper Landscape....")
     update_paper_bins_stats(
-        paper_landscape_file,
+        word_bin_dict,
+        background_dict,
         paper_dataset_filename,
-        global_word_counter_file_obj,
         pca_axes_file,
         paper_landscape_json_file,
     )
