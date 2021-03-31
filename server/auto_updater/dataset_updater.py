@@ -44,6 +44,43 @@ filter_tag_list = [
 parser = ET.XMLParser(encoding="UTF-8", recover=True)
 
 
+def calculate_token_counts(global_word_count_file, paper_landscape_file):
+    """
+    This function is designed to update the current token counts used for the preprint landscape.
+
+    Parameters:
+        global_word_count_file - the file path for token counts in every file within PMCOA
+        paper_landscape_file - the file that contains the bins each paper is assigned to
+    """
+
+    all_paper_bins = pd.read_csv(paper_landscape_file, sep="\t")
+
+    bin_dict = dict(
+        zip(
+            all_paper_bins["document"].tolist(), all_paper_bins["squarebin_id"].tolist()
+        )
+    )
+
+    background_bin_dictionaries = defaultdict(Counter)
+    word_bin_dictionaries = {
+        squarebin_id: defaultdict(Counter)
+        for squarebin_id in all_paper_bins["squarebin_id"].unique()
+    }
+
+    with lzma.open(global_word_count_file, "rt") as infile:
+        count_reader = csv.DictReader(
+            infile,
+            delimiter="\t",
+        )
+
+        for line in tqdm.tqdm(count_reader):
+            token_count_entry = {line["lemma"]: int(line["count"])}
+            background_bin_dictionaries.update(token_count_entry)
+            word_bin_dictionaries[bin_dict[line["document"]]].update(token_count_entry)
+
+    return background_bin_dictionaries, word_bin_dictionaries
+
+
 def gather_new_papers(
     current_pmc_file,
     word_model,
@@ -247,59 +284,3 @@ def merge_files(current_file, temp_file):
 
     infile.close()
     outfile.close()
-
-
-def update_dictionaries(global_word_obj, paper_landscape_file, new_word_counts):
-    """
-    This function is designed to update the current token counts used for the preprint landscape.
-
-    Parameters:
-        global_word_obj - the file path for the background count pickle file
-        paper_landscape_file - the file that contains the bins each paper is assigned to
-        new_word_counts - The file that contains token counts for all new papers
-    """
-
-    all_paper_bins = pd.read_csv(paper_landscape_file, sep="\t")
-    bin_dict = dict(
-        zip(
-            all_paper_bins["document"].tolist(), all_paper_bins["squarebin_id"].tolist()
-        )
-    )
-    with open(global_word_obj, "rb") as word_count_file:
-        global_word_counter_obj = pickle.load(word_count_file)
-
-    token_bin_dictionaries = defaultdict(Counter)
-
-    with open(new_word_counts, "r") as infile:
-        count_reader = csv.DictReader(
-            infile,
-            delimiter="\t",
-        )
-
-        for line in tqdm.tqdm(count_reader):
-            square_bin = bin_dict[line["document"]]
-            token_bin_dictionaries[square_bin].update(
-                {line["lemma"]: int(line["count"])}
-            )
-            global_word_counter_obj[line["lemma"]] += int(line["count"])
-
-    with open(global_word_obj, "wb") as word_count_file:
-        pickle.dump(global_word_counter_obj, word_count_file)
-
-    # Get max number of characters
-    max_num = len(str(max(all_paper_bins["squarebin_id"].tolist())))
-
-    # For each bin update the token count
-    for square_bin in token_bin_dictionaries:
-        bin_num_str = "0" * (max_num - len(str(square_bin)))
-
-        pkl_filename = (
-            f"bin_counters/word_bin_{bin_num_str + str(square_bin)}_count.pkl"
-        )
-        if Path(pkl_filename).exists():
-            object_to_be_updated = pickle.load(open(pkl_filename, "rb"))
-        else:
-            object_to_be_updated = Counter()
-
-        object_to_be_updated.update(token_bin_dictionaries[square_bin])
-        pickle.dump(object_to_be_updated, open(pkl_filename, "wb"))
