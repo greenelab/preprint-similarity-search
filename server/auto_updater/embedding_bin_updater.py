@@ -141,7 +141,7 @@ def generate_SAUCIE_coordinates(
     (
         square_bin_plot_df.assign(bin_id=mapped_data_df.squarebin_id.unique().shape[0])[
             ["x", "y", "xmin", "xmax", "ymin", "ymax", "bin_id"]
-        ].to_json("pmc_square_plot.json", orient="records", lines=False)
+        ].to_json(paper_landscape_json_file, orient="records", lines=False)
     )
 
 
