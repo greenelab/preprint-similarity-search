@@ -78,7 +78,7 @@ def calculate_token_counts(global_word_count_file, paper_landscape_file):
             background_bin_dictionaries.update(token_count_entry)
             word_bin_dictionaries[bin_dict[line["document"]]].update(token_count_entry)
 
-    return background_bin_dictionaries, word_bin_dictionaries
+    return background_bin_dictionaries, word_bin_dictionaries, bin_dict
 
 
 def gather_new_papers(

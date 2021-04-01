@@ -211,6 +211,7 @@ def get_odds_ratio(bin_dict, background_dict, background_sum, bin_sum, cutoff_sc
 def update_paper_bins_stats(
     word_bin_dict,
     background_dict,
+    doc_bin_mapper,
     paper_embeddings_file,
     pca_axes_file,
     paper_landscape_json_file,
@@ -224,6 +225,7 @@ def update_paper_bins_stats(
     Parameters:
         word_bin_dict - the dicionary containing token counts for word bins
         background_dict - the dictionary containing token counts for all papers
+        doc_bin_mapper - the dictionary that contains the bin each document is assigned
         paper_embeddings_file - the file that contains papers and their respective embeddings
         pca_axes_file- the file containing the PC axes
         paper_landscape_json_file - the file containing the json file the front end uses
