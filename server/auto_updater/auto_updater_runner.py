@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     # Update the dictionaries
     print("Updating Token/Token bin Counts....")
-    background_dict, word_bin_dict = calculate_token_counts(
+    background_dict, word_bin_dict, doc_bin_mapper = calculate_token_counts(
         global_word_counter_file, paper_landscape_file
     )
 
@@ -82,6 +82,7 @@ if __name__ == "__main__":
     update_paper_bins_stats(
         word_bin_dict,
         background_dict,
+        doc_bin_mapper,
         paper_dataset_filename,
         pca_axes_file,
         paper_landscape_json_file,
