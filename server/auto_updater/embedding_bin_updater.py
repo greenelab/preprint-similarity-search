@@ -139,7 +139,7 @@ def generate_SAUCIE_coordinates(
 
     # Write updated bin plot to disk
     (
-        square_bin_plot_df.assign(bin_id=mapped_data_df.squarebin_id.unique().shape[0])[
+        square_bin_plot_df.assign(bin_id=mapped_data_df.squarebin_id.unique().tolist())[
             ["x", "y", "xmin", "xmax", "ymin", "ymax", "bin_id"]
         ].to_json(paper_landscape_json_file, orient="records", lines=False)
     )
