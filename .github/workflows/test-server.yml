@@ -2,8 +2,8 @@ name: Test server
 
 on:
   schedule:
-    # every 4 hours
-    - cron: '0 */4 * * *'
+    # every 12 hours
+    - cron: '0 */12 * * *'
 
 jobs:
   test-server:
