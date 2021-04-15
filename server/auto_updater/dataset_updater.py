@@ -16,7 +16,6 @@ disabled_pipelines = [
     "tagger",
     "parser",
     "ner",
-    "lemmatizer",
     "attribute_ruler",
     "tok2vec",
 ]
@@ -230,16 +229,17 @@ def generate_vector_counts(model, document_path, xpath, filter_tags=filter_tag_l
     if root.attrib["article-type"].strip() != "research-article":
         return [], None
 
+    root = tree.getroot()
     all_text = root.xpath(xpath)
     all_text = list(map(lambda x: "".join(list(x.itertext())), all_text))
     all_text = " ".join(all_text)
 
     all_tokens = list(
         map(
-            str,
+            lambda x: str(x.lemma_),
             filter(
-                lambda tok: str(tok) in model.wv
-                and str(tok) not in nlp.Defaults.stop_words,
+                lambda tok: str(tok.lemma_) in model.wv
+                and str(tok.lemma_) not in nlp.Defaults.stop_words,
                 nlp(all_text),
             ),
         )
