@@ -49,17 +49,22 @@ def parse_content(content, xml_file=True):
         # Process xml without specified tags
         ET.strip_tags(root, *filter_tag_list)
 
-        all_tags = root.xpath(biorxiv_xpath_str)
-        text_to_process = list(map(lambda x: list(x.itertext()), list(all_tags)))
+        all_text = root.xpath(biorxiv_xpath_str)
+        all_text = list(map(lambda x: "".join(list(x.itertext())), all_text))
+        all_text = " ".join(all_text)
 
-        for text in text_to_process:
-            tokens = list(map(str, nlp(text[0])))
+        all_tokens = list(
+            map(
+                lambda x: str(x.lemma_),
+                filter(
+                    lambda tok: str(tok.lemma_) in model.wv
+                    and str(tok.lemma_) not in nlp.Defaults.stop_words,
+                    nlp(all_text),
+                ),
+            )
+        )
 
-            word_vectors += [
-                word_model_wv[tok]
-                for tok in tokens
-                if tok in word_model_wv and tok not in nlp.Defaults.stop_words
-            ]
+        word_vectors += [model.wv[text] for text in all_tokens]
     else:
 
         # Have a faux file stream for parsing
@@ -70,12 +75,11 @@ def parse_content(content, xml_file=True):
 
         # Convert text to word vectors and continue processing
         for page in pdf_parser:
-            tokens = list(map(str, nlp(page.getText())))
 
             word_vectors += [
-                word_model_wv[tok]
-                for tok in tokens
-                if tok in word_model_wv and tok not in nlp.Defaults.stop_words
+                word_model_wv[str(tok.lemma_)]
+                for tok in nlp(page.getText())
+                if str(tok.lemma_) in word_model_wv and str(tok.lemma_) not in nlp.Defaults.stop_words
             ]
 
     word_embedd = np.stack(word_vectors)
