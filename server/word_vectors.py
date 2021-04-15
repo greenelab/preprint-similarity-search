@@ -55,10 +55,10 @@ def parse_content(content, xml_file=True):
 
         all_tokens = list(
             map(
-                lambda x: str(x.lemma_),
+                lambda x: x.lemma_,
                 filter(
-                    lambda tok: str(tok.lemma_) in model.wv
-                    and str(tok.lemma_) not in nlp.Defaults.stop_words,
+                    lambda tok: tok.lemma_ in model.wv
+                    and tok.lemma_ not in nlp.Defaults.stop_words,
                     nlp(all_text),
                 ),
             )
@@ -77,9 +77,10 @@ def parse_content(content, xml_file=True):
         for page in pdf_parser:
 
             word_vectors += [
-                word_model_wv[str(tok.lemma_)]
+                word_model_wv[tok.lemma_]
                 for tok in nlp(page.getText())
-                if str(tok.lemma_) in word_model_wv and str(tok.lemma_) not in nlp.Defaults.stop_words
+                if tok.lemma_ in word_model_wv
+                and tok.lemma_ not in nlp.Defaults.stop_words
             ]
 
     word_embedd = np.stack(word_vectors)
