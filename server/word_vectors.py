@@ -6,7 +6,8 @@ import numpy as np
 import spacy
 import fitz
 
-nlp = spacy.load("en_core_web_sm")
+disabled_pipelines = ["parser", "ner"]
+nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
 word_model_wv = pickle.load(open("data/word2vec_model/word_model.wv.pkl", "rb"))
 filter_tag_list = [
     "sc",
