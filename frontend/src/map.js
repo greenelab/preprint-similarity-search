@@ -12,7 +12,7 @@ import { useViewBox } from './hooks';
 import './map.css';
 
 // size of map cells in svg units. match to bin width of plot data
-let cellSize = 0.65;
+let cellSize = 0.85;
 // increase by small % to reduce anti-alias gaps between cells
 cellSize *= 1.05;
 
