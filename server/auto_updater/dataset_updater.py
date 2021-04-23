@@ -12,13 +12,7 @@ import pandas as pd
 import spacy
 import tqdm
 
-disabled_pipelines = [
-    "tagger",
-    "parser",
-    "ner",
-    "attribute_ruler",
-    "tok2vec",
-]
+disabled_pipelines = ["parser", "ner"]
 nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
 
 filter_tag_list = [
@@ -236,10 +230,10 @@ def generate_vector_counts(model, document_path, xpath, filter_tags=filter_tag_l
 
     all_tokens = list(
         map(
-            lambda x: str(x.lemma_),
+            lambda x: x.lemma_,
             filter(
-                lambda tok: str(tok.lemma_) in model.wv
-                and str(tok.lemma_) not in nlp.Defaults.stop_words,
+                lambda tok: tok.lemma_ in model.wv
+                and tok.lemma_ not in nlp.Defaults.stop_words,
                 nlp(all_text),
             ),
         )
