@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_restful import Resource, Api
 from find_knn import get_neighbors
 
-
+"""
 # Sentry config
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -11,7 +11,7 @@ sentry_sdk.init(
     dsn="https://b1183a2fe86f4a8f951e9bb67341c07f@o7983.ingest.sentry.io/5407669",
     integrations=[FlaskIntegration()]
 )
-
+"""
 
 # Create app
 app = Flask(__name__)
