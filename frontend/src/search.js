@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useCallback } from "react";
-//import * as Sentry from "@sentry/react";
+
+// import * as Sentry from "@sentry/react";
 
 import { getNeighbors } from "./backend";
 import { getNeighborsMetadata } from "./backend";
@@ -78,7 +79,7 @@ const Search = ({
         setSimilarJournals([]);
         setSimilarPapers([]);
         setCoordinates({});
-        //Sentry.captureException(error, { tags: { doi } });
+        // Sentry.captureException(error, { tags: { doi } });
       }
     },
     [
