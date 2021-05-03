@@ -73,6 +73,7 @@ def get_doi_content(user_doi):
 
 
 
+
 def ping_biorxiv_or_medrxiv(doi, server="biorxiv"):
     """
     This function pings biorxiv or medrxiv to see if doi exists
