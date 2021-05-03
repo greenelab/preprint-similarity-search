@@ -43,6 +43,7 @@ def generate_centroid_dataset(paper_dataset_file, output_file="centroid_dataset.
         if line["journal"] not in journal_centroid:
             journal_centroid[line["journal"]] = {
                 "journal": line["journal"],
+                "document": line["document"],
                 "vector": np.array([float(line[f"feat_{idx}"]) for idx in range(dim)]),
                 "counter": 1,
             }
@@ -58,7 +59,7 @@ def generate_centroid_dataset(paper_dataset_file, output_file="centroid_dataset.
     with open(output_file, "w") as outfile:
         writer = csv.DictWriter(
             outfile,
-            fieldnames=["journal"] + [f"feat_{idx}" for idx in range(dim)],
+            fieldnames=["journal", "document"] + [f"feat_{idx}" for idx in range(dim)],
             delimiter="\t",
         )
         writer.writeheader()
@@ -72,6 +73,7 @@ def generate_centroid_dataset(paper_dataset_file, output_file="centroid_dataset.
                 f"feat_{idx}": mean_vec[idx] for idx in range(mean_vec.shape[0])
             }
             output_dict["journal"] = journal
+            output_dict["document"] = journal_centroid["document"]
             writer.writerow(output_dict)
 
 
