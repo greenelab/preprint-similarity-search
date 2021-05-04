@@ -9,7 +9,7 @@ import CellDetails from "./cell-details";
 import color from "color";
 
 // map cell data
-const mapData = "./data/pmc_square_plot.json";
+const mapData = "./data/plot.json";
 
 // word cloud "principal component" (pc) images
 export const cloudImages =
