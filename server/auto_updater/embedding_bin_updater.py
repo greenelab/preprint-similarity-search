@@ -73,7 +73,7 @@ def generate_centroid_dataset(paper_dataset_file, output_file="centroid_dataset.
                 f"feat_{idx}": mean_vec[idx] for idx in range(mean_vec.shape[0])
             }
             output_dict["journal"] = journal
-            output_dict["document"] = journal_centroid["document"]
+            output_dict["document"] = journal_centroid[journal]["document"]
             writer.writerow(output_dict)
 
 
