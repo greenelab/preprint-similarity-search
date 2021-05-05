@@ -70,10 +70,13 @@ def get_doi_content(user_doi):
     return response.content, paper_metadata, xml_found
 
 
+
+
 def ping_biorxiv_or_medrxiv(doi, server="biorxiv"):
     """
     This function pings biorxiv or medrxiv to see if doi exists
     within their repository
+
     Args:
         doi - a doi that grabs the most current version of a preprint
     """
