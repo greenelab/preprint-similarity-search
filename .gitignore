@@ -4,5 +4,5 @@ __pycache__
 # emacs
 *~
 
-# virtual env
-server/venv/
+# backend data directory
+server/data
