@@ -8,7 +8,9 @@ import fitz
 
 disabled_pipelines = ["parser", "ner"]
 nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
+
 word_model_wv = pickle.load(open("data/word2vec_model/word_model.wv.pkl", "rb"))
+
 filter_tag_list = [
     "sc",
     "italic",
@@ -28,6 +30,7 @@ filter_tag_list = [
     "tr",
     "td",
 ]
+
 parser = ET.XMLParser(encoding="UTF-8", recover=True)
 
 
@@ -50,25 +53,21 @@ def parse_content(content, xml_file=True):
 
         # Process xml without specified tags
         ET.strip_tags(root, *filter_tag_list)
-
         all_text = root.xpath(biorxiv_xpath_str)
         all_text = list(map(lambda x: "".join(list(x.itertext())), all_text))
         all_text = " ".join(all_text)
-
         all_tokens = list(
             map(
                 lambda x: x.lemma_,
                 filter(
-                    lambda tok: tok.lemma_ in model.wv
+                    lambda tok: tok.lemma_ in word_model_wv
                     and tok.lemma_ not in nlp.Defaults.stop_words,
                     nlp(all_text),
                 ),
             )
         )
-
-        word_vectors += [model.wv[text] for text in all_tokens]
+        word_vectors += [word_model_wv[text] for text in all_tokens]
     else:
-
         # Have a faux file stream for parsing
         text_to_process = BytesIO(content)
 
@@ -77,7 +76,6 @@ def parse_content(content, xml_file=True):
 
         # Convert text to word vectors and continue processing
         for page in pdf_parser:
-
             word_vectors += [
                 word_model_wv[tok.lemma_]
                 for tok in nlp(page.getText())
@@ -87,4 +85,5 @@ def parse_content(content, xml_file=True):
 
     word_embedd = np.stack(word_vectors)
     query_vec = word_embedd.mean(axis=0)[np.newaxis, :]
+
     return query_vec

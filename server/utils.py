@@ -38,32 +38,41 @@ def server_log(message):
     print(datetime.now(), message, sep=": ", flush=True)
 
 
-def create_journal_model(n_neighbors):
-    journal_df = pd.read_csv("data/journal_dataset.tsv", sep="\t").set_index("journal")
+def get_journal_model(n_neighbors):
+    journal_df = pd.read_csv("data/journals.tsv", sep="\t").set_index("journal")
     journal_model = KNeighborsClassifier(n_neighbors)
     journal_model.fit(
-        journal_df.drop("document", axis=1), journal_df.reset_index().journal
+        journal_df.drop("document", axis=1),
+        journal_df.reset_index().journal
     )
+    
     return (journal_df, journal_model)
 
 
-def create_paper_models(n_neighbors):
-    """Return a list of paper models based on pickled sub-kd-trees."""
+def get_paper_model(n_neighbors):
+    """Build and return the paper model based on pickled kd-tree."""
 
     print("", flush=True)  # add a blank line before log section
     server_log("Start initializing paper models")
 
-    N_PAPER_MODELS = 4  # number of sub-models for paper dataset
-    PAPER_MODEL_SIZE = 431539  # number of nodes in each sub-model
-    paper_models = list()
-    for id in range(1, N_PAPER_MODELS + 1):
-        pkl_filename = f"data/paper_dataset/sub{id}.pkl"
-        sub_model = KNeighborsClassifier(n_neighbors)
-        sub_model.n_samples_fit_ = PAPER_MODEL_SIZE
-        sub_model.effective_metric_ = "euclidean"
-        sub_model._fit_method = "kd_tree"
-        sub_model._tree = pickle.load(open(pkl_filename, "rb"))
-        paper_models.append(sub_model)
-
+    pkl_filename = "data/papers/kd_tree.pkl"
+    with open(pkl_filename, "rb") as fh:
+        kd_tree = pickle.load(fh)
+        
+    paper_model = KNeighborsClassifier(n_neighbors)
+    paper_model.n_samples_fit_ = len(kd_tree.idx_array)
+    paper_model.effective_metric_ = "euclidean"
+    paper_model._fit_method = 'kd_tree'
+    paper_model._tree = kd_tree
+    
     server_log("Finished loading paper models\n")
-    return paper_models
+    
+    return paper_model
+
+
+def get_pmc_map():
+    pkl_filename = "data/papers/pmc_map.pkl"
+    with open(pkl_filename, "rb") as fh:
+        pmc_map = pickle.load(fh)
+
+    return pmc_map
