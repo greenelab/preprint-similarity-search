@@ -52,11 +52,11 @@ def get_neighbors(user_doi):
 def get_journal_knn(query_vec):
     """Find the K nearest journals."""
 
-    A_journal = journal_model.kneighbors_graph(query_vec, mode="distance")
-    matched_rows = list(A_journal.indices)
+    top_journals = journal_model.kneighbors_graph(query_vec, mode="distance")
+    matched_rows = list(top_journals.indices)
     journal_data = list(
         zip(
-            A_journal.data,
+            top_journals.data,
             journal_df.reset_index().document[matched_rows].tolist(),
         )
     )
@@ -75,12 +75,11 @@ def get_journal_knn(query_vec):
 def get_paper_knn(query_vec):
     """Find the K nearest papers."""
 
+    top_papers = paper_model.kneighbors_graph(query_vec, mode="distance")
+    matched_rows = list(top_papers.indices)
+    distances = list(top_papers.data)
+
     paper_knn = list()
-    papers = paper_model.kneighbors_graph(query_vec, mode="distance")
-
-    matched_rows = list(papers.indices)
-    distances = list(papers.data)
-
     for idx, row in enumerate(matched_rows):
         node = {
             "distance": distances[idx],
