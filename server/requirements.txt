@@ -1,5 +1,5 @@
 flask==1.1.2
-flask-cors==3.0.8
+flask-cors==3.0.9
 flask_restful==0.3.8
 gensim==3.8.3
 gsutil==4.59
