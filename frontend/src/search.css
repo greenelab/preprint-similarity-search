@@ -16,7 +16,7 @@
 }
 .search_input:hover:not([disabled]),
 .search_input:focus:not([disabled]) {
-  background: var(--light-gray);
+  background: var(--off-white);
 }
 .search_button:focus:not([disabled]),
 .search_button:hover:not([disabled]) {
