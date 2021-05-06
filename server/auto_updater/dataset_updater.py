@@ -239,6 +239,10 @@ def generate_vector_counts(model, document_path, xpath, filter_tags=filter_tag_l
         )
     )
 
+    # Skip wonky papers that have less than 20 tokens
+    if len(all_tokens) < 20:
+        return [], None
+
     word_vectors += [model.wv[text] for text in all_tokens]
 
     # skips weird documents that don't contain text
