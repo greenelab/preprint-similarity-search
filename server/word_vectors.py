@@ -9,7 +9,7 @@ import fitz
 disabled_pipelines = ["parser", "ner"]
 nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
 
-word_model_wv = pickle.load(open("data/word2vec_model/word_model.wv.pkl", "rb"))
+word_model_wv = pickle.load(open("data/word_model.wv.pkl", "rb"))
 
 filter_tag_list = [
     "sc",
