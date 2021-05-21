@@ -16,6 +16,6 @@ sentry-sdk[flask]==0.17.0
 smart-open==3.0.0
 spacy==3.0.3
 tables==3.6.1
-tensorflow==2.4.1
+tensorflow==2.5.0
 tqdm==4.56.2
 wheel
