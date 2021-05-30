@@ -26,7 +26,7 @@ if __name__ == "__main__":
     word_model_vector_filename = Path(static_data_dir, 'word_model.wv.pkl')
 
     # Input/output data directory for current run
-    curr_data_dir = Path(parent_dirname, 'data', 'current_run')
+    curr_data_dir = Path(parent_dir, 'data', 'current_run')
 
     # Input dir
     input_dir = Path(curr_data_dir, 'input')
