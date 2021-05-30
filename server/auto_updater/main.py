@@ -44,10 +44,14 @@ if __name__ == "__main__":
     download_dir = Path(output_dir, 'downloaded_files')
     os.makedirs(download_dir, exist_ok=True)  # If not exist yet, create it
 
+    # Output dir for new papers data ONLY
+    new_papers_dir = Path(output_dir, 'new_papers')
+    os.makedirs(new_papers_dir, exist_ok=True)  # If not exist yet, create it
+
     # Output files: new papers only
-    new_pmc_dir_filename = Path(output_dir, 'new_papers', 'names.tsv')
-    new_embeddings_filename = Path(output_dir, 'new_papers', 'embeddings.tsv')
-    new_token_counts_filename = Path(output_dir, 'new_papers', 'token_counts.tsv')
+    new_pmc_dir_filename = Path(new_papers_dir, 'names.tsv')
+    new_embeddings_filename = Path(new_papers_dir, 'embeddings.tsv')
+    new_token_counts_filename = Path(new_papers_dir, 'token_counts.tsv')
 
     # Output files: merged data of both previous and new papers
     merged_pmc_dir_filename = Path(output_dir, 'pmc_oa_file_list.tsv')
