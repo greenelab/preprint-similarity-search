@@ -122,7 +122,7 @@ def process_tarball(
 
 def generate_vector_counts(word_model_wv, paper_fh):
     """
-    Based on the same function in `dataset_updater.py`.
+    Parse a paper file (paper_fh) based on word model vector (word_model_wv).
     """
 
     stop_words = nlp.Defaults.stop_words
@@ -199,7 +199,7 @@ def parse_new_papers(
     prev_pmc_list_df = pd.read_csv(prev_pmc_dir_filename, sep="\t")
     prev_pmc_ids = set()
     for pmc_path in prev_pmc_list_df.file_path.tolist():
-        pmc_id = Path(pamc_path).stem
+        pmc_id = Path(pmc_path).stem
         prev_pmc_ids.add(pmc_id)
 
     # Process XML tarball files in `download_dir`:
@@ -239,5 +239,19 @@ def parse_new_papers(
 
 # Test harness
 if __name__ == "__main__":
-    tarball_dirname = "./input/xml-tarball"
-    parse_new_papers(tarball_dirname)
+    tarball_dirname = "./data/current_run/output/downloaded_files"
+    prev_pmc_dir_filename = "./data/current_run/input/pmc_oa_file_list.tsv"
+    word_model_vector_filename = "./data/static/word_model.wv.pkl"
+
+    new_pmc_dir_filename = "./data/current_run/output/new_papers/names.tsv"
+    new_embeddings_filename = "./data/current_run/output/new_papers/embeddings.tsv"
+    new_token_counts_filename = "./data/current_run/output/new_papers/token_counts.tsv"
+
+    parse_new_papers(
+        tarball_dirname,
+        prev_pmc_dir_filename,
+        word_model_vector_filename,
+        new_pmc_dir_filename,
+        new_embeddings_filename,
+        new_token_counts_filename
+    )

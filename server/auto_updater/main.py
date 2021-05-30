@@ -79,9 +79,12 @@ if __name__ == "__main__":
     #                    Run the pipeline
     # ------------------------------------------------------------------
     # (1) Download XML tarball files
+    print(flush=True)
     download_xml_files(download_dir)
 
     # (2) Find new papers in downloaded files and process them
+    print(flush=True)
+    updater_log("Finding and parsing new papers ...")
     parse_new_papers(
         download_dir,
         prev_pmc_dir_filename,
@@ -92,6 +95,8 @@ if __name__ == "__main__":
     )
 
     # (3) Merge new papers data with previous run
+    print(flush=True)
+    updater_log("Merging new data with last run ...")
     merge_files(
         prev_pmc_dir_filename,
         prev_embeddings_filename,
@@ -105,6 +110,7 @@ if __name__ == "__main__":
     )
 
     # (4) Create new journal centroid based on merged data
+    print(flush=True)
     Updater_log("Updating centroid dataset ...")
     generate_journal_centroid(
         merged_embeddings_filename,
@@ -112,7 +118,8 @@ if __name__ == "__main__":
     )
 
     # (5) Generate sauice coordinates for new papers and update the sqaure bins
-    updater_log("Gathering SAUCIE coordinates and updating square bins ...")
+    print(flush=True)
+    updater_log("Generating SAUCIE coordinates and updating square bins ...")
     generate_SAUCIE_coordinates(
         new_embeddings_filename,
         paper_landscape_filename,
@@ -120,6 +127,7 @@ if __name__ == "__main__":
     )
 
     # (6) Update bin stats
+    print(flush=True)
     updater_log("Updating each bin stats and creating PMC plot JSON file ...")
     update_paper_bins_stats(
         paper_landscape_filename,
@@ -131,6 +139,9 @@ if __name__ == "__main__":
     )
 
     # (7) Minimize plot JSON file for frontend
-
+    print(flush=True)
+    Updater_log("Creating minimized plot JSON file ...")
 
     # (8) Create kdtree-related pickle files for backend
+    print(flush=True)
+    Updater_log("Creating pickled kd-tree files ...")

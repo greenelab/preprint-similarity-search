@@ -5,7 +5,6 @@ set -e
 
 SCRIPT_DIR=$(dirname $(readlink -e $0))
 
-
 # Create directory and symbolic links for current run
 echo "$(date): Creating directories for new run ..."
 DATE_STR=$(date -I)
