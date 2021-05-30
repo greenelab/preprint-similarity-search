@@ -27,6 +27,6 @@ ln -sf ${LAST_OUTPUT_DIR}/global_token_counts.tsv ./input
 ln -sf ${LAST_OUTPUT_DIR}/pmc_oa_file_list.tsv ./input
 
 # Run auto-updater's main module inside a virtual env
-source $HOME/venv/pss-updater/bin/activate
+source $HOME/venv/pss/bin/activate
 cd ${SCRIPT_DIR}
 python3 ./main.py
