@@ -5,15 +5,16 @@ set -e
 
 SCRIPT_DIR=$(dirname $(readlink -e $0))
 
+echo "$(date): Creating directories for new run ..."
 # Create directory and symbolic links for current run
 DATE_STR=$(date -I)
 CURR_DATA_DIR=${SCRIPT_DIR}/data/${DATE_STR}
 mkdir -p ${CURR_DATA_DIR}
-ln -sf ${DATE_STR} current_run
 
 # Go to current run's data dir and create sub-dirs
 cd ${CURR_DATA_DIR}
 mkdir -p input output
+ln -sf ${DATE_STR} current_run
 
 # Create symbolic links as input files for current run
 if [ ! -e ../last_run/output ]; then
@@ -29,4 +30,9 @@ ln -sf ${LAST_OUTPUT_DIR}/pmc_oa_file_list.tsv ./input
 # Run auto-updater's main module inside a virtual env
 source $HOME/venv/pss/bin/activate
 cd ${SCRIPT_DIR}
+
+echo "$(date): Running main.py ..."
+
 python3 ./main.py
+
+echo "$(date): Done"

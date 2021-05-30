@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parent_dir = Path(__file__).resolve().parent
 
     # Static data dir
-    static_data_dir = Path(parent_dirname, 'data', 'static')
+    static_data_dir = Path(parent_dir, 'data', 'static')
 
     # Static data files that will be read by each updater run
     pca_axes_filename = Path(static_data_dir, 'pca_components.tsv')
