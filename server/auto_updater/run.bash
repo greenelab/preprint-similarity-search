@@ -5,16 +5,17 @@ set -e
 
 SCRIPT_DIR=$(dirname $(readlink -e $0))
 
-echo "$(date): Creating directories for new run ..."
+
 # Create directory and symbolic links for current run
+echo "$(date): Creating directories for new run ..."
 DATE_STR=$(date -I)
-CURR_DATA_DIR=${SCRIPT_DIR}/data/${DATE_STR}
-mkdir -p ${CURR_DATA_DIR}
+cd ${SCRIPT_DIR}/data/
+mkdir -p ${DATE_STR}
+ln -sf ${DATE_STR} current_run
 
 # Go to current run's data dir and create sub-dirs
-cd ${CURR_DATA_DIR}
+cd ${DATE_STR}
 mkdir -p input output
-ln -sf ${DATE_STR} current_run
 
 # Create symbolic links as input files for current run
 if [ ! -e ../last_run/output ]; then
