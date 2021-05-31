@@ -69,7 +69,7 @@ def process_tarball(
     word_model_wv = pickle.load(open(word_model_vector_filename, "rb"))
 
     # Read previously processed PMC IDs into a set
-    prev_pmc_list_df = pd.read_csv(prev_pmc_dir_filename, sep="\t")
+    prev_pmc_list_df = pd.read_csv(prev_pmc_list_filename, sep="\t")
     prev_pmc_ids = set()
     for pmc_path in prev_pmc_list_df.file_path.tolist():
         pmc_id = Path(pmc_path).stem
