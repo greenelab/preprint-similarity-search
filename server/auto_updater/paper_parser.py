@@ -355,10 +355,12 @@ def parse_new_papers(
             Path(embeddings_subdir, output_basename),
             Path(token_counts_subdir, output_basename)
         )
-        #pool.apply_async(process_tarball, args)
-        process_tarball(*args)
-    #pool.close()
-    #pool.join()
+
+        #process_tarball(*args)  # test only: serial processing
+        pool.apply_async(process_tarball, args)
+
+    pool.close()
+    pool.join()
 
     combine_new_papers(
         pmc_list_subdir, new_pmc_list_filename,
