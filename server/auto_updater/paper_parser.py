@@ -294,14 +294,14 @@ def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
 
     with open(new_token_counts_filename, mode='w') as ofh:
         fieldnames = ['document', 'lemma', 'count']
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer = csv.DictWriter(ofh, fieldnames=fieldnames)
         writer.writeheader()
 
         for filename in sub_files:
             file_path = Path(pmc_list_subdir, filename)
             with open(file_path) as ifh:
                 prev_pmc = None
-                csv_reader = csv.DictReader(csv_file)
+                csv_reader = csv.DictReader(ifh)
                 for row in csv_reader:
                     pmc_id = row['document']
                     if pmc_id in pmc_added:
