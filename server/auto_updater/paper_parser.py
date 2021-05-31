@@ -341,8 +341,8 @@ def parse_new_papers(
     token_counts_subdir = Path(new_papers_dir, 'token_counts')
     os.makedirs(token_counts_subdir, exist_ok=True)
 
-    parallel = 4
-    pool = mp.Pool(parallel)
+    #parallel = 4
+    #pool = mp.Pool(parallel)
     for basename in sorted(tarball_files):
         tarball_filename = Path(tarball_dir, basename)
         # Each process's output file basename is the tarball filename
@@ -354,12 +354,15 @@ def parse_new_papers(
             word_model_vector_filename,
             Path(pmc_list_subdir, output_basename),
             Path(embeddings_subdir, output_basename),
-            Path(token_counts_subdir, output_basename),
+            Path(token_counts_subdir, output_basename)
         )
-        pool.apply_async(process_tarball, args)
+        #pool.apply_async(process_tarball, args)
+        p = mp.Process(target=process_tarball, args=args)
+        p.start()
+        p.join()
 
-    pool.close()
-    pool.join()
+    #pool.close()
+    #pool.join()
 
     combine_new_papers(
         pmc_list_subdir, new_pmc_list_filename,
