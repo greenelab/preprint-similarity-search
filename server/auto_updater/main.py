@@ -32,7 +32,7 @@ if __name__ == "__main__":
     input_dir = Path(curr_data_dir, 'input')
 
     # Input files: data from previous run
-    prev_pmc_dir_filename = Path(input_dir, 'pmc_oa_file_list.tsv')
+    prev_pmc_list_filename = Path(input_dir, 'pmc_oa_file_list.tsv')
     prev_embeddings_filename = Path(input_dir, 'embeddings_full.tsv')
     prev_token_counts_filename = Path(input_dir,'global_token_counts.tsv')
 
@@ -49,12 +49,12 @@ if __name__ == "__main__":
     os.makedirs(new_papers_dir, exist_ok=True)  # If not exist yet, create it
 
     # Output files: new papers only
-    new_pmc_dir_filename = Path(new_papers_dir, 'names.tsv')
+    new_pmc_list_filename = Path(new_papers_dir, 'names.tsv')
     new_embeddings_filename = Path(new_papers_dir, 'embeddings.tsv')
     new_token_counts_filename = Path(new_papers_dir, 'token_counts.tsv')
 
     # Output files: merged data of both previous and new papers
-    merged_pmc_dir_filename = Path(output_dir, 'pmc_oa_file_list.tsv')
+    merged_pmc_list_filename = Path(output_dir, 'pmc_oa_file_list.tsv')
     merged_embeddings_filename = Path(output_dir, 'embeddings_full.tsv')
     merged_token_counts_filename = Path(output_dir, 'global_token_counts.tsv')
 
@@ -91,9 +91,9 @@ if __name__ == "__main__":
     updater_log("Finding and parsing new papers ...")
     parse_new_papers(
         download_dir,
-        prev_pmc_dir_filename,
+        prev_pmc_list_filename,
         word_model_vector_filename,
-        new_pmc_dir_filename,
+        new_pmc_list_filename,
         new_embeddings_filename,
         new_token_counts_filename,
     )
@@ -102,13 +102,13 @@ if __name__ == "__main__":
     print(flush=True)
     updater_log("Merging new data with last run ...")
     merge_files(
-        prev_pmc_dir_filename,
+        prev_pmc_list_filename,
         prev_embeddings_filename,
         prev_token_counts_filename,
-        new_pmc_dir_filename,
+        new_pmc_list_filename,
         new_embeddings_filename,
         new_token_counts_filename,
-        merged_pmc_dir_filename,
+        merged_pmc_list_filename,
         merged_embeddings_filename,
         merged_token_counts_filename
     )

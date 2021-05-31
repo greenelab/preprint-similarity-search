@@ -342,7 +342,7 @@ def parse_new_papers(
     parallel = 4
     pool = mp.Pool(parallel)
     for basename in sorted(tarball_files):
-        tarball_filename = Path(download_dir, basename)
+        tarball_filename = Path(tarball_dir, basename)
         # Each process's output file basename is the tarball filename
         # with an extra ".tsv" suffix.
         output_basename = basename + ".tsv"
