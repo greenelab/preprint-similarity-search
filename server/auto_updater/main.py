@@ -50,7 +50,7 @@ if __name__ == "__main__":
     download_dir = Path(output_dir, 'downloaded_files')
     os.makedirs(download_dir, exist_ok=True)  # If not exist yet, create it
 
-    updater_log("Start auto_updater pipeline ...", prefix_blank_line=True)
+    updater_log("Start auto_updater pipeline", prefix_blank_line=True)
     '''dhu
     download_xml_files(download_dir)
     '''
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     # Number of concurrent processes launched to process new papers
     parallel = 6
 
-    updater_log("Finding and parsing new papers ...", prefix_blank_line=True)
+    updater_log("Finding and parsing new papers", prefix_blank_line=True)
     '''dhu
     parse_new_papers(
         download_dir,
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     merged_embeddings_filename = Path(output_dir, 'embeddings_full.tsv')
     merged_token_counts_filename = Path(output_dir, 'global_token_counts.tsv')
 
-    updater_log("Merging new data with last run ...", prefix_blank_line=True)
+    updater_log("Merging new data with last run", prefix_blank_line=True)
     merge_files(
         prev_pmc_list_filename,
         prev_embeddings_filename,
