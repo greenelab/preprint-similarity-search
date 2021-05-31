@@ -64,6 +64,7 @@ def process_tarball(
     Search new papers in an input tarball file, and save the new papers
     data on disk.
     """
+    updater_log(f"Reading {tarball_filename} ...")
 
     # Load word model vector from input pickled filename
     word_model_wv = pickle.load(open(word_model_vector_filename, "rb"))
@@ -74,8 +75,6 @@ def process_tarball(
     for pmc_path in prev_pmc_list_df.file_path.tolist():
         pmc_id = Path(pmc_path).stem
         prev_pmc_ids.add(pmc_id)
-
-    print(tarball_filename)  # dhu
 
     tarball_basename = Path(tarball_filename).name
     with tarfile.open(tarball_filename, "r:gz") as tar_fh:
@@ -119,11 +118,6 @@ def process_tarball(
             # dhu: only process regular files that are new
             if not pmc_paper.isfile() or pmc_id in prev_pmc_ids:
                 continue
-
-            # Some papers exist in both "comm_use.*.xml.tar.gz" and
-            # "non_comm_use.*.xml.tar.gz" files, so `prev_pmc_ids` is updated to
-            # prevent these duplicate papers from being processed more than once.
-            prev_pmc_ids.add(pmc_id)
 
             new_counter += 1  # dhu debug
 
@@ -341,8 +335,8 @@ def parse_new_papers(
     token_counts_subdir = Path(new_papers_dir, 'token_counts')
     os.makedirs(token_counts_subdir, exist_ok=True)
 
-    #parallel = 4
-    #pool = mp.Pool(parallel)
+    parallel = 4
+    pool = mp.Pool(parallel)
     for basename in sorted(tarball_files):
         tarball_filename = Path(tarball_dir, basename)
         # Each process's output file basename is the tarball filename
@@ -356,13 +350,13 @@ def parse_new_papers(
             Path(embeddings_subdir, output_basename),
             Path(token_counts_subdir, output_basename)
         )
-        #pool.apply_async(process_tarball, args)
-        p = mp.Process(target=process_tarball, args=args)
-        p.start()
-        p.join()
+        pool.apply_async(process_tarball, args)
+        #p = mp.Process(target=process_tarball, args=args)
+        #p.start()
+        #p.join()
 
-    #pool.close()
-    #pool.join()
+    pool.close()
+    pool.join()
 
     combine_new_papers(
         pmc_list_subdir, new_pmc_list_filename,
