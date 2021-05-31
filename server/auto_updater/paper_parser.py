@@ -261,7 +261,7 @@ def combine_new_embeddings(embeddings_subdir, new_embeddings_filename):
     "non_comm_use.*.xml.tar.gz" files, these duplicates must be removed.
     """
 
-    sub_files = sorted(os.listdir(pmc_list_subdir))
+    sub_files = sorted(os.listdir(embeddings_subdir))
     pmc_col = 1
     pmc_added = set()
 
@@ -289,7 +289,7 @@ def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
     in input files are NOT unique.
     """
 
-    sub_files = sorted(os.listdir(pmc_list_subdir))
+    sub_files = sorted(os.listdir(token_counts_subdir))
     pmc_added = set()
 
     with open(new_token_counts_filenam, mode='w') as ofh:
