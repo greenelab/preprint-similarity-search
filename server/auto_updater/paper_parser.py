@@ -75,6 +75,8 @@ def process_tarball(
         pmc_id = Path(pmc_path).stem
         prev_pmc_ids.add(pmc_id)
 
+    print(tarball_filename)  # dhu
+
     tarball_basename = Path(tarball_filename).name
     with tarfile.open(tarball_filename, "r:gz") as tar_fh:
         # Write header lines into three output files
