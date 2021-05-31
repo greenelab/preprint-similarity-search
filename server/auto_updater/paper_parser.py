@@ -354,10 +354,14 @@ def parse_new_papers(
     pool.close()
     pool.join()
 
+    combined_pmc_path = Path(new_papers_dir, new_pmc_list_basename)
+    combined_embeddings_path = Path(new_papers_dir, new_embeddings_basename)
+    combined_token_counts_path = Path(new_papers_dir, new_token_counts_basename)
+
     combine_new_papers(
-        pmc_list_subdir, Path(new_papers_dir, new_pmc_list_basename,
-        embeddings_subdir, Path(new_ppaers_dir, new_embeddings_basename),
-        token_counts_subdir, Path(new_papers_dir, new_token_counts_basename)
+        pmc_list_subdir, combined_pmc_path,
+        embeddings_subdir, combined_embeddings_path,
+        token_counts_subdir, combined_token_counts_path
     )
 
 
