@@ -17,6 +17,7 @@ import os
 import pickle
 import sys
 import tarfile
+from collections import Counter
 from pathlib import Path
 
 import lxml.etree as ET
@@ -53,7 +54,7 @@ filter_tags = [
 ]
 parser = ET.XMLParser(encoding="UTF-8", recover=True)
 stop_words = nlp.Defaults.stop_words
-
+parallel = 4  # number of concurrent processes to launch
 
 def process_tarball(
         tarball_filename,
@@ -324,7 +325,7 @@ def parse_new_papers(
         new_embeddings_filename,
         new_token_counts_filename,
 ):
-    """Process tarball files and find new papers in parallel."""
+    """Process tarball files and find new papers."""
 
     all_filenames = os.listdir(tarball_dir)
     tarball_files = [x for x in all_filenames if x.endswith(".xml.tar.gz")]
@@ -340,7 +341,6 @@ def parse_new_papers(
     token_counts_subdir = Path(new_papers_dir, 'token_counts')
     os.makedirs(token_counts_subdir, exist_ok=True)
 
-    parallel = 4
     pool = mp.Pool(parallel)
     for basename in sorted(tarball_files):
         tarball_filename = Path(tarball_dir, basename)
