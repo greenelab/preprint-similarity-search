@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
-import csv
-from collections import defaultdict, Counter
-#!/usr/bin/env python3
-
 """
 Find new papers in XML tarball files and parse them.
 """
+
+# dhu TODO:
+# =========
+# Save new paper data (pmc_list, embeddings, token_counts) in memory during
+# processing. Then write them to disk when processing is done?
+#
+
 
 import csv
 import multiprocessing as mp
@@ -339,8 +342,8 @@ def parse_new_papers(
     pool = mp.Pool(parallel)
     for basename in sorted(tarball_files):
         tarball_filename = Path(tarball_dir, basename)
-        # Each process's output file basename is the tarball filename
-        # with an extra ".tsv" suffix.
+        # Each process's output file basename is the tarball filename with an
+        # extra ".tsv" suffix.
         output_basename = basename + ".tsv"
         args = (
             tarball_filename,
@@ -350,13 +353,10 @@ def parse_new_papers(
             Path(embeddings_subdir, output_basename),
             Path(token_counts_subdir, output_basename)
         )
-        pool.apply_async(process_tarball, args)
-        #p = mp.Process(target=process_tarball, args=args)
-        #p.start()
-        #p.join()
-
-    pool.close()
-    pool.join()
+        #pool.apply_async(process_tarball, args)
+        process_tarball(*args)
+    #pool.close()
+    #pool.join()
 
     combine_new_papers(
         pmc_list_subdir, new_pmc_list_filename,
