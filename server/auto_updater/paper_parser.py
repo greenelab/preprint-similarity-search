@@ -4,13 +4,6 @@
 Find new papers in XML tarball files and parse them.
 """
 
-# dhu TODO:
-# =========
-# Save new paper data (pmc_list, embeddings, token_counts) in memory during
-# processing. Then write them to disk when processing is done?
-#
-
-
 import csv
 import multiprocessing as mp
 import os
@@ -55,11 +48,8 @@ filter_tags = [
 parser = ET.XMLParser(encoding="UTF-8", recover=True)
 stop_words = nlp.Defaults.stop_words
 
-# number of concurrent processes launched to find and parse new papers
-parallel = 8
 
-
-def process_tarball(
+def parallel_process_tarball(
         tarball_filename,
         prev_pmc_list_filename,
         word_model_vector_filename,
@@ -324,16 +314,16 @@ def parse_new_papers(
         tarball_dir,
         prev_pmc_list_filename,
         word_model_vector_filename,
-        new_pmc_list_filename,
-        new_embeddings_filename,
-        new_token_counts_filename,
+        new_papers_dir,
+        new_pmc_list_basename,
+        new_embeddings_basename,
+        new_token_counts_basename,
+        parallel=4
 ):
     """Process tarball files and find new papers."""
 
     all_filenames = os.listdir(tarball_dir)
     tarball_files = [x for x in all_filenames if x.endswith(".xml.tar.gz")]
-
-    new_papers_dir = Path(new_pmc_list_filename).parent
 
     pmc_list_subdir = Path(new_papers_dir, 'pmc_list')
     os.makedirs(pmc_list_subdir, exist_ok=True)
@@ -359,16 +349,15 @@ def parse_new_papers(
             Path(token_counts_subdir, output_basename)
         )
 
-        #process_tarball(*args)  # test only: serial processing
-        pool.apply_async(process_tarball, args)
+        pool.apply_async(parallel_process_tarball, args)
 
     pool.close()
     pool.join()
 
     combine_new_papers(
-        pmc_list_subdir, new_pmc_list_filename,
-        embeddings_subdir, new_embeddings_filename,
-        token_counts_subdir, new_token_counts_filename
+        pmc_list_subdir, Path(new_papers_dir, new_pmc_list_basename,
+        embeddings_subdir, Path(new_ppaers_dir, new_embeddings_basename),
+        token_counts_subdir, Path(new_papers_dir, new_token_counts_basename)
     )
 
 
@@ -378,15 +367,18 @@ if __name__ == "__main__":
     prev_pmc_list_filename = "./data/current_run/input/pmc_oa_file_list.tsv"
     word_model_vector_filename = "./data/static/word_model.wv.pkl"
 
-    new_pmc_list_filename = "./data/current_run/output/new_papers/pmc_list.tsv"
-    new_embeddings_filename = "./data/current_run/output/new_papers/embeddings.tsv"
-    new_token_counts_filename = "./data/current_run/output/new_papers/token_counts.tsv"
+    new_papers_dir = "./data/current_run/output/new_papers/"
+    new_pmc_list_basename = "pmc_list.tsv"
+    new_embeddings_basename = "embeddings.tsv"
+    new_token_counts_basename = "token_counts.tsv"
 
     parse_new_papers(
         tarball_dir,
         prev_pmc_list_filename,
         word_model_vector_filename,
-        new_pmc_list_filename,
-        new_embeddings_filename,
-        new_token_counts_filename
+        new_papers_dir,
+        new_pmc_list_basename,
+        new_embeddings_basename,
+        new_token_counts_basename,
+        parallel=6
     )

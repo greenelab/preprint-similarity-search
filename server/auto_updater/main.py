@@ -40,65 +40,49 @@ if __name__ == "__main__":
     output_dir = Path(curr_data_dir, 'output')
     os.makedirs(output_dir, exist_ok=True)    # If not exist yet, create it
 
+    # ------------------------------------------------------------------
+    #                    Run the pipeline
+    # ------------------------------------------------------------------
+
+    # (1) Download XML tarball files
+    # ------------------------------------------------------------------
     # Output dir where the downloaded files will be saved in
     download_dir = Path(output_dir, 'downloaded_files')
     os.makedirs(download_dir, exist_ok=True)  # If not exist yet, create it
 
-    # Output dir for new papers data ONLY
-    new_papers_dir = Path(output_dir, 'new_papers')
-    os.makedirs(new_papers_dir, exist_ok=True)  # If not exist yet, create it
-
-    # Output files: new papers only
-    new_pmc_list_filename = Path(new_papers_dir, 'names.tsv')
-    new_embeddings_filename = Path(new_papers_dir, 'embeddings.tsv')
-    new_token_counts_filename = Path(new_papers_dir, 'token_counts.tsv')
-
-    # Output files: merged data of both previous and new papers
-    merged_pmc_list_filename = Path(output_dir, 'pmc_oa_file_list.tsv')
-    merged_embeddings_filename = Path(output_dir, 'embeddings_full.tsv')
-    merged_token_counts_filename = Path(output_dir, 'global_token_counts.tsv')
-
-    # Output file: journal centroid
-    journal_centroid_filename = Path(output_dir, 'journals.tsv')
-
-    # Output files: paper landscape file
-    paper_landscape_filename = Path(output_dir, 'paper_landscape.tsv')
-
-    # Output file: intermediate and final PMC plot JSON files
-    tmp_plot_filename = Path(output_dir, 'pmc_plot_tmp.json')
-    final_plot_filename = Path(output_dir, 'pmc_plot.json')
-
-    # Deployment dir
-    deployment_dir = Path(output_dir, 'deployment')
-    os.makedirs(deployment_dir, exist_ok=True)  # If not exist yet, create it
-
-    # Minimized plot JSON file for frontend deployment
-    mini_plot_filename = Path(deployment_dir, 'plot.json')
-
-    # Pickled files for backend deployment:
-    pickled_kdtree_filename = Path(deployment_dir, 'kdtree.pkl')
-    pickled_pmc_map_filename = Path(deployment_dir, 'pmc_map.pkl')
-
-    # ------------------------------------------------------------------
-    #                    Run the pipeline
-    # ------------------------------------------------------------------
-    # (1) Download XML tarball files
     print(flush=True)
     download_xml_files(download_dir)
 
     # (2) Find new papers in downloaded files and process them
+    # ------------------------------------------------------------------
+    # Output dir for new papers data
+    new_papers_dir = Path(output_dir, 'new_papers')
+    os.makedirs(new_papers_dir, exist_ok=True)  # If not exist yet, create it
+
+    # Output files for new papers
+    new_pmc_list_basename = 'pmc_list.tsv'
+    new_embeddings_basename = 'embeddings.tsv'
+    new_token_counts_basename = 'token_counts.tsv'
+
     print(flush=True)
     updater_log("Finding and parsing new papers ...")
     parse_new_papers(
         download_dir,
         prev_pmc_list_filename,
         word_model_vector_filename,
-        new_pmc_list_filename,
-        new_embeddings_filename,
-        new_token_counts_filename,
+        new_papers_dir,
+        new_pmc_list_basename,
+        new_embeddings_basename,
+        new_token_counts_basename,
     )
 
     # (3) Merge new papers data with previous run
+    # ------------------------------------------------------------------
+    # Output files: merged data of both previous and new papers
+    merged_pmc_list_filename = Path(output_dir, 'pmc_oa_file_list.tsv')
+    merged_embeddings_filename = Path(output_dir, 'embeddings_full.tsv')
+    merged_token_counts_filename = Path(output_dir, 'global_token_counts.tsv')
+
     print(flush=True)
     updater_log("Merging new data with last run ...")
     merge_files(
@@ -114,6 +98,10 @@ if __name__ == "__main__":
     )
 
     # (4) Create new journal centroid based on merged data
+    # ------------------------------------------------------------------
+    # Output file: journal centroid
+    journal_centroid_filename = Path(output_dir, 'journals.tsv')
+
     print(flush=True)
     Updater_log("Updating centroid dataset ...")
     generate_journal_centroid(
@@ -122,6 +110,11 @@ if __name__ == "__main__":
     )
 
     # (5) Generate sauice coordinates for new papers and update the sqaure bins
+    # -------------------------------------------------------------------------
+    # Output files: paper landscape file and intermediate PMC plot JSON file
+    paper_landscape_filename = Path(output_dir, 'paper_landscape.tsv')
+    tmp_plot_filename = Path(output_dir, 'pmc_plot_tmp.json')
+
     print(flush=True)
     updater_log("Generating SAUCIE coordinates and updating square bins ...")
     generate_SAUCIE_coordinates(
@@ -131,6 +124,10 @@ if __name__ == "__main__":
     )
 
     # (6) Update bin stats
+    # ------------------------------------------------------------------
+    # Output file: final PMC plot JSON file
+    final_plot_filename = Path(output_dir, 'pmc_plot.json')
+
     print(flush=True)
     updater_log("Updating each bin stats and creating PMC plot JSON file ...")
     update_paper_bins_stats(
@@ -143,9 +140,22 @@ if __name__ == "__main__":
     )
 
     # (7) Minimize plot JSON file for frontend
+    # ------------------------------------------------------------------
+    # Deployment dir: create it if not exist yet.
+    deployment_dir = Path(output_dir, 'deployment')
+    os.makedirs(deployment_dir, exist_ok=True)
+
+    # Output file: minimized plot JSON file for frontend deployment
+    mini_plot_filename = Path(deployment_dir, 'plot.json')
+
     print(flush=True)
     Updater_log("Creating minimized plot JSON file ...")
 
     # (8) Create kdtree-related pickle files for backend
+    # ------------------------------------------------------------------
+    # Output files: pickled files for backend deployment:
+    pickled_kdtree_filename = Path(deployment_dir, 'kdtree.pkl')
+    pickled_pmc_map_filename = Path(deployment_dir, 'pmc_map.pkl')
+
     print(flush=True)
     Updater_log("Creating pickled kd-tree files ...")
