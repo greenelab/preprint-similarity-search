@@ -64,7 +64,7 @@ def process_tarball(
     Search new papers in an input tarball file, and save the new papers
     data on disk.
     """
-    updater_log(f"Reading {tarball_filename} ...")
+    updater_log(f"Processing '{tarball_filename}' ...")
 
     # Load word model vector from input pickled filename
     word_model_wv = pickle.load(open(word_model_vector_filename, "rb"))
@@ -108,7 +108,7 @@ def process_tarball(
 
             # dhu debug
             if tar_counter == 0:
-                updater_log(f": {tarball_filename} opened")
+                updater_log(f"'{tarball_filename}' opened")
 
             tar_counter += 1
             if tar_counter % 1000 == 0:
@@ -263,7 +263,7 @@ def combine_new_embeddings(embeddings_subdir, new_embeddings_filename):
 
     with open(new_pmc_list_filename, 'w') as ofh:
         for idx, filename in enumerate(sub_files):
-            file_path = Path(pmc_list_subdir, filename)
+            file_path = Path(embeddings_subdir, filename)
             with open(file_path) as ifh:
                 for line_num, line in enumerate(ifh):
                     # Only copy header line from the first file
@@ -294,7 +294,7 @@ def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
         writer.writeheader()
 
         for filename in sub_files:
-            file_path = Path(pmc_list_subdir, filename)
+            file_path = Path(token_counts_subdir, filename)
             with open(file_path) as ifh:
                 prev_pmc = None
                 csv_reader = csv.DictReader(ifh, delimiter='\t')
