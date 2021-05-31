@@ -5,8 +5,12 @@ import os
 from stat import S_IREAD, S_IRGRP, S_IROTH
 
 
-def updater_log(message, with_date=True):
+def updater_log(message, with_date=True, prefix_blank_line=False):
     """Print a log message with optional datetime prefix."""
+
+    # Print a blank line as a divider at the very beginning
+    if prefix_blank_line:
+        print(flush=True)
 
     if with_date:
         message = f"{datetime.now()}: {message}"

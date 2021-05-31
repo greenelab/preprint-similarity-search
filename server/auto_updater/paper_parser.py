@@ -302,7 +302,7 @@ def combine_new_token_counts(token_counts_subdir, combined_token_counts_filename
                     if pmc_id in merged_pmc:
                         continue
 
-                    if pmc_id != prev_pmc:  # another paper's token count session
+                    if pmc_id != prev_pmc: # enter a new token count session
                         if prev_pmc:
                             merged_pmc.add(prev_pmc)
                         prev_pmc = pmc_id
