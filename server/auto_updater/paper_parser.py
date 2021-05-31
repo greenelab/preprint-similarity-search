@@ -292,7 +292,7 @@ def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
     sub_files = sorted(os.listdir(token_counts_subdir))
     pmc_added = set()
 
-    with open(new_token_counts_filenam, mode='w') as ofh:
+    with open(new_token_counts_filename, mode='w') as ofh:
         fieldnames = ['document', 'lemma', 'count']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
