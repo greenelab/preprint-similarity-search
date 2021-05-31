@@ -105,13 +105,13 @@ def process_tarball(
             token_counts_writer.writeheader()
 
             write_data(
-                word_model_wv, prev_pmc_ids, tar_fh,
+                word_model_wv, prev_pmc_ids, tarball_basename, tar_fh,
                 pmc_list_writer, embeddings_writer, token_counts_writer
             )
 
 
 def write_data(
-        word_model_wv, prev_pmc_ids, tar_fh,
+        word_model_wv, prev_pmc_ids, tarball_basename, tar_fh,
         pmc_list_writer, embeddings_writer, token_counts_writer
 ):
     """Write new papers data to disk."""
@@ -125,7 +125,7 @@ def write_data(
             continue
 
 
-        # Add a new paper's name no matter whether it can be parsed
+        # Save a new paper's name to pmc_list no matter it can be parsed
         # succesful or not
         pmc_list_writer.writerow(
             {"tarfile": tarball_basename, "file_path": paper_name}
@@ -263,7 +263,7 @@ def combine_new_embeddings(embeddings_subdir, new_embeddings_filename):
 
     sub_files = sorted(os.listdir(embeddings_subdir))
     pmc_col = 1
-    pmc_added = set()
+    merged_pmc = set()
 
     with open(new_pmc_list_filename, 'w') as ofh:
         for idx, filename in enumerate(sub_files):
@@ -277,9 +277,9 @@ def combine_new_embeddings(embeddings_subdir, new_embeddings_filename):
                         continue
 
                     pmc_id = line.split('\t')[pmc_col]
-                    if pmc_id not in pmc_added:
+                    if pmc_id not in merged_pmc:
                         ofh.write(line)
-                        pmc_added.add(pmc_id)
+                        merged_pmc.add(pmc_id)
 
 
 def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
@@ -290,7 +290,7 @@ def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
     """
 
     sub_files = sorted(os.listdir(token_counts_subdir))
-    pmc_added = set()
+    merged_pmc = set()
 
     with open(new_token_counts_filename, mode='w') as ofh:
         fieldnames = ['document', 'lemma', 'count']
@@ -304,12 +304,13 @@ def combine_new_token_counts(token_counts_subdir, new_token_counts_filename):
                 csv_reader = csv.DictReader(ifh, delimiter='\t')
                 for row in csv_reader:
                     pmc_id = row['document']
-                    if pmc_id in pmc_added:
+
+                    if pmc_id in merged_pmc:
                         continue
 
                     if pmc_id != prev_pmc:  # another paper's token count session
                         if prev_pmc:
-                            pmc_added.add(prev_pmc)
+                            merged_pmc.add(prev_pmc)
                         prev_pmc = pmc_id
 
                     writer.writerow(row)
