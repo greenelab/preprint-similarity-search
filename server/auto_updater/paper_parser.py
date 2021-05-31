@@ -331,13 +331,13 @@ def parse_new_papers(
     new_papers_dir = Path(new_pmc_list_filename).parent
 
     pmc_list_subdir = Path(new_papers_dir, 'pmc_list')
-    os.makedirs(embeddings_dir, exist_ok=True)
+    os.makedirs(pmc_list_subdir, exist_ok=True)
 
     embeddings_subdir = Path(new_papers_dir, 'embeddings')
-    os.makedirs(embeddings_dir, exist_ok=True)
+    os.makedirs(embeddings_subdir, exist_ok=True)
 
     token_counts_subdir = Path(new_papers_dir, 'token_counts')
-    os.makedirs(token_counts_dir, exist_ok=True)
+    os.makedirs(token_counts_subdir, exist_ok=True)
 
     parallel = 4
     pool = mp.Pool(parallel)
@@ -369,18 +369,18 @@ def parse_new_papers(
 # Test harness
 if __name__ == "__main__":
     tarball_dir = "./data/current_run/output/downloaded_files"
-    prev_pmc_dir_filename = "./data/current_run/input/pmc_oa_file_list.tsv"
+    prev_pmc_list_filename = "./data/current_run/input/pmc_oa_file_list.tsv"
     word_model_vector_filename = "./data/static/word_model.wv.pkl"
 
-    new_pmc_dir_filename = "./data/current_run/output/new_papers/names.tsv"
+    new_pmc_list_filename = "./data/current_run/output/new_papers/names.tsv"
     new_embeddings_filename = "./data/current_run/output/new_papers/embeddings.tsv"
     new_token_counts_filename = "./data/current_run/output/new_papers/token_counts.tsv"
 
     parse_new_papers(
         tarball_dir,
-        prev_pmc_dir_filename,
+        prev_pmc_list_filename,
         word_model_vector_filename,
-        new_pmc_dir_filename,
+        new_pmc_list_filename,
         new_embeddings_filename,
         new_token_counts_filename
     )
