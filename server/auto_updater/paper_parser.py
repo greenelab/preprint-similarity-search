@@ -104,60 +104,61 @@ def process_tarball(
             )
             token_counts_writer.writeheader()
 
-        tar_counter = new_counter = 0  # dhu debug
-        for pmc_paper in tar_fh.getmembers():
-            paper_name = pmc_paper.name
-            pmc_id = Path(paper_name).stem
-
-            # dhu debug
-            if tar_counter == 0:
-                updater_log(f"'{tarball_filename}' opened")
-
-            tar_counter += 1
-            if tar_counter % 1000 == 0:
-                updater_log(f"{paper_name}: {new_counter} / {tar_counter}")
-            # end of dhu debug
-
-            # dhu: only process regular files that are new
-            if not pmc_paper.isfile() or pmc_id in prev_pmc_ids:
-                continue
-
-            new_counter += 1  # dhu debug
-
-            # Add a new paper's name no matter whether it can be parsed
-            # succesful or not
-            pmc_list_writer.writerow(
-                {"tarfile": tarball_basename, "file_path": paper_name}
+            write_data(
+                word_model_wv, prev_pmc_ids, tar_fh,
+                pmc_list_writer, embeddings_writer, token_counts_writer
             )
 
-            paper_fh = tar_fh.extractfile(pmc_paper)
-            doc_vector, word_counter = generate_vector_counts(
-                word_model_wv, paper_fh
-            )
 
-            # If the paper doesn't include valid words, do not write
-            # embeddings and token count.
-            if word_counter is None:
-                continue
+def write_data(
+        word_model_wv, prev_pmc_ids, tar_fh,
+        pmc_list_writer, embeddings_writer, token_counts_writer
+):
+    """Write new papers data to disk."""
 
-            embeddings_writer.writerow(
+    for pmc_paper in tar_fh.getmembers():
+        paper_name = pmc_paper.name
+        pmc_id = Path(paper_name).stem
+
+        # Only process regular files that are new
+        if not pmc_paper.isfile() or pmc_id in prev_pmc_ids:
+            continue
+
+
+        # Add a new paper's name no matter whether it can be parsed
+        # succesful or not
+        pmc_list_writer.writerow(
+            {"tarfile": tarball_basename, "file_path": paper_name}
+        )
+
+        paper_fh = tar_fh.extractfile(pmc_paper)
+        doc_vector, word_counter = generate_vector_counts(
+            word_model_wv, paper_fh
+        )
+
+        # If the paper doesn't include valid words, do not write
+        # embeddings and token count.
+        if word_counter is None:
+            continue
+
+        embeddings_writer.writerow(
+            {
+                "document": pmc_id,
+                "journal": str(Path(paper_name).parent),
+                **dict(
+                    zip([f"feat_{idx}" for idx in range(300)], doc_vector)
+                ),
+            }
+        )
+
+        for tok in word_counter:
+            token_counts_writer.writerow(
                 {
                     "document": pmc_id,
-                    "journal": str(Path(paper_name).parent),
-                    **dict(
-                        zip([f"feat_{idx}" for idx in range(300)], doc_vector)
-                    ),
+                    "lemma": tok,
+                    "count": word_counter[tok],
                 }
             )
-
-            for tok in word_counter:
-                token_counts_writer.writerow(
-                    {
-                        "document": pmc_id,
-                        "lemma": tok,
-                        "count": word_counter[tok],
-                    }
-                )
 
 
 def generate_vector_counts(word_model_wv, paper_fh):
