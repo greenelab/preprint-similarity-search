@@ -13,6 +13,8 @@ server_path = Path("../server").resolve()
 sys.path.append(str(server_path)) # make SAUCIE package importable
 from SAUCIE import SAUCIE, Loader
 
+from utils import set_read_only
+
 
 def generate_saucie_coordinates(
         new_embeddings_filename,
