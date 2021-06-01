@@ -168,7 +168,7 @@ def update_paper_bins_stats(
       * pca_axes_filename: name of file that contains the PC axes;
       * tmp_json_filename: input intermediate json filename;
       * final_json_filename: final output json filename (for front end);
-      * cutoff_score: a threshold to remove tokens;
+      * cutoff_score: int; threshold to remove tokens;
       * debug: bool; if true, bin_counters pickle file will be saved too.
     """
 
@@ -250,15 +250,17 @@ def update_paper_bins_stats(
 
 # Test harness
 if __name__ == "__main__":
+    data_dir = './data/current_run/output/'
+
     # Input files
-    pmc_tsne_filename = './data/current_run/output/pmc_tsne_square.tsv'
-    embeddings_filename = "./data/current_run/output/embeddings_full.tsv"
-    token_counts_filename = './data/current_run/output/global_token_counts.tsv'
-    pca_axes_filename = "./data/static/pca_components.tsv"
-    tmp_json_filename = "./data/currnet_run/output/pmc_plot_tmp.json"
+    pmc_tsne_filename = data_dir + 'pmc_tsne_square.tsv'
+    embeddings_filename = data_dir + 'embeddings_full.tsv'
+    token_counts_filename = data_dir + 'global_token_counts.tsv'
+    pca_axes_filename = './data/static/pca_components.tsv'
+    tmp_json_filename = data_dir + 'pmc_plot_tmp.json'
 
     # output file
-    final_json_filename = "./data/current_run/output/pmc_plot_final.json"
+    final_json_filename = data_dir + 'pmc_plot_final.json'
 
     updater_log("Start ...")
 
