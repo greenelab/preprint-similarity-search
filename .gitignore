@@ -6,4 +6,6 @@ __pycache__
 
 # backend data directory
 server/data
-server/auto_updater/data
+
+# auto_updater data directory
+auto_updater/data
