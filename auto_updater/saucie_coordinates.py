@@ -34,7 +34,7 @@ def generate_saucie_coordinates(
     new_papers_df = pd.read_csv(new_embeddings_filename, sep="\t")
 
     # Load SAUCIE model and generate coordinates for new papers
-    saucie_model = SAUCIE(300, restore_folder="../saucie_model")
+    saucie_model = SAUCIE(300, restore_folder="../server/saucie_model")
     coordinates = saucie_model.get_embedding(
         Loader(new_papers_df[[f"feat_{idx}" for idx in range(300)]].values)
     )
