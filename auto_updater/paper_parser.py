@@ -381,11 +381,14 @@ def parse_new_papers(
 
 # Test harness
 if __name__ == "__main__":
-    tarball_dir = "./data/current_run/output/downloaded_files"
-    prev_pmc_list_filename = "./data/current_run/input/pmc_oa_file_list.tsv"
+    input_dir = "./data/current_run/input/"
+    output_dir = "./data/current_run/output/"
+
+    tarball_dir = output_dir + "downloaded_files"
+    prev_pmc_list_filename = input_dir + "pmc_oa_file_list.tsv"
     word_model_vector_filename = "./data/static/word_model.wv.pkl"
 
-    new_papers_dir = "./data/current_run/output/new_papers/"
+    new_papers_dir = output_dir + "new_papers/"
     new_pmc_list_basename = "pmc_list.tsv"
     new_embeddings_basename = "embeddings.tsv"
     new_token_counts_basename = "token_counts.tsv"

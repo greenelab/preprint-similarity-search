@@ -111,13 +111,16 @@ def generate_saucie_coordinates(
 
 # Test harness
 if __name__ == "__main__":
+    input_dir = "./data/current_run/input/"
+    output_dir = "./data/current_run/output/"
+
     # Input files
-    new_embeddings_filename = "./data/current_run/output/new_papers/embeddings.tsv"
-    old_pmc_tsne_filename = "./data/current_run/input/pmc_tsne_square.tsv"
+    new_embeddings_filename = output_dir + "new_papers/embeddings.tsv"
+    old_pmc_tsne_filename = input_dir + "pmc_tsne_square.tsv"
 
     # Output files
-    updated_pmc_tsne_filename = "./data/current_run/output/pmc_tsne_square.tsv"
-    tmp_plot_json_filename = "./data/current_run/output/pmc_plot_tmp.json"
+    updated_pmc_tsne_filename = output_dir + "pmc_tsne_square.tsv"
+    tmp_plot_json_filename = output_dir + "pmc_plot_tmp.json"
 
     generate_saucie_coordinates(
         new_embeddings_filename,

@@ -68,7 +68,8 @@ def generate_journal_centroid(paper_embeddings_filename, output_filename):
 
 # Test harness
 if __name__ == "__main__":
-    paper_embeddings_filename = "./data/current_run/output/embeddings_full.tsv"
-    output_filename = "./data/current_run/output/journals.tsv"
+    data_dir = "./data/current_run/output/"
+    paper_embeddings_filename = data_dir + "embeddings_full.tsv"
+    output_filename = data_dir + "journals.tsv"
 
     generate_journal_centroid(paper_embeddings_filename, output_filename)
