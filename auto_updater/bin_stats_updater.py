@@ -24,8 +24,8 @@ def get_bin_centroid(embeddings_filename, pmc_bin_mapper):
 
     bin_centroid = dict()
 
-    with open(embeddings_filename, "r") as infile:
-        reader = csv.DictReader(infile, delimiter="\t")
+    with open(embeddings_filename) as ifh:
+        reader = csv.DictReader(ifh, delimiter="\t")
         for line_num, line in enumerate(reader):
             if line_num == 0:
                 dim = len(line) - 2
@@ -191,8 +191,8 @@ def update_paper_bins_stats(
     ]
 
     updater_log(f"Reading {token_counts_filename} (~2.5 hours) ...")
-    with open(global_word_count_filename, "rt") as infile:
-        count_reader = csv.DictReader(infile, delimiter="\t")
+    with open(token_counts_filename) as ifh:
+        count_reader = csv.DictReader(ifh, delimiter="\t")
         for line in count_reader:
             token_count_entry = {line["lemma"]: int(line["count"])}
             bin_id = pmc_bin_mapper[line["document"]]
@@ -242,6 +242,9 @@ def update_paper_bins_stats(
     ).to_json(
         final_json_filename, orient="records", lines=False
     )
+
+    # Set final output json file read-only
+    set_read_only(final_json_filename)
 
 
 # Test harness
