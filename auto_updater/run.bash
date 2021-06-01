@@ -29,7 +29,7 @@ ln -sf ${LAST_OUTPUT_DIR}/pmc_oa_file_list.tsv ./input
 ln -sf ${LAST_OUTPUT_DIR}/pmc_tsne_sqaure.tsv ./input
 
 # Run auto-updater's main module inside a virtual env
-source $HOME/venv/pss/bin/activate
+source $HOME/venv/pss-updater/bin/activate
 cd ${SCRIPT_DIR}
 
 echo "$(date): Running main.py ..."
@@ -37,6 +37,10 @@ echo "$(date): Running main.py ..."
 python3 ./main.py
 
 # Copy deployment files to Google Cloud bucket
+
+
+# Rebuild soymbolic links
+ln -sf ${SCRIPT_DIR}/data/${DATE_STR} ${SCRIPT_DIR}/data/last_run
 
 
 # Delete data files that are older than two months
