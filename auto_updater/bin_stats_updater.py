@@ -133,7 +133,7 @@ def process_bin(
     # For debugging only: pickle bin counter data on disk
     if debug:
         bin_counters_dir = '/tmp/bin_counters'
-        os.mkdirs(bin_counters_dir, exist_ok=True)
+        os.makedirs(bin_counters_dir, exist_ok=True)
         with open(f'{bin_counters_dir}/{bin_id}.pkl', 'wb') as fh:
             pickle.dump(result, fh)
 
