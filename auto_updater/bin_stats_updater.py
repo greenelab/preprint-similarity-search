@@ -108,7 +108,8 @@ def get_odds_ratio(bin_data, total_counts, total_sum):
 
 def process_bin(
         bin_id, bin_data, centroid_data,
-        total_counts, total_sum, pca_axes_df
+        total_counts, total_sum, pca_axes_df,
+        debug=False
 ):
     """Process a single square bin."""
 
@@ -132,9 +133,12 @@ def process_bin(
         "bin_odds": word_odds_ratios[:20]
     }
 
-    # dhu test: Write output to pickle file:
-    with open(f'/tmp/bin_counters/{bin_id}.pkl', 'wb') as fh:
-        pickle.dump(result, fh)
+    # For debugging only: pickle bin counter data on disk
+    if debug:
+        bin_counters_dir = '/tmp/bin_counters'
+        os.mkdirs(bin_counters_dir, exist_ok=True)
+        with open(f'{bin_counters_dir}/{bin_id}.pkl', 'wb') as fh:
+            pickle.dump(result, fh)
 
     return result
 
@@ -146,7 +150,8 @@ def update_paper_bins_stats(
         pca_axes_filename,
         tmp_json_filename,
         final_json_filename,
-        cutoff_score=20
+        cutoff_score=20,
+        debug=False
 ):
     """
     This function performs all the updates necessary for the frontend to
@@ -165,8 +170,8 @@ def update_paper_bins_stats(
       * pca_axes_filename: name of file that contains the PC axes;
       * tmp_json_filename: input intermediate json filename;
       * final_json_filename: final output json filename (for front end);
-      * cutoff_score: a threshold to remove tokens.
-
+      * cutoff_score: a threshold to remove tokens;
+      * debug: bool; if true, bin_counters pickle file will be saved too.
     """
 
     # Read input paper landscape file and create a map from paper ID to bin_id
@@ -226,7 +231,8 @@ def update_paper_bins_stats(
         bin_stat_records.append(
             process_bin(
                 bin_id, bin_data, bin_centroid[bin_id],
-                total_counts, total_sum, pca_axes_df
+                total_counts, total_sum, pca_axes_df,
+                debug=debug
             )
         )
 
@@ -265,5 +271,6 @@ if __name__ == "__main__":
         token_counts_filename,
         pca_axes_filename,
         tmp_json_filename,
-        final_json_filename
+        final_json_filename,
+        debug=True
     )
