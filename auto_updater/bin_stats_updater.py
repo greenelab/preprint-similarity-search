@@ -181,7 +181,7 @@ def update_paper_bins_stats(
     )
 
     # Read embeddings into dictionary
-    updater_log(f"Reading {paper_embeddings_filename} (8~9 minutes) ...")
+    updater_log(f"Reading {embeddings_filename} (8~9 minutes) ...")
     bin_centroid = get_bin_centroid(embeddings_filename, pmc_bin_mapper)
 
     # Read global word counter file to get word counts in each bin:
