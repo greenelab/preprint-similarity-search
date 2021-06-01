@@ -83,25 +83,23 @@ def get_odds_ratio(bin_data, total_counts, total_sum):
       * bin_data: dict that contains tokens and counts in the current bin;
       * total_counts: dict that contains all tokens and counts;
       * total_sum: total number of tokens;
-      * cutoff_score: a threshold to remove tokens.
     """
 
     bin_sum = sum(bin_data.values())
+    odd_ratio_records = []
 
     # Calculate odds ratio
-    bin_words = set(bin_data.keys())
-    word_odd_ratio_records = []
-    for idx, word in enumerate(bin_words):
-        top = float(bin_data[word] * total_sum)
-        bottom = float(total_counts[word] * bin_sum)
-        word_odd_ratio_records.append(
+    for word, count_value in bin_data.items():
+        top = count_value * total_sum
+        bottom = total_counts[word] * bin_sum
+        odd_ratio_records.append(
             {
                 "lemma": word,
                 "odds_ratio": np.log(top / bottom)
             }
         )
 
-    return word_odd_ratio_records
+    return odd_ratio_records
 
 
 def process_bin(
