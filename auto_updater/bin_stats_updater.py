@@ -133,7 +133,7 @@ def process_bin(
     }
 
     # dhu test: Write output to pickle file:
-    with open(f'tmp/bin_counters/{bin_id}.pkl', 'wb') as fh:
+    with open(f'/tmp/bin_counters/{bin_id}.pkl', 'wb') as fh:
         pickle.dump(result, fh)
 
     return result
