@@ -339,13 +339,13 @@ def parse_new_papers(
     all_filenames = os.listdir(tarball_dir)
     tarball_files = [x for x in all_filenames if x.endswith(".xml.tar.gz")]
 
-    pmc_list_subdir = Path(new_papers_dir, 'pmc_list')
+    pmc_list_subdir = Path(new_papers_dir, 'pmc_list_sub')
     os.makedirs(pmc_list_subdir, exist_ok=True)
 
-    embeddings_subdir = Path(new_papers_dir, 'embeddings')
+    embeddings_subdir = Path(new_papers_dir, 'embeddings_sub')
     os.makedirs(embeddings_subdir, exist_ok=True)
 
-    token_counts_subdir = Path(new_papers_dir, 'token_counts')
+    token_counts_subdir = Path(new_papers_dir, 'token_counts_sub')
     os.makedirs(token_counts_subdir, exist_ok=True)
 
     pool = mp.Pool(parallel)
