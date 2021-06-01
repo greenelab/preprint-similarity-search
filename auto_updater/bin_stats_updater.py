@@ -5,7 +5,6 @@ Update PMC square bins and create plot JSON file.
 """
 
 import csv
-import multiprocessing as mp
 import os
 import pickle
 from collections import defaultdict, Counter
