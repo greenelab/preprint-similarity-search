@@ -7,6 +7,7 @@ Main Python module that starts the auto-updater pipeline.
 import os
 from pathlib import Path
 
+from bin_stats_updater import update_paper_bins_stats
 from downloader import download_xml_files
 from journal_centroid import generate_journal_centroid
 from merger import merge_files
@@ -135,7 +136,7 @@ if __name__ == "__main__":
     tmp_plot_filename = Path(output_dir, 'pmc_plot_tmp.json')
 
     updater_log(
-        "Generating SAUCIE coordinates and updating square bins ..."
+        "Updating SAUCIE coordinates and square bins ..."
         prefix_blank_line=True
     )
     generate_SAUCIE_coordinates(
@@ -144,15 +145,16 @@ if __name__ == "__main__":
         updated_pmc_tsne_filename,
         tmp_plot_filename
     )
+    updater_log("SAUCIE coordinates and square bins updated")
 
-    '''
+
     # (6) Update bin stats
     # ------------------------------------------------------------------
     # Output file: final PMC plot JSON file
-    final_plot_filename = Path(output_dir, 'pmc_plot.json')
+    final_plot_filename = Path(output_dir, 'pmc_plot_final.json')
 
     updater_log(
-        "Updating each bin stats and creating PMC plot JSON file ...",
+        "Updating PMC plot json file ...",
         prefix_blank_line=True
     )
     update_paper_bins_stats(
@@ -163,6 +165,7 @@ if __name__ == "__main__":
         tmp_plot_filename,
         final_plot_filename
     )
+    updater_log("PMC plot json file updated")
 
     # (7) Minimize plot JSON file for frontend
     # ------------------------------------------------------------------
@@ -182,5 +185,3 @@ if __name__ == "__main__":
     pickled_pmc_map_filename = Path(deployment_dir, 'pmc_map.pkl')
 
     Updater_log("Creating pickled kd-tree files ...", prefix_blank_line=True)
-
-    '''
