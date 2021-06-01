@@ -32,14 +32,13 @@ def generate_journal_centroid(paper_embeddings_filename, output_filename):
             if line_num == 0:
                 dim = len(line) - 2
 
-                if line["journal"] not in journal_centroid:
-                    journal_centroid[line["journal"]] = {
-                        "journal": line["journal"],
-                        "document": line["document"],
-                        "vector": np.array([float(line[f"feat_{idx}"]) for idx in range(dim)]),
-                        "counter": 1,
-                    }
-
+            if line["journal"] not in journal_centroid:
+                journal_centroid[line["journal"]] = {
+                    "journal": line["journal"],
+                    "document": line["document"],
+                    "vector": np.array([float(line[f"feat_{idx}"]) for idx in range(dim)]),
+                    "counter": 1,
+                }
             else:
                 journal_centroid[line["journal"]]["counter"] += 1
                 journal_centroid[line["journal"]]["vector"] += np.array(
