@@ -5,7 +5,6 @@ Update PMC square bins and create plot JSON file.
 """
 
 import csv
-import os
 import pickle
 from collections import Counter
 from datetime import datetime
