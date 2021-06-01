@@ -3,7 +3,6 @@
 # Generate journal centroid dataset
 
 import csv
-#from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -23,7 +22,7 @@ def generate_journal_centroid(paper_embeddings_filename, output_filename):
       * output_filename - output file that contains the journal centroids
     """
 
-    journal_centroid = dict()  # defaultdict(dict)
+    journal_centroid = dict()
 
     # Read input paper embeddings file
     with open(paper_embeddings_filename, "r") as ifh:
