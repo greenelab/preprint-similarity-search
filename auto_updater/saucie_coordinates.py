@@ -70,7 +70,7 @@ def generate_saucie_coordinates(
     square_iterator = enumerate(square_bin_plot_df.iterrows())
     mapped_data_df = pd.DataFrame([], columns=landscape_df.columns.tolist())
 
-    for idx, (row_idx, square_bin) in tqdm.tqdm(square_iterator):
+    for idx, (row_idx, square_bin) in square_iterator:
         top_left = (square_bin["xmin"], square_bin["ymax"])
         bottom_right = (square_bin["xmax"], square_bin["ymin"])
 

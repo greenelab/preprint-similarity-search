@@ -26,7 +26,7 @@ LAST_OUTPUT_DIR=$(readlink -e ../last_run/output)
 ln -sf ${LAST_OUTPUT_DIR}/embeddings_full.tsv ./input
 ln -sf ${LAST_OUTPUT_DIR}/global_token_counts.tsv ./input
 ln -sf ${LAST_OUTPUT_DIR}/pmc_oa_file_list.tsv ./input
-ln -sf ${LAST_OUTPUT_DIR}/pmc_tsne_sqaure.tsv ./input
+ln -sf ${LAST_OUTPUT_DIR}/pmc_tsne_square.tsv ./input
 
 # Run auto-updater's main module inside a virtual env
 source $HOME/venv/pss-updater/bin/activate

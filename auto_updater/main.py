@@ -128,7 +128,7 @@ if __name__ == "__main__":
     # (5) Generate saucie coordinates for new papers and update the sqaure bins
     # -------------------------------------------------------------------------
     # Input file: paper tsne file in last run
-    old_pmc_tsne_filename = Path(input_dir, 'pmc_tsne_sqaure.tsv')
+    old_pmc_tsne_filename = Path(input_dir, 'pmc_tsne_square.tsv')
 
     # Output files: paper landscape file and intermediate PMC plot JSON file
     updated_pmc_tsne_filename = Path(output_dir, 'pmc_tsne_square.tsv')
@@ -144,6 +144,7 @@ if __name__ == "__main__":
         updated_pmc_tsne_filename,
         tmp_plot_filename
     )
+
     '''
     # (6) Update bin stats
     # ------------------------------------------------------------------
