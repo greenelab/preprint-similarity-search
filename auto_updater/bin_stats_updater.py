@@ -228,13 +228,12 @@ def update_paper_bins_stats(
     updater_log("Processing all square bins ...")
     bin_stat_records = list()
     for bin_id, bin_data in enumerate(bin_counts):
-        bin_stat_records.append(
-            process_bin(
-                bin_id, bin_data, bin_centroid[bin_id],
-                total_counts, total_sum, pca_axes_df,
-                debug=debug
-            )
+        bin_result = process_bin(
+            bin_id, bin_data, bin_centroid[bin_id],
+            total_counts, total_sum, pca_axes_df,
+            debug=debug
         )
+        bin_stat_records.append(bin_result)
 
     # Update JSON file and write it to disk
     square_plot_df = pd.read_json(tmp_json_filename)
