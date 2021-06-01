@@ -9,7 +9,7 @@ import pandas as pd
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 
-sys.path.append(Path("./server").resolve()) # make SAUCIE package importable
+sys.path.append(Path("../server").resolve()) # make SAUCIE package importable
 from SAUCIE import SAUCIE, Loader
 
 
