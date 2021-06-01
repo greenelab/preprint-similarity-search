@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 import spacy
 
-from utils import updater_log
+from utils import set_read_only, updater_log
 
 # Default pipelines: only "parser" and "ner" can be disabled.
 # Disabling any other pipelines will affect the lemma functionality.
@@ -49,7 +49,7 @@ parser = ET.XMLParser(encoding="UTF-8", recover=True)
 stop_words = nlp.Defaults.stop_words
 
 
-def parallel_process_tarball(
+def process_tarball(
         tarball_filename,
         prev_pmc_list_filename,
         word_model_vector_filename,
@@ -102,6 +102,11 @@ def parallel_process_tarball(
                 word_model_wv, prev_pmc_ids, tarball_basename, tar_fh,
                 pmc_list_writer, embeddings_writer, token_counts_writer
             )
+
+    # Set output files read-only
+    set_read_only(new_pmc_list_filename)
+    set_read_only(new_embeddings_filename)
+    set_read_only(new_token_counts_filename)
 
     updater_log(f"'{tarball_filename}' is done")
 
@@ -247,6 +252,9 @@ def combine_new_pmc_list(pmc_list_subdir, combined_pmc_list_filename):
                 for line in ifh:
                     ofh.write(line)
 
+    # Set combined output file read-only
+    set_read_only(combined_pmc_list_filename)
+
 
 def combine_new_embeddings(embeddings_subdir, combined_embeddings_filename):
     """
@@ -274,6 +282,9 @@ def combine_new_embeddings(embeddings_subdir, combined_embeddings_filename):
                     if pmc_id not in merged_pmc:
                         ofh.write(line)
                         merged_pmc.add(pmc_id)
+
+    # Set combined output file read-only
+    set_read_only(combined_embeddings_filename)
 
 
 def combine_new_token_counts(token_counts_subdir, combined_token_counts_filename):
@@ -308,6 +319,9 @@ def combine_new_token_counts(token_counts_subdir, combined_token_counts_filename
                         prev_pmc = pmc_id
 
                     writer.writerow(row)
+
+    # Set combined output file read-only
+    set_read_only(combined_token_counts_filename)
 
 
 def parse_new_papers(
@@ -349,7 +363,7 @@ def parse_new_papers(
             Path(token_counts_subdir, output_basename)
         )
 
-        pool.apply_async(parallel_process_tarball, args)
+        pool.apply_async(process_tarball, args)
 
     pool.close()
     pool.join()

@@ -29,6 +29,8 @@ def simple_merge(input_filenames, merged_filename):
                 for line in ifh:
                     ofh.write(line)
 
+    set_read_only(merged_filename)  # set output file read-only
+
 
 def merge_files(
         prev_pmc_list_filename,
@@ -46,19 +48,24 @@ def merge_files(
     """
 
     updater_log("Merging pmc_list files ...")
+
     simple_merge(
         [prev_pmc_list_filename, new_pmc_list_filename],
         merged_pmc_list_filename
     )
 
     updater_log("Merging embeddings files ...")
+
     simple_merge(
         [prev_embeddings_filename, new_embeddings_filename],
         merged_embeddings_filename
     )
 
     updater_log("Merging token_counts files ...")
+
     simple_merge(
         [prev_token_counts_filename, new_token_counts_filename],
         merged_token_counts_filename
     )
+
+    updater_log("Finished merging files")

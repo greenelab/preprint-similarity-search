@@ -35,4 +35,10 @@ echo "$(date): Running main.py ..."
 
 python3 ./main.py
 
+# Copy deployment files to Google Cloud bucket
+
+
+# Delete data files that are older than two months
+find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
+
 echo "$(date): Done"

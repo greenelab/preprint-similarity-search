@@ -10,7 +10,7 @@ from pathlib import Path
 import shutil
 import urllib.request as request
 
-from utils import updater_log, set_read_only
+from utils import set_read_only, updater_log
 
 pmc_open_access_url = "ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/oa_bulk/"
 

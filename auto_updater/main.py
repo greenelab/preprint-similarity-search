@@ -8,8 +8,10 @@ import os
 from pathlib import Path
 
 from downloader import download_xml_files
+from journal_centroid import generate_journal_centroid
 from merger import merge_files
 from paper_parser import parse_new_papers
+from saucie_corrdinates import generate_saucie_coordinates
 from utils import updater_log
 
 
@@ -26,18 +28,13 @@ if __name__ == "__main__":
     word_model_vector_filename = Path(static_data_dir, 'word_model.wv.pkl')
 
     # Input/output data directory for current run
-    curr_data_dir = Path(parent_dir, 'data', 'current_run')
+    current_data_dir = Path(parent_dir, 'data', 'current_run')
 
     # Input dir
-    input_dir = Path(curr_data_dir, 'input')
-
-    # Input files: data from previous run
-    prev_pmc_list_filename = Path(input_dir, 'pmc_oa_file_list.tsv')
-    prev_embeddings_filename = Path(input_dir, 'embeddings_full.tsv')
-    prev_token_counts_filename = Path(input_dir,'global_token_counts.tsv')
+    input_dir = Path(current_data_dir, 'input')
 
     # Output dir
-    output_dir = Path(curr_data_dir, 'output')
+    output_dir = Path(current_data_dir, 'output')
     os.makedirs(output_dir, exist_ok=True)    # If not exist yet, create it
 
     # ------------------------------------------------------------------
@@ -57,6 +54,9 @@ if __name__ == "__main__":
 
     # (2) Find new papers in downloaded files and process them
     # ------------------------------------------------------------------
+    # Input file: pmc list in last run
+    prev_pmc_list_filename = Path(input_dir, 'pmc_oa_file_list.tsv')
+
     # Output dir for new papers
     new_papers_dir = Path(output_dir, 'new_papers')
     os.makedirs(new_papers_dir, exist_ok=True)  # If not exist yet, create it
@@ -69,7 +69,8 @@ if __name__ == "__main__":
     # Number of concurrent processes launched to process new papers
     parallel = 6
 
-    updater_log("Finding and parsing new papers", prefix_blank_line=True)
+    updater_log("Find and parse new papers", prefix_blank_line=True)
+
     '''dhu
     parse_new_papers(
         download_dir,
@@ -85,6 +86,10 @@ if __name__ == "__main__":
 
     # (3) Merge new papers data with previous run
     # ------------------------------------------------------------------
+    # Input files: embeddings and global token counts files in last run
+    prev_embeddings_filename = Path(input_dir, 'embeddings_full.tsv')
+    prev_token_counts_filename = Path(input_dir,'global_token_counts.tsv')
+
     # Full path of new papers data files generated in previous step:
     new_pmc_list_filename = Path(new_papers_dir, new_pmc_list_basename)
     new_embeddings_filename = Path(new_papers_dir, new_embeddings_basename)
@@ -95,7 +100,8 @@ if __name__ == "__main__":
     merged_embeddings_filename = Path(output_dir, 'embeddings_full.tsv')
     merged_token_counts_filename = Path(output_dir, 'global_token_counts.tsv')
 
-    updater_log("Merging new data with last run", prefix_blank_line=True)
+    updater_log("Merge new data with last run", prefix_blank_line=True)
+
     merge_files(
         prev_pmc_list_filename,
         prev_embeddings_filename,
@@ -108,7 +114,6 @@ if __name__ == "__main__":
         merged_token_counts_filename
     )
 
-    '''
     # (4) Create new journal centroid based on merged data
     # ------------------------------------------------------------------
     # Output file: journal centroid
@@ -120,23 +125,26 @@ if __name__ == "__main__":
         journal_centroid_filename
     )
 
-    # (5) Generate sauice coordinates for new papers and update the sqaure bins
+    # (5) Generate saucie coordinates for new papers and update the sqaure bins
     # -------------------------------------------------------------------------
+    # Input file: paper tsne file in last run
+    old_pmc_tsne_filename = Path(input_dir, 'pmc_tsne_sqaure.tsv')
+
     # Output files: paper landscape file and intermediate PMC plot JSON file
-    paper_landscape_filename = Path(output_dir, 'paper_landscape.tsv')
+    updated_pmc_tsne_filename = Path(output_dir, 'pmc_tsne_square.tsv')
     tmp_plot_filename = Path(output_dir, 'pmc_plot_tmp.json')
 
-    print(flush=True)
     updater_log(
         "Generating SAUCIE coordinates and updating square bins ..."
         prefix_blank_line=True
     )
     generate_SAUCIE_coordinates(
         new_embeddings_filename,
-        paper_landscape_filename,
+        old_pmc_tsne_filename,
+        updated_pmc_tsne_filename,
         tmp_plot_filename
     )
-
+    '''
     # (6) Update bin stats
     # ------------------------------------------------------------------
     # Output file: final PMC plot JSON file
