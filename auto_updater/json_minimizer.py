@@ -20,8 +20,10 @@ confirmed that they have identical contents.
 import json
 import sys
 
+from utils import set_read_only
 
-def convert_entry(input_entry):
+
+def minimize_entry(input_entry):
     """Convert an input dict and return the new dict."""
 
     output_entry = dict()
@@ -59,7 +61,7 @@ def convert_entry(input_entry):
     return output_entry
 
 
-def convert_json(input_filename, output_filename):
+def minimize_json(input_filename, output_filename):
     """
     Convert an input JSON object in `input_filename` and save the new
     JSON object in `output_filename`.
@@ -68,13 +70,15 @@ def convert_json(input_filename, output_filename):
     with open(input_filename) as ifh:
         input_obj = json.load(ifh)
 
-    output_obj = list(map(convert_entry, input_obj))
+    output_obj = list(map(minimize_entry, input_obj))
     output_obj.sort(
         key=lambda entry: (entry['y'], entry['x'])
     )
 
     with open(output_filename, 'w') as ofh:
         json.dump(output_obj, ofh, separators=(',', ':'))
+
+    set_read_only(output_filename)  # set output file read-only
 
 
 # Test harness

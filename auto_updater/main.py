@@ -9,7 +9,9 @@ from pathlib import Path
 
 from bin_stats_updater import update_paper_bins_stats
 from downloader import download_xml_files
+from json_minimizer import minimize_json
 from journal_centroid import generate_journal_centroid
+from kd_tree_creator import pickle_kd_tree
 from merger import merge_files
 from paper_parser import parse_new_papers
 from saucie_corrdinates import generate_saucie_coordinates
@@ -120,7 +122,7 @@ if __name__ == "__main__":
     # Output file: journal centroid
     journal_centroid_filename = Path(output_dir, 'journals.tsv')
 
-    Updater_log("Updating centroid dataset ...", prefix_blank_line=True)
+    updater_log("Updating centroid dataset ...", prefix_blank_line=True)
     generate_journal_centroid(
         merged_embeddings_filename,
         journal_centroid_filename
@@ -158,7 +160,7 @@ if __name__ == "__main__":
         prefix_blank_line=True
     )
     update_paper_bins_stats(
-        paper_landscape_filename,
+        updated_pmc_tsne_filename,
         merged_embeddings_filename,
         merged_token_counts_filename,
         pca_axes_filename,
@@ -169,19 +171,26 @@ if __name__ == "__main__":
 
     # (7) Minimize plot JSON file for frontend
     # ------------------------------------------------------------------
-    # Deployment dir: create it if not exist yet.
+    updater_log("Creating minimized plot json file ...", prefix_blank_line=True)
+
+    # Deployment dir: create it if not exist yet
     deployment_dir = Path(output_dir, 'deployment')
     os.makedirs(deployment_dir, exist_ok=True)
 
     # Output file: minimized plot JSON file for frontend deployment
     mini_plot_filename = Path(deployment_dir, 'plot.json')
+    minimize_json(final_plot_filename, mini_plot_filename)
 
-    Updater_log("Creating minimized plot JSON file ...", prefix_blank_line=True)
+    updater_log("minimized json plot file created")
 
     # (8) Create kdtree-related pickle files for backend
     # ------------------------------------------------------------------
-    # Output files: pickled files for backend deployment:
-    pickled_kdtree_filename = Path(deployment_dir, 'kdtree.pkl')
-    pickled_pmc_map_filename = Path(deployment_dir, 'pmc_map.pkl')
+    updater_log("Creating pickled kd-tree files ...", prefix_blank_line=True)
 
-    Updater_log("Creating pickled kd-tree files ...", prefix_blank_line=True)
+    # Output files: pickled files for backend deployment:
+    pmc_pkl_filename = Path(deployment_dir, 'pmc_map.pkl')
+    kdtree_pkl_filename = Path(deployment_dir, 'kd_tree.pkl')
+
+    pickle_kd_tree(merged_embeddings_filename, pmc_pkl_filename, kdtree_pkl_filename)
+
+    updater_log("Pickled kd-tree files created")
