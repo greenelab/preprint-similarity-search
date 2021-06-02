@@ -8,6 +8,7 @@ import csv
 import os
 import pickle
 from collections import Counter
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -106,6 +107,7 @@ def get_odds_ratio(bin_data, total_counts, total_sum):
 def process_bin(
         bin_id, bin_data, centroid_data,
         total_counts, total_sum, pca_axes_df,
+        output_dir,
         debug=False
 ):
     """Process a single square bin."""
@@ -132,7 +134,7 @@ def process_bin(
 
     # For debugging only: pickle bin counter data on disk
     if debug:
-        bin_counters_dir = '/tmp/bin_counters'
+        bin_counters_dir = Path(output_dir, 'bin_counters')
         os.makedirs(bin_counters_dir, exist_ok=True)
         with open(f'{bin_counters_dir}/{bin_id}.pkl', 'wb') as fh:
             pickle.dump(result, fh)
@@ -224,10 +226,12 @@ def update_paper_bins_stats(
     # Process all bins
     updater_log("Processing all square bins ...")
     bin_stat_records = list()
+    output_dir = Path(final_json_filename).parent
     for bin_id, bin_data in enumerate(bin_counts):
         bin_result = process_bin(
             bin_id, bin_data, bin_centroid[bin_id],
             total_counts, total_sum, pca_axes_df,
+            output_dir,
             debug=debug
         )
         bin_stat_records.append(bin_result)
