@@ -20,6 +20,8 @@ from utils import updater_log
 
 # Main program
 if __name__ == "__main__":
+    updater_log("Start auto_updater pipeline")
+
     # Get name of the directory that this script is located:
     parent_dir = Path(__file__).resolve().parent
 
@@ -36,27 +38,34 @@ if __name__ == "__main__":
     # Input dir
     input_dir = Path(current_data_dir, 'input')
 
-    # Output dir
+    # Output dir: If not exist yet, create it
     output_dir = Path(current_data_dir, 'output')
-    os.makedirs(output_dir, exist_ok=True)    # If not exist yet, create it
+    os.makedirs(output_dir, exist_ok=True)
 
-    # ------------------------------------------------------------------
+    # Deployment dir: sub-directory for output files that will be
+    # directly used by the backend server.
+    deployment_dir = Path(output_dir, 'deployment')
+    os.makedirs(deployment_dir, exist_ok=True)
+
+    #===================================================================
     #                    Run the pipeline
-    # ------------------------------------------------------------------
+    #===================================================================
 
     # (1) Download XML tarball files
     # ------------------------------------------------------------------
+
     # Output dir where the downloaded files will be saved in
     download_dir = Path(output_dir, 'downloaded_files')
     os.makedirs(download_dir, exist_ok=True)  # If not exist yet, create it
 
-    updater_log("Start auto_updater pipeline", prefix_blank_line=True)
-    '''dhu
     download_xml_files(download_dir)
-    '''
+    updater_log("NCBI tarball files downloaded\n")
+
 
     # (2) Find new papers in downloaded files and process them
     # ------------------------------------------------------------------
+    updater_log("Find and parse new papers ...")
+
     # Input file: pmc list in last run
     prev_pmc_list_filename = Path(input_dir, 'pmc_oa_file_list.tsv')
 
@@ -72,9 +81,6 @@ if __name__ == "__main__":
     # Number of concurrent processes launched to process new papers
     parallel = 6
 
-    updater_log("Find and parse new papers", prefix_blank_line=True)
-
-    '''dhu
     parse_new_papers(
         download_dir,
         prev_pmc_list_filename,
@@ -85,10 +91,14 @@ if __name__ == "__main__":
         new_token_counts_basename,
         parallel=parallel
     )
-    '''
+
+    updater_log("New papers parsed\n")
+
 
     # (3) Merge new papers data with previous run
     # ------------------------------------------------------------------
+    updater_log("Merge new papers data with data in last run ...")
+
     # Input files: embeddings and global token counts files in last run
     prev_embeddings_filename = Path(input_dir, 'embeddings_full.tsv')
     prev_token_counts_filename = Path(input_dir,'global_token_counts.tsv')
@@ -103,8 +113,6 @@ if __name__ == "__main__":
     merged_embeddings_filename = Path(output_dir, 'embeddings_full.tsv')
     merged_token_counts_filename = Path(output_dir, 'global_token_counts.tsv')
 
-    updater_log("Merge new data with last run", prefix_blank_line=True)
-
     merge_files(
         prev_pmc_list_filename,
         prev_embeddings_filename,
@@ -117,48 +125,52 @@ if __name__ == "__main__":
         merged_token_counts_filename
     )
 
+    updater_log("New papers data merged with data in last run\n")
+
+
     # (4) Create new journal centroid based on merged data
     # ------------------------------------------------------------------
-    # Output file: journal centroid
-    journal_centroid_filename = Path(output_dir, 'journals.tsv')
+    updater_log("Create journal centroid file ...")
 
-    updater_log("Updating centroid dataset ...", prefix_blank_line=True)
+    # One output file that will be saved in `deployment_dir`:
+    journal_centroid_filename = Path(deployment_dir, 'journals.tsv')
+
     generate_journal_centroid(
         merged_embeddings_filename,
         journal_centroid_filename
     )
 
-    # (5) Generate saucie coordinates for new papers and update the sqaure bins
-    # -------------------------------------------------------------------------
+    updater_log("Journal centroid file created\n")
+
+
+    # (5) Update saucie coordinates and PMC sqaure bins
+    # --------------------------------------------------------------------
+    updater_log("Updating SAUCIE coordinates and square bins ...")
+
     # Input file: paper tsne file in last run
     old_pmc_tsne_filename = Path(input_dir, 'pmc_tsne_square.tsv')
 
-    # Output files: paper landscape file and intermediate PMC plot JSON file
+    # Output files: PMC tsne file and intermediate PMC plot json file
     updated_pmc_tsne_filename = Path(output_dir, 'pmc_tsne_square.tsv')
     tmp_plot_filename = Path(output_dir, 'pmc_plot_tmp.json')
 
-    updater_log(
-        "Updating SAUCIE coordinates and square bins ..."
-        prefix_blank_line=True
-    )
     generate_SAUCIE_coordinates(
         new_embeddings_filename,
         old_pmc_tsne_filename,
         updated_pmc_tsne_filename,
         tmp_plot_filename
     )
-    updater_log("SAUCIE coordinates and square bins updated")
+
+    updater_log("SAUCIE coordinates and square bins updated\n")
 
 
-    # (6) Update bin stats
+    # (6) Update PMC bin stats and final plot json file
     # ------------------------------------------------------------------
+    updater_log("Updating PMC plot json file ...")
+
     # Output file: final PMC plot JSON file
     final_plot_filename = Path(output_dir, 'pmc_plot_final.json')
 
-    updater_log(
-        "Updating PMC plot json file ...",
-        prefix_blank_line=True
-    )
     update_paper_bins_stats(
         updated_pmc_tsne_filename,
         merged_embeddings_filename,
@@ -167,30 +179,33 @@ if __name__ == "__main__":
         tmp_plot_filename,
         final_plot_filename
     )
-    updater_log("PMC plot json file updated")
+
+    updater_log("PMC plot json file updated\n")
+
 
     # (7) Minimize plot JSON file for frontend
     # ------------------------------------------------------------------
-    updater_log("Creating minimized plot json file ...", prefix_blank_line=True)
+    updater_log("Creating minimized plot json file ...")
 
-    # Deployment dir: create it if not exist yet
-    deployment_dir = Path(output_dir, 'deployment')
-    os.makedirs(deployment_dir, exist_ok=True)
-
-    # Output file: minimized plot JSON file for frontend deployment
+    # One output file that will be saved in `deployment_dir`:
     mini_plot_filename = Path(deployment_dir, 'plot.json')
+
     minimize_json(final_plot_filename, mini_plot_filename)
 
-    updater_log("minimized json plot file created")
+    updater_log("minimized json plot file created\n")
+
 
     # (8) Create kdtree-related pickle files for backend
     # ------------------------------------------------------------------
-    updater_log("Creating pickled kd-tree files ...", prefix_blank_line=True)
+    updater_log("Creating pickled kd-tree files ...")
 
-    # Output files: pickled files for backend deployment:
+    # Two output files that will be saved in `deployment_dir`:
     pmc_pkl_filename = Path(deployment_dir, 'pmc_map.pkl')
     kdtree_pkl_filename = Path(deployment_dir, 'kd_tree.pkl')
 
-    pickle_kd_tree(merged_embeddings_filename, pmc_pkl_filename, kdtree_pkl_filename)
+    pickle_kd_tree(
+        merged_embeddings_filename,
+        pmc_pkl_filename, kdtree_pkl_filename
+    )
 
-    updater_log("Pickled kd-tree files created")
+    updater_log("Pickled kd-tree files created\n")

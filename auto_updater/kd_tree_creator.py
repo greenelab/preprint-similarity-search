@@ -19,7 +19,7 @@ def pickle_kd_tree(dataset_filename, pmc_pkl_filename, kdtree_pkl_filename):
     Compute Engine instance (64-GB RAM).
     """
 
-    # Read paper_dataset file: 3.3 minutes
+    # Read paper_dataset file: 3 minutes
     updater_log(f"Reading {dataset_filename} ...")
     df = pd.read_csv(dataset_filename, sep="\t").set_index("document")
 
