@@ -5,6 +5,7 @@ Create pickle kdtree related files for backend server use.
 """
 
 import pickle
+from pathlib import Path
 
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
