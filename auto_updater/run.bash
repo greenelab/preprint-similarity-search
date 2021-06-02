@@ -39,11 +39,14 @@ python3 ./main.py
 # Copy deployment files to Google Cloud bucket
 
 
-# Rebuild soymbolic links
-ln -sf ${SCRIPT_DIR}/data/${DATE_STR} ${SCRIPT_DIR}/data/last_run
+# Reset symbolic link
+mv ${SCRIPT_DIR}/data/current_run ${SCRIPT_DIR}/data/last_run
 
 
 # Delete data files that are older than two months
 find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
 
 echo "$(date): Done"
+
+# Shutdown itself
+sudo init 0
