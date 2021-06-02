@@ -52,7 +52,7 @@ if __name__ == "__main__":
     data_dir = './data/current_run/output/'
 
     # Input file
-    dataset_filename = path(data_dir, 'embeddings_full.tsv')
+    dataset_filename = Path(data_dir, 'embeddings_full.tsv')
 
     # Output files
     pmc_pkl_filename = Path(data_dir, 'deployment', 'pmc_map.pkl')
