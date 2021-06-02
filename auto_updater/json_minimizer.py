@@ -90,4 +90,4 @@ if __name__ == '__main__':
     input_filename = sys.argv[1]
     output_filename = sys.argv[2]
 
-    convert_json(input_filename, output_filename)
+    minimize_json(input_filename, output_filename)
