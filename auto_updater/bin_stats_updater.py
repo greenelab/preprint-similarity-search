@@ -22,7 +22,7 @@ def get_bin_centroid(embeddings_filename, pmc_bin_mapper):
 
     bin_centroid = dict()
 
-    with open(embeddings_filename) as ifh:
+    with open(embeddings_filename, newline='') as ifh:
         reader = csv.DictReader(ifh, delimiter="\t")
         for line_num, line in enumerate(reader):
             if line_num == 0:
@@ -193,7 +193,7 @@ def update_paper_bins_stats(
     ]
 
     updater_log(f"Reading {token_counts_filename} (~2.5 hours) ...")
-    with open(token_counts_filename) as ifh:
+    with open(token_counts_filename, newline='') as ifh:
         count_reader = csv.DictReader(ifh, delimiter="\t")
         for line in count_reader:
             token_count_entry = {line["lemma"]: int(line["count"])}

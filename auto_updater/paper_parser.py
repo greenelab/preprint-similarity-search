@@ -76,9 +76,9 @@ def process_tarball(
     tarball_basename = Path(tarball_filename).name
     with tarfile.open(tarball_filename, "r:gz") as tar_fh:
         # Write header lines into three output files
-        with open(new_pmc_list_filename, "w") as pmc_list_fh, \
-         open(new_embeddings_filename, "w") as embeddings_fh, \
-         open(new_token_counts_filename, "w") as token_counts_fh:
+        with open(new_pmc_list_filename, 'w', newline='') as pmc_list_fh, \
+         open(new_embeddings_filename, 'w', newline='') as embeddings_fh, \
+         open(new_token_counts_filename, 'w', newline='') as token_counts_fh:
             pmc_list_writer = csv.DictWriter(
                 pmc_list_fh, delimiter="\t", fieldnames=["tarfile", "file_path"]
             )
@@ -297,14 +297,14 @@ def combine_new_token_counts(token_counts_subdir, combined_token_counts_filename
     sub_files = sorted(os.listdir(token_counts_subdir))
     merged_pmc = set()
 
-    with open(combined_token_counts_filename, mode='w') as ofh:
+    with open(combined_token_counts_filename, 'w', newline='') as ofh:
         fieldnames = ['document', 'lemma', 'count']
         writer = csv.DictWriter(ofh, fieldnames=fieldnames, delimiter='\t')
         writer.writeheader()
 
         for filename in sub_files:
             file_path = Path(token_counts_subdir, filename)
-            with open(file_path) as ifh:
+            with open(file_path, newline='') as ifh:
                 prev_pmc = None
                 csv_reader = csv.DictReader(ifh, delimiter='\t')
                 for row in csv_reader:

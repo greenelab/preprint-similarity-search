@@ -25,7 +25,7 @@ def generate_journal_centroid(paper_embeddings_filename, output_filename):
     journal_centroid = dict()
 
     # Read input paper embeddings file
-    with open(paper_embeddings_filename, "r") as ifh:
+    with open(paper_embeddings_filename, newline='') as ifh:
         reader = csv.DictReader(ifh, delimiter="\t")
         for line_num, line in enumerate(reader):
             if line_num == 0:
@@ -45,7 +45,7 @@ def generate_journal_centroid(paper_embeddings_filename, output_filename):
                 )
 
     # Write output file
-    with open(output_filename, "w") as outfile:
+    with open(output_filename, "w", newline='') as outfile:
         writer = csv.DictWriter(
             outfile,
             fieldnames=["journal", "document"] + [f"feat_{idx}" for idx in range(dim)],
