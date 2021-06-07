@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Deploy auto_updater on a brandnew machine
+# Deploy auto-updater on a brandnew machine
 
 sudo apt-get update
 sudo apt-get dist-upgrade --yes
@@ -28,12 +28,12 @@ git submodule update --init
 #         import tensorflow.compat.v1 as tf
 #         tf.disable_eager_execution()
 
-cd ~/preprint-similarity-search/auto_updater
+cd ~/preprint-similarity-search/auto-updater
 pip install wheel
 pip install -r requirements.txt
 
 # Install 'ggplot2' and its dependency R packages in '/usr/local/lib/R/site-library/'
-# (required by `auto_updater/get_square_bins.R`)
+# (required by `auto-updater/get_square_bins.R`)
 sudo su - -c "R -e \"install.packages('ggplot2')\""
 
 # Install 'en-core-web-sm' pip package in venv
