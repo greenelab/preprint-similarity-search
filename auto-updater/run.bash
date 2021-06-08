@@ -12,7 +12,6 @@ sudo apt-get dist-upgrade --yes
 # Update repo
 cd ${SCRIPT_DIR}
 echo -e "\n$(date +"%F %X"): Update local repo"
-#git checkout master
 git pull
 
 # Create directory and symbolic links for current run
