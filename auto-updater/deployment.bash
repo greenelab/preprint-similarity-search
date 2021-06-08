@@ -38,3 +38,14 @@ sudo su - -c "R -e \"install.packages('ggplot2')\""
 
 # Install 'en-core-web-sm' pip package in venv
 python -m spacy download en_core_web_sm
+
+# Copy static data files from Google bucket
+mkdir ~/preprint-similarity-search/auto-updater/data
+cd ~/preprint-similarity-search/auto-updater/data
+gsutil cp -r gs://preprint-similarity-search/data_for_deployment/static .
+
+# Copy the data of last run from gs:///preprint-similarity-search/auto-updater/<last_run_date>
+# and build `last_run` symbolic link
+last_run_date='2021-06-30'
+gsutil cp -r gs://preprint-similarity-search/auto-updater/${last_run_date} .
+ln -sf ${last_run_date} last_run

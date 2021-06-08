@@ -20,7 +20,7 @@ from utils import updater_log
 
 # Main program
 if __name__ == "__main__":
-    updater_log("Start auto_updater pipeline")
+    updater_log("Python auto-updater pipeline started")
 
     # Get name of the directory that this script is located:
     parent_dir = Path(__file__).resolve().parent
