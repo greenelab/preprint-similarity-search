@@ -6,7 +6,7 @@ set -e
 SCRIPT_DIR=$(dirname $(readlink -e $0))
 
 # Create directory and symbolic links for current run
-echo "$(date): Creating directories for new run ..."
+echo "$(date +"%F %X"): Creating directories for new run ..."
 DATE_STR=$(date -I)
 cd ${SCRIPT_DIR}/data/
 mkdir -p ${DATE_STR}
@@ -32,27 +32,35 @@ ln -sf ${LAST_OUTPUT_DIR}/pmc_tsne_square.tsv ./input
 source $HOME/venv/auto-updater/bin/activate
 cd ${SCRIPT_DIR}
 
-echo -e "\n$(date): Running main.py ..."
+echo -e "\n$(date +"%F %X"): Running main.py ..."
 
 python3 ./main.py
 
 # Back up some output files to Google Cloud bucket
-echo "Copying output files to Google Cloud Bucket ..."
-gzip ...
-gzip ...
-gsutul cp -r ...
+echo "$(date +"%F %X"): Create output tarball file ..."
+cd ${SCRIPT_DIR}/data/current_run
+tar czvf ${DATE_STR}.tgz output/*.tsv output/*.json
+
+echo "$(date +"%F %X"): Copy output tarball file to Google Cloud Bucket ..."
+gsutil cp ${DATE_STR}.tgz gs://preprint-similarity-search/auto-updater/
+rm -f ${DATE_STR}.tgz
 
 # Copy deployment files to Google Cloud bucket
-echo -e "\nCopying merged output files to Google Cloud Bucket ..."
-gsutul cp -r ...
+echo -e "\n$(date +"%F %X"): Copy deployment files to Google Cloud Bucket ..."
+gsutil cp -r output/deployment gs://preprint-similarity-search/data_for_deployment/${DATE_STR}
+echo ${DATE_STR} > remote_version.txt
+gsutil cp remote_version.txt gs://preprint-similarity-search/data_for_deployment/
+rm -f remote_version.txt
 
-# Reset symbolic link
-mv -f ${SCRIPT_DIR}/data/current_run ${SCRIPT_DIR}/data/last_run
+# Reset symbolic links
+cd ${SCRIPT_DIR}/data
+rm -f last_run current_run
+ln -s ${DATE_STR} last_run
 
 # Delete data files that are older than two months
 find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
 
-echo -e "\n$(date): Done"
+echo -e "\n$(date +"%F %X"): Done"
 
 # Shutdown itself
 sudo init 0
