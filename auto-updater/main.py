@@ -58,7 +58,7 @@ if __name__ == "__main__":
     download_dir = Path(output_dir, 'downloaded_files')
     os.makedirs(download_dir, exist_ok=True)  # If not exist yet, create it
 
-    download_xml_files(download_dir)
+    #download_xml_files(download_dir)  # dhu
     updater_log("NCBI tarball files downloaded\n")
 
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     # Number of concurrent processes launched to process new papers
     parallel = 6
 
-    parse_new_papers(
+    num_new_papers = parse_new_papers(
         download_dir,
         prev_pmc_list_filename,
         word_model_vector_filename,
@@ -92,13 +92,11 @@ if __name__ == "__main__":
         parallel=parallel
     )
 
-    updater_log("New papers parsed\n")
+    updater_log(f"{num_new_papers} new papers found and parsed\n")
 
 
-    # (3) Merge new papers data with previous run
+    # (3) Merge new papers with last run
     # ------------------------------------------------------------------
-    updater_log("Merge new papers data with data in last run ...")
-
     # Input files: embeddings and global token counts files in last run
     prev_embeddings_filename = Path(input_dir, 'embeddings_full.tsv')
     prev_token_counts_filename = Path(input_dir,'global_token_counts.tsv')
@@ -125,7 +123,7 @@ if __name__ == "__main__":
         merged_token_counts_filename
     )
 
-    updater_log("New papers data merged with data in last run\n")
+    updater_log(f"{num_new_papers} new papers merged with last run\n")
 
 
     # (4) Create new journal centroid based on merged data
@@ -154,7 +152,7 @@ if __name__ == "__main__":
     updated_pmc_tsne_filename = Path(output_dir, 'pmc_tsne_square.tsv')
     tmp_plot_filename = Path(output_dir, 'pmc_plot_tmp.json')
 
-    generate_SAUCIE_coordinates(
+    generate_saucie_coordinates(
         new_embeddings_filename,
         old_pmc_tsne_filename,
         updated_pmc_tsne_filename,
