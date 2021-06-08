@@ -72,5 +72,5 @@ echo -e "\n$(date +"%F %X"): Clean up old files"
 find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
 
 # Shut down itself
-echo -e "\n$(date +"%F %X"): Done"
+echo -e "\n$(date +"%F %X"): Done\n"
 sudo init 0
