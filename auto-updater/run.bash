@@ -5,8 +5,18 @@ set -e
 
 SCRIPT_DIR=$(dirname $(readlink -e $0))
 
+# Upgrade OS packages
+echo "$(date +"%F %X"): Upgrade OS packages"
+sudo apt-get dist-upgrade --yes
+
+# Update repo
+cd ${SCRIPT_DIR}
+echo -e "\n$(date +"%F %X"): Update local repo"
+#git checkout master
+git pull
+
 # Create directory and symbolic links for current run
-echo "$(date +"%F %X"): Creating directories for new run ..."
+echo -e "\n$(date +"%F %X"): Creating directories for new run ..."
 DATE_STR=$(date -I)
 cd ${SCRIPT_DIR}/data/
 mkdir -p ${DATE_STR}
@@ -58,9 +68,9 @@ rm -f last_run current_run
 ln -s ${DATE_STR} last_run
 
 # Delete data files that are older than two months
+echo -e "\n$(date +"%F %X"): Clean up old files"
 find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
 
+# Shut down itself
 echo -e "\n$(date +"%F %X"): Done"
-
-# Shutdown itself
 sudo init 0
