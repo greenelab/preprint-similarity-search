@@ -8,7 +8,6 @@ import csv
 import multiprocessing as mp
 import os
 import pickle
-import sys
 import tarfile
 from collections import Counter
 from pathlib import Path
@@ -294,8 +293,8 @@ def combine_new_embeddings(embeddings_subdir, combined_embeddings_filename):
     # Set combined output file read-only
     set_read_only(combined_embeddings_filename)
 
-    # Update the number of new papers found
-    num_new_papers = len(merged_pmc)
+    # Return the number of new papers found
+    return len(merged_pmc)
 
 
 def combine_new_token_counts(token_counts_subdir, combined_token_counts_filename):
@@ -417,4 +416,4 @@ if __name__ == "__main__":
         parallel=6
     )
 
-    print(f"{num_new_papers} papers found and parsed")
+    print(f"{num_new_papers} new papers found and parsed")
