@@ -14,7 +14,7 @@ from journal_centroid import generate_journal_centroid
 from kd_tree_creator import pickle_kd_tree
 from merger import merge_files
 from paper_parser import parse_new_papers
-from saucie_corrdinates import generate_saucie_coordinates
+from saucie_coordinates import generate_saucie_coordinates
 from utils import updater_log
 
 
