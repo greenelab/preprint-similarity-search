@@ -8,4 +8,4 @@ __pycache__
 server/data
 
 # auto_updater data directory
-auto_updater/data
+auto-updater/data
