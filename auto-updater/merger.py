@@ -4,7 +4,7 @@
 Merge new papers data with data in previous run.
 """
 
-from utils import updater_log
+from utils import set_read_only, updater_log
 
 
 def simple_merge(input_filenames, merged_filename):
