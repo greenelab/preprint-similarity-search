@@ -29,7 +29,7 @@ ln -sf ${LAST_OUTPUT_DIR}/pmc_oa_file_list.tsv ./input
 ln -sf ${LAST_OUTPUT_DIR}/pmc_tsne_square.tsv ./input
 
 # Run auto-updater's main module inside a virtual env
-source $HOME/venv/pss-updater/bin/activate
+source $HOME/venv/auto-updater/bin/activate
 cd ${SCRIPT_DIR}
 
 echo "$(date): Running main.py ..."
