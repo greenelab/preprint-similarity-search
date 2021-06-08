@@ -37,7 +37,7 @@ if [[ "${remote_version}" > "${local_version}" ]]; then
     # Keep track of local version number
     mv remote_version.txt local_version.txt
 
-    echo -e "\n$(date +"%F %X"): updated successfully"
+    echo -e "\n$(date +"%F %X"): updated successfully\n"
 else
-    echo -e "\n$(date +"%F %X"): no need to update"
+    echo -e "\n$(date +"%F %X"): no need to update\n"
 fi
