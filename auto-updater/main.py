@@ -92,7 +92,7 @@ if __name__ == "__main__":
         parallel=parallel
     )
 
-    updater_log(f"{num_new_papers} new papers found and parsed\n")
+    updater_log(f"{num_new_papers:,} new papers found and parsed\n")
 
 
     # (3) Merge new papers with last run
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         merged_token_counts_filename
     )
 
-    updater_log(f"{num_new_papers} new papers merged with last run\n")
+    updater_log(f"{num_new_papers:,} new papers merged with last run\n")
 
 
     # (4) Create new journal centroid based on merged data
@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
     minimize_json(final_plot_filename, mini_plot_filename)
 
-    updater_log("minimized json plot file created\n")
+    updater_log("Minimized json plot file created\n")
 
 
     # (8) Create kdtree-related pickle files for backend

@@ -15,11 +15,11 @@ from utils import set_read_only, updater_log
 
 def pickle_kd_tree(dataset_filename, pmc_pkl_filename, kdtree_pkl_filename):
     """
-    Main function.  Times wrer measured on a "e2-high-mem-8" Google
-    Compute Engine instance (64-GB RAM).
+    Main function.  Times were measured on a "e2-highmem-4" Google
+    Compute Engine instance (4vCPUs, 32 GB memory).
     """
 
-    # Read paper_dataset file: 3 minutes
+    # Read paper_dataset file: ~3 minutes
     updater_log(f"Reading {dataset_filename} ...")
     df = pd.read_csv(dataset_filename, sep="\t").set_index("document")
 
@@ -30,12 +30,12 @@ def pickle_kd_tree(dataset_filename, pmc_pkl_filename, kdtree_pkl_filename):
     with open(pmc_pkl_filename, "wb") as fh:
         pickle.dump(pmc_map, fh)
 
-    # Create KNN paper_model: 7.5 minutes (~32 GB RAM required)
+    # Create KNN paper_model: ~8 minutes (~30 GB RAM required)
     updater_log("Start KNN fitting")
     paper_model = KNeighborsClassifier(n_neighbors=10)
     paper_model.fit(df.drop("journal", axis=1), df.journal)
 
-    # Pickle kd-tree: 28 seconds
+    # Pickle kd-tree: 1.5 minutes
     updater_log("Pickle kd_tree component ...")
     kd_tree = paper_model._tree
     with open(kdtree_pkl_filename, "wb") as fh:

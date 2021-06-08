@@ -32,21 +32,27 @@ ln -sf ${LAST_OUTPUT_DIR}/pmc_tsne_square.tsv ./input
 source $HOME/venv/auto-updater/bin/activate
 cd ${SCRIPT_DIR}
 
-echo "$(date): Running main.py ..."
+echo -e "\n$(date): Running main.py ..."
 
 python3 ./main.py
 
-# Copy deployment files to Google Cloud bucket
+# Back up some output files to Google Cloud bucket
+echo "Copying output files to Google Cloud Bucket ..."
+gzip ...
+gzip ...
+gsutul cp -r ...
 
+# Copy deployment files to Google Cloud bucket
+echo -e "\nCopying merged output files to Google Cloud Bucket ..."
+gsutul cp -r ...
 
 # Reset symbolic link
-mv ${SCRIPT_DIR}/data/current_run ${SCRIPT_DIR}/data/last_run
-
+mv -f ${SCRIPT_DIR}/data/current_run ${SCRIPT_DIR}/data/last_run
 
 # Delete data files that are older than two months
 find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
 
-echo "$(date): Done"
+echo -e "\n$(date): Done"
 
 # Shutdown itself
 sudo init 0

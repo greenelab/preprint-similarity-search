@@ -416,4 +416,4 @@ if __name__ == "__main__":
         parallel=6
     )
 
-    print(f"{num_new_papers} new papers found and parsed")
+    print(f"{num_new_papers:,} new papers found and parsed")
