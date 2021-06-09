@@ -3,6 +3,8 @@
 # IMPORTANT: This script should be launched by a regular user account
 # on Ubuntu/Debian box WITHOUT "sudo" prefix.
 
+set -e  # exit immediately if any error happens
+
 # ========================================================================
 #          Run this section as regular user:
 # ========================================================================
@@ -39,6 +41,10 @@ python3 -m venv ~/venv
 source ~/venv/bin/activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
+
+# (4) Set up cron jobs to start/stop auto-updater VM and update data files
+cd ~/preprint-similarity-search/server/deployment
+(crontab -l; cat cron_jobs.txt) | crontab -
 
 # =============================================================================
 #        The following section needs `sudo` privilege:

@@ -4,8 +4,14 @@ set -e
 
 # Stop "auto-updater" VM instance (if it still runs)
 echo "$(date +"%F %X"): Stop auto-updater VM instance"
+
+# Print out current status of "auto-updater" VM (for curiosity only)
+gcloud compute instances list --filter="name=auto-updater"
+
+# Stop it, no matter it's alive or not
 gcloud compute instances stop auto-updater --zone=us-east1-b
 
+# main working directory
 cd ~/preprint-similarity-search/server/data
 
 # Compare remote and local versions
