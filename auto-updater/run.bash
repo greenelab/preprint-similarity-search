@@ -7,7 +7,8 @@ SCRIPT_DIR=$(dirname $(readlink -e $0))
 
 # Upgrade OS packages
 echo "$(date +"%F %X"): Upgrade OS packages"
-sudo apt-get dist-upgrade --yes
+sudo apt-get update --quiet
+sudo apt-get dist-upgrade --quiet --yes
 
 # Update repo
 cd ${SCRIPT_DIR}
