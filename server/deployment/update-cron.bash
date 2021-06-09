@@ -1,17 +1,20 @@
 #!/bin/bash
+#
+# Stop "auto-updater" VM and collect updated data for both backend and frontend.
+# If updates are available, restart backend and rebuild frontend.
 
+# stop immediately if any error happens
 set -e
 
-# Stop "auto-updater" VM instance (if it still runs)
 echo "$(date +"%F %X"): Stop auto-updater VM instance"
 
-# Print out current status of "auto-updater" VM (for curiosity only)
+# Current status of "auto-updater" VM (for curiosity only):
 gcloud compute instances list --filter="name=auto-updater"
 
-# Stop it, no matter it's alive or not
+# Stop the VM (not hurt if it's already offline)
 gcloud compute instances stop auto-updater --zone=us-east1-b
 
-# main working directory
+# Main working directory
 cd ~/preprint-similarity-search/server/data
 
 # Compare remote and local versions
@@ -23,7 +26,7 @@ remote_version=$(cat remote_version.txt)
 
 # Update local version
 if [[ "${remote_version}" > "${local_version}" ]]; then
-    echo -e "\n$(date +"%F %X"): Copy updated deployment files from Google Cloud bucket"
+    echo -e "\n$(date +"%F %X"): Copy updated data from Google Cloud bucket"
     gsutil -q cp gs://preprint-similarity-search/server_data/${remote_version}/* .
 
     # Restart backend API server
@@ -34,15 +37,15 @@ if [[ "${remote_version}" > "${local_version}" ]]; then
     git checkout master
     mv -f plot.json ~/preprint-similarity-search/frontend/public/data/
 
-    # Push the updated to master branch, which will trigger the frontend rebuild
-    echo -e "\n$(date +"%F %X"): Commit updated plot.json"
+    # Push the updated 'plot.json' to master branch, which will trigger
+    # the git action in this repo to rebuild the frontend
+    echo -e "\n$(date +"%F %X"): Push updated plot.json"
     git add  ~/preprint-similarity-search/frontend/public/data/plot.json
     git ci -m "Update plot.json"
     git push
 
     # Update local version number
     mv remote_version.txt version.txt
-
     echo -e "\n$(date +"%F %X"): updated successfully\n"
 else
     rm -f remote_version.txt
