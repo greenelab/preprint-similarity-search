@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Deploy auto-updater on a brandnew machine
+# Deploy auto-updater on a brandnew Debian/Ubuntu box
 
 sudo apt-get update
 sudo apt-get dist-upgrade --yes
 
 # "pthon3-venv" is required by "python -m venv" command;
-# "r-base" is required when pip installs "rpy2" (in `requirements.txt`);
-# "*-dev" are required by "pip install -r requirements.txt" command too.
+# "r-base" is required by "rpy2" package in `requirements.txt`;
+# "*-dev" are required when compiling some packages in `requirements.txt`.
 sudo apt-get install python3-venv r-base python3-dev libxml2-dev libxslt-dev --yes
 
 mkdir ~/venv
@@ -44,8 +44,14 @@ mkdir ~/preprint-similarity-search/auto-updater/data
 cd ~/preprint-similarity-search/auto-updater/data
 gsutil cp -r gs://preprint-similarity-search/server_data/static .
 
-# Copy the data of last run from gs:///preprint-similarity-search/auto-updater/<last_run_date>
-# and build `last_run` symbolic link
-last_run_date='2021-06-30'
-gsutil cp -r gs://preprint-similarity-search/auto-updater/${last_run_date} .
+# Copy the data of last run from Google Cloud Bucket
+gsutil cp -r gs://preprint-similarity-search/auto-updater/server_data/version.txt .
+last_run_date=$(cat version.txt)
+mkdir ${last_run_date}
+cd ${last_run_date}
+gsutil cp -r gs://preprint-similarity-search/auto-updater/${last_run_date}.tgz .
+tar xzvf ${last_run_date}.tgz
+
+# Build "last_run" symbolic link
+cd ..
 ln -sf ${last_run_date} last_run
