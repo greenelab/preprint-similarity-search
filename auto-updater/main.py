@@ -5,6 +5,7 @@ Main Python module that starts the auto-updater pipeline.
 """
 
 import os
+import sys
 from pathlib import Path
 
 from bin_stats_updater import update_paper_bins_stats
@@ -91,6 +92,13 @@ if __name__ == "__main__":
         new_token_counts_basename,
         parallel=parallel
     )
+
+    # Terminate the whole program if new papers are not found.
+    # The caller `run.bash` will be also terminated due to `sys.exit(1)`
+    # and `set -e` in `run.bash`.
+    if num_new_papers == 0:
+        updater_log(f"No new papers found, exit\n")
+        sys.exit(1)
 
     updater_log(f"{num_new_papers:,} new papers found and parsed\n")
 
