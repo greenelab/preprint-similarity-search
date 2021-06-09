@@ -184,7 +184,7 @@ def generate_vector_counts(word_model_wv, paper_fh):
     # map(...) returns an iterable of single string for each entry in all_text;
     # list(map(...)) converts the iterable of single string into a list of single string.
 
-    # dhu: combine all single strings together into ONE single string.
+    # Combine all single strings together into ONE single string.
     all_text = " ".join(all_text)
 
     # Optimization: Remove stop words from `all_text` before feeding it to nlp.

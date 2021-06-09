@@ -58,7 +58,7 @@ if __name__ == "__main__":
     download_dir = Path(output_dir, 'downloaded_files')
     os.makedirs(download_dir, exist_ok=True)  # If not exist yet, create it
 
-    #download_xml_files(download_dir)  # dhu
+    download_xml_files(download_dir)
     updater_log("NCBI tarball files downloaded\n")
 
 
