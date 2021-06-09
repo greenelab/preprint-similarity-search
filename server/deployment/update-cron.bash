@@ -10,7 +10,7 @@ cd ~/preprint-similarity-search/server/data
 
 # Compare remote and local versions
 echo "$(date +"%F %X"): Check remote version"
-gsutil -q cp gs://preprint-similarity-search/data_for_deployment/version.txt ./remote_version.txt
+gsutil -q cp gs://preprint-similarity-search/server_data/version.txt ./remote_version.txt
 
 local_version=$(cat version.txt)
 remote_version=$(cat remote_version.txt)
@@ -18,7 +18,7 @@ remote_version=$(cat remote_version.txt)
 # Update local version
 if [[ "${remote_version}" > "${local_version}" ]]; then
     echo -e "\n$(date +"%F %X"): Copy updated deployment files from Google Cloud bucket"
-    gsutil -q cp gs://preprint-similarity-search/data_for_deployment/${remote_version}/* .
+    gsutil -q cp gs://preprint-similarity-search/server_data/${remote_version}/* .
 
     # Restart backend API server
     echo -e "\n$(date +"%F %X"): Restart backend"

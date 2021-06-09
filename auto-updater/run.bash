@@ -56,9 +56,9 @@ rm -f ${DATE_STR}.tgz
 
 # Copy deployment files to Google Cloud bucket
 echo -e "\n$(date +"%F %X"): Copy deployment files to Google Cloud Bucket ..."
-gsutil -q cp -r output/deployment gs://preprint-similarity-search/data_for_deployment/${DATE_STR}
+gsutil -q cp -r output/deployment gs://preprint-similarity-search/server_data/${DATE_STR}
 echo ${DATE_STR} > version.txt
-gsutil -q cp version.txt gs://preprint-similarity-search/data_for_deployment/
+gsutil -q cp version.txt gs://preprint-similarity-search/server_data/
 rm -f version.txt
 
 # Reset symbolic links

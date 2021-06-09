@@ -24,7 +24,15 @@ git submodule update --init
 
 # (2) Copy data files from Google Cloud Storage bucket to local `server/data/` directory
 mkdir data
-gsutil cp -r gs://preprint-similarity-search/data_for_deployment/* ./data
+cd data
+gsutil cp -r gs://preprint-similarity-search/server_data/version.txt ./
+version=$(cat $version.txt)
+
+gsutil cp -r gs://preprint-similarity-search/server_data/${version}/* ./
+gsutil cp -r gs://preprint-similarity-search/server_data/static/word_model.wv.pkl ./
+
+# Remove 'plot.json', which is for frontend only
+rm -f ./plot.json
 
 # (3) Set up virtualenv
 python3 -m venv ~/venv
@@ -36,7 +44,7 @@ python -m spacy download en_core_web_sm
 #        The following section needs `sudo` privilege:
 # =============================================================================
 
-cd deployment/
+cd ../deployment/
 sudo apt update
 
 # (1) Install `certbot` to manage SSL certificates,
