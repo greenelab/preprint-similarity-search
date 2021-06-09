@@ -48,6 +48,7 @@ gsutil cp -r gs://preprint-similarity-search/server_data/static .
 gsutil cp -r gs://preprint-similarity-search/auto-updater/server_data/version.txt .
 last_run_date=$(cat version.txt)
 mkdir ${last_run_date}
+rm -f version.txt
 cd ${last_run_date}
 gsutil cp -r gs://preprint-similarity-search/auto-updater/${last_run_date}.tgz .
 tar xzvf ${last_run_date}.tgz
