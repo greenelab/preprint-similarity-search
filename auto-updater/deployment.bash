@@ -42,7 +42,7 @@ python -m spacy download en_core_web_sm
 # Copy static data files from Google bucket
 mkdir ~/preprint-similarity-search/auto-updater/data
 cd ~/preprint-similarity-search/auto-updater/data
-gsutil cp -r gs://preprint-similarity-search/data_for_deployment/static .
+gsutil cp -r gs://preprint-similarity-search/server_data/static .
 
 # Copy the data of last run from gs:///preprint-similarity-search/auto-updater/<last_run_date>
 # and build `last_run` symbolic link
