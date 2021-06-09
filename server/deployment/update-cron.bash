@@ -10,9 +10,9 @@ cd ~/preprint-similarity-search/server/data
 
 # Compare remote and local versions
 echo "$(date +"%F %X"): Check remote version"
-gsutil -q cp gs://preprint-similarity-search/data_for_deployment/remote_version.txt .
+gsutil -q cp gs://preprint-similarity-search/data_for_deployment/version.txt ./remote_version.txt
 
-local_version=$(cat local_version.txt)
+local_version=$(cat version.txt)
 remote_version=$(cat remote_version.txt)
 
 # Update local version
@@ -34,10 +34,11 @@ if [[ "${remote_version}" > "${local_version}" ]]; then
     git ci -m "Update plot.json"
     git push
 
-    # Keep track of local version number
-    mv remote_version.txt local_version.txt
+    # Update local version number
+    mv remote_version.txt version.txt
 
     echo -e "\n$(date +"%F %X"): updated successfully\n"
 else
+    rm -f remote_version.txt
     echo -e "\n$(date +"%F %X"): no need to update\n"
 fi
