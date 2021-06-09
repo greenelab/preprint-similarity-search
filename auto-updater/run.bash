@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Exit if any error happens
+# Exit immediately if any error happens
 set -e
 
 SCRIPT_DIR=$(dirname $(readlink -e $0))

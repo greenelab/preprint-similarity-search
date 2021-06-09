@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     # Terminate the whole program if new papers are not found.
     # If `run.bash` is the caller, it will be also terminated due to
-    # `sys.exit(1)` here and `set -e` in `run.bash`.
+    # `sys.exit(1)` here and `set -e` line in `run.bash`.
     if num_new_papers == 0:
         updater_log(f"No new papers found, exit\n")
         sys.exit(1)
