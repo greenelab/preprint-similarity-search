@@ -3,6 +3,8 @@
 # IMPORTANT: This script should be launched by a regular user account
 # on Ubuntu/Debian box WITHOUT "sudo" prefix.
 
+set -e  # exit immediately if any error happens
+
 # ========================================================================
 #          Run this section as regular user:
 # ========================================================================
@@ -24,7 +26,15 @@ git submodule update --init
 
 # (2) Copy data files from Google Cloud Storage bucket to local `server/data/` directory
 mkdir data
-gsutil cp -r gs://preprint-similarity-search/data_for_deployment/* ./data
+cd data
+gsutil cp -r gs://preprint-similarity-search/server_data/version.txt ./
+version=$(cat $version.txt)
+
+gsutil cp -r gs://preprint-similarity-search/server_data/${version}/* ./
+gsutil cp -r gs://preprint-similarity-search/server_data/static/word_model.wv.pkl ./
+
+# Remove 'plot.json', which is for frontend only
+rm -f ./plot.json
 
 # (3) Set up virtualenv
 python3 -m venv ~/venv
@@ -32,11 +42,15 @@ source ~/venv/bin/activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 
+# (4) Set up cron jobs to start/stop auto-updater VM and update data files
+cd ~/preprint-similarity-search/server/deployment
+(crontab -l; cat cron_jobs.txt) | crontab -
+
 # =============================================================================
 #        The following section needs `sudo` privilege:
 # =============================================================================
 
-cd deployment/
+cd ../deployment/
 sudo apt update
 
 # (1) Install `certbot` to manage SSL certificates,
