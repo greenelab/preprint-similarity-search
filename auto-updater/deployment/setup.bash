@@ -59,4 +59,4 @@ ln -sf ${last_run_date} last_run
 
 # Add updater cron job to crontab
 cd ~/preprint-similarity-search/auto-updater/deployment
-(crontab -l; cat cron_job.txt) | crontab -
+(crontab -l; cat cron_jobs.txt) | crontab -

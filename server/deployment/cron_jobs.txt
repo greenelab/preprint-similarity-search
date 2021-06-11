@@ -1,6 +1,6 @@
 
 # Launch auto-updater VM at 00:03 AM on the FIRST day of each month
-3 0 1 * * /home/ubuntu/preprint-similarity-search/server/deployment/launch-updater-cron.bash >> /home/ubuntu/preprint-similarity-search/server/data/update.log 2>&1
+3 0 1 * * /home/ubuntu/preprint-similarity-search/server/deployment/launch-updater-vm.bash >> /home/ubuntu/preprint-similarity-search/server/data/update.log 2>&1
 
 # Update backend and frontend data at 00:03 AM on the SECOND day of each month
-3 0 2 * * /home/ubuntu/preprint-similarity-search/server/deployment/update-cron.bash >> /home/ubuntu/preprint-similarity-search/server/data/update.log 2>&1
+3 0 2 * * /home/ubuntu/preprint-similarity-search/server/deployment/update-data.bash >> /home/ubuntu/preprint-similarity-search/server/data/update.log 2>&1

@@ -3,17 +3,10 @@
 # Exit immediately if any error happens
 set -e
 
+# Make `gcloud` and `gsutil` commands available when run as a cron job
+PATH=/snap/bin:$PATH
+
 SCRIPT_DIR=$(dirname $(readlink -e $0))
-
-# Upgrade OS packages
-echo "$(date +"%F %X"): Upgrade OS packages"
-sudo apt-get update --quiet
-sudo apt-get dist-upgrade --quiet --yes
-
-# Update repo
-cd ${SCRIPT_DIR}
-echo -e "\n$(date +"%F %X"): Update local repo"
-git pull
 
 # Create directory and symbolic links for current run
 echo -e "\n$(date +"%F %X"): Creating directories for new run ..."

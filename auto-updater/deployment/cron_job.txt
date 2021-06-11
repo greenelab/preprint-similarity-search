@@ -1,3 +1,0 @@
-
-# Start updating process at 00:17 AM on the 1st day of each month
-17 0 1 * * /home/ubuntu/preprint-similarity-search/auto-updater/run.bash >> /home/ubuntu/preprint-similarity-search/auto-updater/data/log.txt 2>&1
