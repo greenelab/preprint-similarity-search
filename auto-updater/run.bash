@@ -36,15 +36,22 @@ source $HOME/venv/auto-updater/bin/activate
 cd ${SCRIPT_DIR}
 
 echo -e "\n$(date +"%F %X"): Running main.py ..."
-
 python3 ./main.py
+
+# Run a few tests to confirm the outputs
+echo -e "\n$(date +"%F %X"): Running tests ..."
+cd ../server
+ln -sf ${SCRIPT_DIR}/data/current_run/output/deployment ./data
+./tests.py ${SCRIPT_DIR}/data/current_run/output/embeddings_full.tsv
+rm -f ./data
+echo -e "$(date +"%F %X"): Tests passed\n"
 
 # Back up some output files to Google Cloud bucket
 echo "$(date +"%F %X"): Create output tarball file ..."
 cd ${SCRIPT_DIR}/data/current_run
 tar czvf ${DATE_STR}.tgz output/*.tsv output/*.json
 
-echo "$(date +"%F %X"): Copy output tarball file to Google Cloud Bucket ..."
+echo -e "\n$(date +"%F %X"): Copy output tarball file to Google Cloud Bucket ..."
 gsutil -q cp ${DATE_STR}.tgz gs://preprint-similarity-search/auto-updater/
 rm -f ${DATE_STR}.tgz
 
@@ -66,4 +73,4 @@ find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +60 | xargs rm -rf
 
 # Shut down itself
 echo -e "\n$(date +"%F %X"): Done\n"
-sudo init 0
+sudo /usr/sbin/init 0

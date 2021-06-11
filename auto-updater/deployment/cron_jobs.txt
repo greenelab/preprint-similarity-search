@@ -1,5 +1,10 @@
+
+SCRIPT_DIR="/home/ubuntu/preprint-similarity-search/auto-updater"
+
+LOG_FILE="/home/ubuntu/preprint-similarity-search/auto-updater/data/log.txt"
+
 # Update OS and pip packages at 00:09 AM on the 1st day of each month
-9 0 1 * * /home/ubuntu/preprint-similarity-search/auto-updater/pkg-upgrade.bash >> /home/ubuntu/preprint-similarity-search/auto-updater/data/log.txt 2>&1
+9 0 1 * * ${SCRIPT_DIR}/pkg-upgrade.bash >> ${LOG_FILE} 2>&1
 
 # Start auto-updater process at 00:19 AM on the 1st day of each month
-19 0 1 * * /home/ubuntu/preprint-similarity-search/auto-updater/run.bash >> /home/ubuntu/preprint-similarity-search/auto-updater/data/log.txt 2>&1
+19 0 1 * * ${SCRIPT_DIR}/run.bash >> ${LOG_FILE} 2>&1
