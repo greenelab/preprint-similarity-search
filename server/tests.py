@@ -24,9 +24,9 @@ def get_last_row():
         while fh.read(1) != b'\n':
             fh.seek(-2, os.SEEK_CUR)
 
-        last_line = fh.readline().decode()
+        last_row = fh.readline().decode()
 
-    return last_line
+    return last_row
 
 
 def get_np_vec(data_row):
@@ -47,16 +47,18 @@ def test_paper_knn(data_row):
     closest = get_paper_knn(np_vec)[0]
 
     server_log(
-        f"Closest PMC: {closest['pmcid']}; distance: {closest['distance']}"
+        f"Closest: {closest['pmcid']}; distance: {closest['distance']}"
     )
 
     assert closest['pmcid'] == pmc
     assert closest['distance'] < 1e-2  # ensure that distance is small enough
-    server_log(f"{pmc}: confirmed\n")
+    server_log(f"{pmc} confirmed\n")
 
 
 # Test harness
 if __name__ == "__main__":
+    # Due to the hard-coded server data path, allow the script to be run
+    # ONLY inside current directory.
     if len(sys.argv) != 2 or sys.argv[0] != './tests.py':
         print(f"Usage: {sys.argv[0]} [paper_embeddings_filename]")
         sys.exit(1)

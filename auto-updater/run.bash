@@ -39,11 +39,19 @@ echo -e "\n$(date +"%F %X"): Running main.py ..."
 python3 ./main.py
 
 # Run a few tests to confirm the outputs
-echo -e "\n$(date +"%F %X"): Running tests ..."
+echo -e "$(date +"%F %X"): Running tests ..."
+
+# Build symbolic links so that tests can use deployment data in `current_run`:
+ln -sf ${SCRIPT_DIR}/data/static/word_model.wv.pkl ${SCRIPT_DIR}/data/current_run/output/deployment/
+ln -sf ${SCRIPT_DIR}/data/current_run/output/deployment ${SCRIPT_DIR}/../server/data
+
+# Invoke tests
 cd ../server
-ln -sf ${SCRIPT_DIR}/data/current_run/output/deployment ./data
 ./tests.py ${SCRIPT_DIR}/data/current_run/output/embeddings_full.tsv
-rm -f ./data
+
+# Remove symbolic links that were created for test only
+rm -f ${SCRIPT_DIR}/../server/data
+rm -f ${SCRIPT_DIR}/data/current_run/output/deployment/word_model.wv.pkl
 echo -e "$(date +"%F %X"): Tests passed\n"
 
 # Back up some output files to Google Cloud bucket

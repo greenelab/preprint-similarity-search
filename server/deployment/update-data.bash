@@ -6,11 +6,10 @@
 # Exit immediately if any error happens
 set -e
 
-echo "$(date +"%F %X"): Stop auto-updater VM instance"
-
 # Make `gcloud` and `gsutil` commands available when run as a cron job
 PATH=/snap/bin:$PATH
 
+echo "$(date +"%F %X"): Stop auto-updater VM instance"
 # Current status of "auto-updater" VM (for curiosity only):
 gcloud compute instances list --filter="name=auto-updater"
 
