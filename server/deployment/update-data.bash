@@ -19,6 +19,10 @@ gcloud compute instances stop auto-updater --zone=us-east1-b
 # Main working directory
 cd ~/preprint-similarity-search/server/data
 
+# Update local repo
+echo "$(date +"%F %X"): Update local repo"
+git pull
+
 # Compare remote and local versions
 echo -e "\n$(date +"%F %X"): Check remote version"
 gsutil -q cp gs://preprint-similarity-search/server_data/version.txt ./remote_version.txt
