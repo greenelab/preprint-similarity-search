@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+"""
+Test `get_paper_knn()` function in `find_knn.py` module.
+
+Requires an input `embeddings_filename` argument, which should include
+embeddings of papers that are already in the backend's pickled KD-tree.
+
+The first and last data rows of the input file will be read into memory
+(with slight changes by rounding), and converted into numpy vectors,
+whose closest neighbors will then be searched in the KD-tree.
+
+In both cases, the closest neighbor should be the input paper itself.
+
+Due to hard-coded path of server data, this script can be invoked ONLY
+inside its parent directory.
+"""
+
 import os
 import sys
 
@@ -30,6 +46,8 @@ def get_last_row():
 
 
 def get_np_vec(data_row):
+    """Convert an input data row into a numpy vector."""
+
     tokens = data_row.strip().split('\t')
     pmc = tokens[1]
 
@@ -43,11 +61,13 @@ def get_np_vec(data_row):
 
 
 def test_paper_knn(data_row):
+    """Confirm the closest neighbor of an input data row."""
+
     pmc, np_vec = get_np_vec(data_row)
     closest = get_paper_knn(np_vec)[0]
 
     server_log(
-        f"Closest: {closest['pmcid']}; distance: {closest['distance']}"
+        f"Closest neighbor: {closest['pmcid']}; distance: {closest['distance']}"
     )
 
     assert closest['pmcid'] == pmc
@@ -57,10 +77,9 @@ def test_paper_knn(data_row):
 
 # Test harness
 if __name__ == "__main__":
-    # Due to the hard-coded server data path, allow the script to be run
-    # ONLY inside current directory.
+    # Enforce correct usage:
     if len(sys.argv) != 2 or sys.argv[0] != './tests.py':
-        print(f"Usage: {sys.argv[0]} [paper_embeddings_filename]")
+        print(f"Usage: ./tests.py [paper_embeddings_filename]", flush=True)
         sys.exit(1)
 
     embeddings_filename = sys.argv[1]
