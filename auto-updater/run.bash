@@ -77,7 +77,7 @@ ln -s ${DATE_STR} last_run
 
 # Delete data files that are older than 31 days
 echo -e "\n$(date +"%F %X"): Clean up old files"
-find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +31 | xargs rm -rf
+find ${SCRIPT_DIR}/data/ -type d -name "20*" -ctime +45 | xargs rm -rf
 
 # Shut down itself
 echo -e "\n$(date +"%F %X"): Done\n"
