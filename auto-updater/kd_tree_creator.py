@@ -23,7 +23,7 @@ def pickle_kd_tree(dataset_filename, pmc_pkl_filename, kdtree_pkl_filename):
     updater_log(f"Reading {dataset_filename} ...")
     df = pd.read_csv(dataset_filename, sep="\t").set_index("document")
 
-    # Create pmc_map.pkl: immediately
+    # Create pmc_map.pkl: less than 1 sec
     pmc_list = df.index.tolist()
     pmc_map = {row_num: pmc for row_num, pmc in enumerate(pmc_list)}
     updater_log("Pickle pmc_map ...")

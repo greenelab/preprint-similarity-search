@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Resource, Api
-from find_knn import get_neighbors
+from find_knn import get_doi_neighbors, get_text_neightbors
 
 
 # Sentry config
@@ -28,11 +28,21 @@ def index():
 
 class JournalRecommendation(Resource):
     def get(self, user_doi):
-        neighbors = get_neighbors(user_doi)
+        neighbors = get_doi_neighbors(user_doi)
         return neighbors
 
 
 api.add_resource(JournalRecommendation, "/doi/<path:user_doi>")
+
+
+# Route for plain text parser
+@app.route("/text", methods=['POST'])
+def text_parser(text):
+    #text = request.get_data()
+    #get_text_neighbors(text)
+
+    if request.headers['Content-Type'] == 'text/plain':
+        get_text_neighbors(request.data)
 
 
 # Sentry verification
