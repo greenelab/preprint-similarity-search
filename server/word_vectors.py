@@ -64,7 +64,7 @@ def text_to_vector(text):
     if len(tokens) == 0:
          message = "Valid tokens not found in user input"
          server_log(f"{message}\n")
-         abort(404, message=message)
+         abort(400, message=message)
 
     word_vectors = [word_model_wv[tok] for tok in tokens]
     word_embedd = np.stack(word_vectors)
