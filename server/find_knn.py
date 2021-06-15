@@ -64,10 +64,8 @@ def get_text_neighbors(user_text):
     """
     Find the closest papers and journals given an input plain text.
     Arguments:
-      * user_text: user's plain text content
+      * user_text: user's input plain text
     """
-
-    server_log(f"text from user: '{user_text}'")  # dhu test
 
     server_log("Received user's plain text")
     query_vec = text_to_vector(user_text)
