@@ -38,12 +38,15 @@ api.add_resource(JournalRecommendation, "/doi/<path:user_doi>")
 # Route for plain text parser
 @app.route("/text", methods=['POST'])
 def text_parser():
-    #text = request.get_data()
-    #get_text_neighbors(text)
+    data = request.get_data()
+    text = "".join(map(chr, data))  # convert bytes to str
+    return get_text_neighbors(text)
 
+    """
     if request.headers['Content-Type'] == 'text/plain':
-        text = "".join(map(chr, request.data))  # Convert bytes to str
-        get_text_neighbors(text)
+        text = "".join(map(chr, request.data))  # convert bytes to str
+        return get_text_neighbors(text)
+    """
 
 
 # Sentry verification
