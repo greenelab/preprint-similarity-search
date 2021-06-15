@@ -63,7 +63,7 @@ def text_to_vector(text):
     return vec
 
 
-def parse_file(content, is_xml=True):
+def parse_content(content, is_xml=True):
     """
     Parses input content and returns a vector based on the pre-loaded
     `word_model_wv`.
