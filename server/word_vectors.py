@@ -6,6 +6,8 @@ import numpy as np
 import spacy
 import fitz
 
+from flask_restful import abort
+
 disabled_pipelines = ["parser", "ner"]
 nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
 stop_words = nlp.Defaults.stop_words
@@ -55,6 +57,12 @@ def text_to_vector(text):
             ),
         )
     )
+
+    # Generate error message if no valid tokens are found
+    if len(tokens) == 0:
+         message = "Valid tokens not found in user input"
+         server_log(f"{message}\n")
+         abort(404, message=message)
 
     word_vectors = [word_model_wv[tok] for tok in tokens]
     word_embedd = np.stack(word_vectors)
