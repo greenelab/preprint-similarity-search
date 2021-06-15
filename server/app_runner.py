@@ -37,7 +37,7 @@ api.add_resource(JournalRecommendation, "/doi/<path:user_doi>")
 
 # Route for plain text parser
 @app.route("/text", methods=['POST'])
-def text_parser(text):
+def text_parser():
     #text = request.get_data()
     #get_text_neighbors(text)
 
