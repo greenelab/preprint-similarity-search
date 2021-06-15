@@ -42,7 +42,8 @@ def text_parser():
     #get_text_neighbors(text)
 
     if request.headers['Content-Type'] == 'text/plain':
-        get_text_neighbors(request.data)
+        text = "".join(map(chr, request.data))  # Convert bytes to str
+        get_text_neighbors(text)
 
 
 # Sentry verification
