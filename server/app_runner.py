@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Resource, Api
 from find_knn import get_doi_neighbors, get_text_neighbors
