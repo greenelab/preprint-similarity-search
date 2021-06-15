@@ -8,6 +8,8 @@ import fitz
 
 from flask_restful import abort
 
+from utils import server_log
+
 disabled_pipelines = ["parser", "ner"]
 nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
 stop_words = nlp.Defaults.stop_words
