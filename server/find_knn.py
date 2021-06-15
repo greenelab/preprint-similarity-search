@@ -67,6 +67,8 @@ def get_text_neighbors(user_text):
       * user_text: user's plain text content
     """
 
+    server_log(f"text from user: '{user_text}'")  # dhu test
+
     server_log("Received user's plain text")
     query_vec = text_to_vector(user_text)
 
