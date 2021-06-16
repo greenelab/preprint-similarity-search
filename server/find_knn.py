@@ -67,11 +67,11 @@ def get_text_neighbors(user_text):
       * user_text: user's input plain text
     """
 
+    with open('/tmp/user.txt', 'w') as ofh:
+        ofh.write(user_text)
+
     server_log("Received user's plain text")
     query_vec = text_to_vector(user_text)
-
-    with open('/tmp/user.txt', 'w') as ofh:
-        ofh.write(text)
 
     server_log(f"Start plain text searching")
 
