@@ -6,10 +6,16 @@ import numpy as np
 import spacy
 import fitz
 
+from flask_restful import abort
+
+from utils import server_log
+
 disabled_pipelines = ["parser", "ner"]
 nlp = spacy.load("en_core_web_sm", disable=disabled_pipelines)
+stop_words = nlp.Defaults.stop_words
 
-word_model_wv = pickle.load(open("data/word_model.wv.pkl", "rb"))
+with open("data/word_model.wv.pkl", "rb") as wv_fh:
+    word_model_wv = pickle.load(wv_fh)
 
 filter_tag_list = [
     "sc",
@@ -34,16 +40,54 @@ filter_tag_list = [
 parser = ET.XMLParser(encoding="UTF-8", recover=True)
 
 
-def parse_content(content, xml_file=True):
+def text_to_vector(text):
+    """
+    Parses input plain text and returns a numpy vector based on the
+    pre-loaded `word_model_wv`.
+
+    Args:
+      * text: plain text string
+    """
+
+    tokens = list(
+        map(
+            lambda x: x.lemma_,
+            filter(
+                lambda tok: tok.lemma_ in word_model_wv
+                and tok.lemma_ not in stop_words,
+                nlp(text),
+            ),
+        )
+    )
+
+    num_tokens = len(tokens)
+    # Generate error message if no valid tokens are found
+    if num_tokens == 0:
+         message = "Valid tokens not found in user input"
+         server_log(f"{message}\n")
+         abort(400, message=message)
+
+    # Calculate the mean of all token vectors and convert it to a vector
+    # whose shape is accepted by KNN search function.
+    vec = np.zeros(word_model_wv.vector_size)
+    for tok in tokens:
+        vec += word_model_wv[tok]
+    vec = (vec / num_tokens)[np.newaxis, :]
+
+    return vec
+
+
+def parse_content(content, is_xml=True):
     """
     Parses input content and returns a vector based on the pre-loaded
     `word_model_wv`.
+
     Args:
-        content - a PDF file's contents to be parsed
+      * content: an XML or PDF file's content
+      * is_xml: a boolean indicating whether `content` is in XML format
     """
 
-    word_vectors = []
-    if xml_file:
+    if is_xml:
         biorxiv_xpath_str = (
             "//abstract/p|//abstract/title|//body/sec//p|//body/sec//title"
         )
@@ -56,17 +100,6 @@ def parse_content(content, xml_file=True):
         all_text = root.xpath(biorxiv_xpath_str)
         all_text = list(map(lambda x: "".join(list(x.itertext())), all_text))
         all_text = " ".join(all_text)
-        all_tokens = list(
-            map(
-                lambda x: x.lemma_,
-                filter(
-                    lambda tok: tok.lemma_ in word_model_wv
-                    and tok.lemma_ not in nlp.Defaults.stop_words,
-                    nlp(all_text),
-                ),
-            )
-        )
-        word_vectors += [word_model_wv[text] for text in all_tokens]
     else:
         # Have a faux file stream for parsing
         text_to_process = BytesIO(content)
@@ -74,16 +107,9 @@ def parse_content(content, xml_file=True):
         # Use this function to write pdf text to the file stream
         pdf_parser = fitz.open(stream=text_to_process, filetype="pdf")
 
-        # Convert text to word vectors and continue processing
+        # Convert PDF content to plain text
+        all_text = ""
         for page in pdf_parser:
-            word_vectors += [
-                word_model_wv[tok.lemma_]
-                for tok in nlp(page.getText())
-                if tok.lemma_ in word_model_wv
-                and tok.lemma_ not in nlp.Defaults.stop_words
-            ]
+            all_text += page.getText()
 
-    word_embedd = np.stack(word_vectors)
-    query_vec = word_embedd.mean(axis=0)[np.newaxis, :]
-
-    return query_vec
+    return text_to_vector(all_text)

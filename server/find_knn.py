@@ -1,11 +1,18 @@
+"""Get K nearest neighbors from KNN models."""
+
 import numpy as np
 import pandas as pd
 import pickle
+
 from sklearn.neighbors import KNeighborsClassifier
+
 from document_downloader import get_doi_content
 from find_coordinates import get_coordinates
-from utils import get_journal_model, get_paper_model, get_pmc_map, server_log, timeout
-from word_vectors import parse_content
+from utils import (
+    get_journal_model, get_paper_model, get_pmc_map,
+    server_log, timeout
+)
+from word_vectors import parse_content, text_to_vector
 
 N_NEIGHBORS = 10  # number of closest neighbors to find
 
@@ -20,24 +27,28 @@ pmc_map = get_pmc_map()
 
 
 @timeout(seconds=240)
-def get_neighbors(user_doi):
+def get_doi_neighbors(user_doi):
     """
     Find the closest papers and journals given an input paper's DOI.
     Arguments:
-        - user_doi: biorxiv DOI
+      * user_doi: biorxiv DOI
     """
 
     server_log(f"Received user DOI ({user_doi})")
 
     content, paper_metadata, xml_found = get_doi_content(user_doi)
-    server_log(f"Downloaded {'XML' if xml_found else 'PDF'} content of {user_doi}")
-    query_vec = parse_content(content, xml_file=xml_found)
+    file_type = 'XML' if xml_found else 'PDF'
+
+    server_log(f"Downloaded {file_type} content of {user_doi}")
+
+    query_vec = parse_content(content, is_xml=xml_found)
 
     server_log(f"Start searching {user_doi}")
 
     paper_knn = get_paper_knn(query_vec)
     journal_knn = get_journal_knn(query_vec)
     coordinates = get_coordinates(query_vec)
+
     server_log(f"Finished searching {user_doi}\n")
 
     return {
@@ -46,6 +57,31 @@ def get_neighbors(user_doi):
         "coordinates": coordinates,
         "paper_info": paper_metadata,
         "xml_found": xml_found
+    }
+
+
+def get_text_neighbors(user_text):
+    """
+    Find the closest papers and journals given an input plain text.
+    Arguments:
+      * user_text: user's input plain text
+    """
+
+    server_log("Received user's plain text")
+    query_vec = text_to_vector(user_text)
+
+    server_log(f"Start plain text searching")
+
+    paper_knn = get_paper_knn(query_vec)
+    journal_knn = get_journal_knn(query_vec)
+    coordinates = get_coordinates(query_vec)
+
+    server_log(f"Finished plain text searching\n")
+
+    return {
+        "paper_neighbors": paper_knn,
+        "journal_neighbors": journal_knn,
+        "coordinates": coordinates,
     }
 
 
