@@ -60,15 +60,19 @@ def text_to_vector(text):
         )
     )
 
+    num_tokens = len(tokens)
     # Generate error message if no valid tokens are found
-    if len(tokens) == 0:
+    if num_tokens == 0:
          message = "Valid tokens not found in user input"
          server_log(f"{message}\n")
          abort(400, message=message)
 
-    word_vectors = [word_model_wv[tok] for tok in tokens]
-    word_embedd = np.stack(word_vectors)
-    vec = word_embedd.mean(axis=0)[np.newaxis, :]
+    # Calculate the mean of all token vectors and convert it to a vector
+    # whose shape is accepted by KNN search function.
+    vec = np.zeros(word_model_wv.vector_size)
+    for tok in tokens:
+        vec += word_model_wv[tok]
+    vec = (vec / num_tokens)[np.newaxis, :]
 
     return vec
 
