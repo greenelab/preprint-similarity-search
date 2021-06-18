@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 
+import Tooltip from "./tooltip";
 import { useViewBox } from "./hooks";
 
 import "./cell-details.css";
@@ -63,18 +64,19 @@ const CellDetails = ({ selectedCell }) => {
             const y = top + (index + 1) * size;
             return (
               <Fragment key={index}>
-                <text
-                  x={left - size * 0.75}
-                  y={y}
-                  textAnchor="end"
-                  dominantBaseline="middle"
-                  fontSize={size}
-                  title={lemma.name}
-                >
-                  {lemma.name.length > maxChars
-                    ? lemma.name.substr(0, maxChars) + "..."
-                    : lemma.name}
-                </text>
+                <Tooltip content={lemma.name}>
+                  <text
+                    x={left - size * 0.75}
+                    y={y}
+                    textAnchor="end"
+                    dominantBaseline="middle"
+                    fontSize={size}
+                  >
+                    {lemma.name.length > maxChars
+                      ? lemma.name.substr(0, maxChars) + "..."
+                      : lemma.name}
+                  </text>
+                </Tooltip>
                 <rect
                   x={left}
                   y={y - size / 4}

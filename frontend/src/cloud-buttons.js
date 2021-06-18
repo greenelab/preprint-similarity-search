@@ -1,11 +1,9 @@
-import { createPortal } from "react-dom";
-
 import { startImage } from "./map-sections";
 import { endImage } from "./map-sections";
 import { range } from "./map-sections";
 import { getPcNum } from "./map-sections";
 import { getCloudUrl } from "./map-sections";
-import { useTooltip } from "./hooks";
+import Tooltip from "./tooltip";
 
 import "./cloud-buttons.css";
 
@@ -22,42 +20,34 @@ const CloudButtons = ({ selectedPc, setSelectedPc }) => (
 export default CloudButtons;
 
 // cloud image button component
-const CloudButton = ({ number, selectedPc, setSelectedPc }) => {
-  // tooltip
-  const { show, anchorRef, tooltipRef, tooltipProps, update } = useTooltip();
-
-  // render
-  return (
-    <>
-      <button
-        ref={anchorRef}
-        className="cloud_button"
-        data-number={getPcNum(number)}
-        data-selected={selectedPc === number}
-        onClick={() =>
-          selectedPc === number ? setSelectedPc(null) : setSelectedPc(number)
-        }
-      >
-        <img
-          src={getCloudUrl(number)}
-          title={"Select principal component " + getPcNum(number)}
-          alt={"Select principal component " + getPcNum(number)}
-          onLoad={update}
-        />
-      </button>
-      {show &&
-        createPortal(
-          <img
-            ref={tooltipRef}
-            src={getCloudUrl(number)}
-            className="cloud_enlarged"
-            title={"Select principal component " + getPcNum(number)}
-            alt={"Select principal component " + getPcNum(number)}
-            onLoad={update}
-            {...tooltipProps}
-          />,
-          document.body
-        )}
-    </>
-  );
-};
+const CloudButton = ({ number, selectedPc, setSelectedPc }) => (
+  <Tooltip
+    content={
+      <img
+        src={getCloudUrl(number)}
+        className="cloud_enlarged"
+        alt={"Principal component " + getPcNum(number)}
+        // put min estimated height to avoid flickering
+        style={{ minHeight: "300px" }}
+      />
+    }
+  >
+    <button
+      className="cloud_button"
+      data-number={getPcNum(number)}
+      data-selected={selectedPc === number}
+      title={
+        (selectedPc === number ? "Deselect" : "Select") +
+        " this principal component"
+      }
+      onClick={() =>
+        selectedPc === number ? setSelectedPc(null) : setSelectedPc(number)
+      }
+    >
+      <img
+        src={getCloudUrl(number)}
+        alt={"Principal component " + getPcNum(number)}
+      />
+    </button>
+  </Tooltip>
+);

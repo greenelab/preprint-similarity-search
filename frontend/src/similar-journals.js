@@ -1,5 +1,7 @@
 import color from "color";
 
+import Tooltip from "./tooltip";
+
 import "./card.css";
 
 const rankColorA = color("#ff980020");
@@ -11,19 +13,22 @@ const link = "https://www.google.com/search?q=";
 
 const SimilarJournals = ({ similarJournals }) => (
   <section id="similar-journals">
-    <h3>
-      <i className="fas fa-bookmark"></i>
-      <span>Most Similar Journals</span>
-    </h3>
+    <Tooltip content="The closest journals within our generated paper embedding space">
+      <h3>
+        <i className="fas fa-bookmark"></i>
+        <span>Most Similar Journals</span>
+      </h3>
+    </Tooltip>
     {similarJournals.map(({ journal, rank, distance, strength }, index) => (
       <div key={index} className="card">
-        <div
-          className="card_score"
-          title={"Distance score: " + distance}
-          style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
-        >
-          {rank}
-        </div>
+        <Tooltip content={"Distance score: " + distance.toFixed(2)}>
+          <div
+            className="card_score"
+            style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
+          >
+            {rank}
+          </div>
+        </Tooltip>
         <div className="card_details">
           <a href={link + journal} className="card_detail">
             {journal}

@@ -8,6 +8,8 @@ import { getNeighborsMetadata } from "./backend";
 import { cleanPreprint } from "./backend";
 import { cleanNeighbors } from "./backend";
 
+import Tooltip from "./tooltip";
+
 import { loading } from "./status";
 import { success } from "./status";
 
@@ -54,12 +56,8 @@ const Search = ({
 
       // get preprint info and neighbor data
       try {
-        let {
-          preprint,
-          similarJournals,
-          similarPapers,
-          coordinates,
-        } = await getNeighbors(doi);
+        let { preprint, similarJournals, similarPapers, coordinates } =
+          await getNeighbors(doi);
         preprint = cleanPreprint(preprint);
         similarJournals = await getNeighborsMetadata(similarJournals);
         similarPapers = await getNeighborsMetadata(similarPapers);
@@ -139,14 +137,15 @@ const Search = ({
           disabled={status === loading}
           onFocus={({ target }) => target.select()}
         />
-        <button
-          className="search_button"
-          type="submit"
-          title="Search for related papers and journals"
-          disabled={status === loading}
-        >
-          <i className="fas fa-search"></i>
-        </button>
+        <Tooltip content="Search for related papers and journals">
+          <button
+            className="search_button"
+            type="submit"
+            disabled={status === loading}
+          >
+            <i className="fas fa-search"></i>
+          </button>
+        </Tooltip>
       </form>
     </section>
   );

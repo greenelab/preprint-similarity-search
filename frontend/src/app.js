@@ -42,7 +42,6 @@ const App = () => {
           }}
         />
         <Status {...{ status }} />
-        <hr />
         {status === success && (
           <>
             <PreprintInfo {...{ preprint }} />
@@ -50,9 +49,9 @@ const App = () => {
             <SimilarPapers {...{ similarPapers }} />
             <hr />
             <SimilarJournals {...{ similarJournals }} />
-            <hr />
           </>
         )}
+        <hr />
         <MapSections {...{ coordinates }} />
         <hr />
         <About />
