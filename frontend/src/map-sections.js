@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
+import Tooltip from "./tooltip";
 import CloudButtons from "./cloud-buttons";
 import Map from "./map";
 import Legend from "./legend";
@@ -45,10 +46,12 @@ const MapSections = ({ coordinates }) => {
   return (
     <>
       <section id="map">
-        <h3>
-          <i className="fas fa-map"></i>
-          <span>Map of PubMed Central</span>
-        </h3>
+        <Tooltip content="A visualization of the PubMed landscape based on on textual content and model data">
+          <h3>
+            <i className="fas fa-map"></i>
+            <span>Map of PubMed Central</span>
+          </h3>
+        </Tooltip>
         <CloudButtons {...{ selectedPc, setSelectedPc }} />
         <Map
           {...{ cells, selectedPc, selectedCell, setSelectedCell, coordinates }}

@@ -27,26 +27,26 @@ const Search = ({
   setSimilarPapers,
   setCoordinates,
 }) => {
-  // default query
-  const [query, setQuery] = useState(getUrl() || defaultSearch);
+  const [doi, setDoi] = useState(getUrl() || defaultSearch); // doi query
+  const [drag, setDrag] = useState(false); // text upload drag
 
   // on type
   const onChange = useCallback(
-    (event) => setQuery(event.target.value.trim()),
+    (event) => setDoi(event.target.value.trim()),
     []
   );
 
   // search
   const search = useCallback(
-    async (doi, updateUrl = true) => {
-      // clean doi
-      doi = cleanDoi(doi);
-
-      // update search box with cleaned doi
-      setQuery(doi);
+    async ({ doi, text }, updateUrl = true) => {
+      // clean doi and update search box
+      if (doi) {
+        doi = cleanDoi(doi);
+        setDoi(doi);
+      }
 
       // exit if doi query empty
-      if (!doi) return;
+      if (doi === "") return;
 
       // update url based on search
       if (updateUrl) setUrl(doi);
@@ -57,7 +57,7 @@ const Search = ({
       // get preprint info and neighbor data
       try {
         let { preprint, similarJournals, similarPapers, coordinates } =
-          await getNeighbors(doi);
+          await getNeighbors({ doi, text });
         preprint = cleanPreprint(preprint);
         similarJournals = await getNeighborsMetadata(similarJournals);
         similarPapers = await getNeighborsMetadata(similarPapers);
@@ -69,6 +69,7 @@ const Search = ({
         setSimilarPapers(similarPapers);
         setCoordinates(coordinates);
       } catch (error) {
+        console.log(error);
         if (error.name !== "CustomError")
           error.message = "Couldn't get results";
         setStatus(error.message);
@@ -94,9 +95,9 @@ const Search = ({
     const doi = getUrl();
     if (!doi) return;
     // put doi in search box
-    setQuery(doi);
+    setDoi(doi);
     // run search, without updating url since browser does this automatically
-    search(doi, false);
+    search({ doi }, false);
   }, [search]);
 
   // search for doi in url if any on first load
@@ -110,6 +111,30 @@ const Search = ({
     return () => window.removeEventListener("popstate", onNav);
   }, [onNav, search]);
 
+  // on button drag file over, set drag flag on
+  const onDragEnter = () => setDrag(true);
+
+  // on button drag file off, set drag flag off
+  const onDragLeave = () => setDrag(false);
+
+  // on button drag file
+  const onDragOver = (event) => event.preventDefault();
+
+  // on button file drop
+  const onDrop = async (event) => {
+    // prevent navigating
+    event.preventDefault();
+    event.stopPropagation();
+    setDrag(false);
+
+    // get text file contents
+    const file = event.dataTransfer.files[0];
+    if (file.type !== "text/plain") return;
+    const text = (await file.text()) || "";
+
+    // run search
+    search({ text });
+  };
   // render
   return (
     <section id="search">
@@ -125,12 +150,17 @@ const Search = ({
           // prevent page from navigating away/refreshing on submit
           event.preventDefault();
           // run search
-          search(query);
+          search({ doi });
         }}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        data-drag={drag}
       >
         <input
           className="search_input"
-          value={query}
+          value={doi}
           onChange={onChange}
           type="text"
           placeholder="e.g. 10.1101/833400"
@@ -154,8 +184,7 @@ const Search = ({
 // clean what user types into search box for convenience
 // remove everything before first number, eg "doi:"
 // remove version at end, eg "v4"
-const cleanDoi = (query) =>
-  query.replace(/^\D*/g, "").replace(/v\d+$/g, "").trim();
+const cleanDoi = (doi) => doi.replace(/^\D*/g, "").replace(/v\d+$/g, "").trim();
 
 // get doi from url
 const getUrl = () =>
@@ -165,7 +194,8 @@ const getUrl = () =>
 const setUrl = (doi) => {
   const oldUrl = window.location.href;
   const base = window.location.href.split(/[?#]/)[0];
-  const newUrl = base + "?doi=" + doi;
+  const newUrl = base + (doi ? "?doi=" + doi : "");
+  console.log(doi, newUrl);
   // compare old to new url to prevent duplicate history entries when refreshing
   if (oldUrl !== newUrl) window.history.pushState(null, null, newUrl);
 };
