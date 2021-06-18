@@ -164,7 +164,6 @@ def generate_vector_counts(word_model_wv, paper_fh):
     Parse a paper file (paper_fh) based on word model vector (word_model_wv).
     """
 
-    word_vectors = []
     tree = ET.parse(paper_fh, parser=parser)
 
     # Process xml without specified tags
@@ -212,13 +211,9 @@ def generate_vector_counts(word_model_wv, paper_fh):
     if len(all_tokens) < 20:
         return [], None
 
-    word_vectors += [word_model_wv[text] for text in all_tokens]
+    word_vectors = [word_model_wv[text] for text in all_tokens]
 
-    # Skip papers that don't contain text
-    if len(word_vectors) > 0:
-        return np.stack(word_vectors).mean(axis=0), Counter(all_tokens)
-
-    return [], None
+    return np.stack(word_vectors).mean(axis=0), Counter(all_tokens)
 
 
 def combine_new_papers(
