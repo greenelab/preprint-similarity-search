@@ -195,7 +195,6 @@ const setUrl = (doi) => {
   const oldUrl = window.location.href;
   const base = window.location.href.split(/[?#]/)[0];
   const newUrl = base + (doi ? "?doi=" + doi : "");
-  console.log(doi, newUrl);
   // compare old to new url to prevent duplicate history entries when refreshing
   if (oldUrl !== newUrl) window.history.pushState(null, null, newUrl);
 };

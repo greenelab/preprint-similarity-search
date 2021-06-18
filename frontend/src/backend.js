@@ -12,8 +12,6 @@ export const getNeighbors = async ({ doi, text }) => {
   if (!response.ok) throw new Error();
   const neighbors = await response.json();
 
-  console.log(neighbors);
-
   // if error returned, throw error with message
   if (neighbors.message) throw new CustomError(neighbors.message);
 
