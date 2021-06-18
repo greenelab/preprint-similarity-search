@@ -211,7 +211,7 @@ def generate_vector_counts(word_model_wv, paper_fh):
     if len(all_tokens) < 20:
         return [], None
 
-    word_vectors = [word_model_wv[text] for text in all_tokens]
+    word_vectors = [word_model_wv[tok] for tok in all_tokens]
 
     return np.stack(word_vectors).mean(axis=0), Counter(all_tokens)
 
