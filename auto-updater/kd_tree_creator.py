@@ -16,7 +16,7 @@ from utils import set_read_only, updater_log
 def pickle_kd_tree(dataset_filename, pmc_pkl_filename, kdtree_pkl_filename):
     """
     Main function.  Times were measured on a "e2-highmem-4" Google
-    Compute Engine instance (4vCPUs, 32 GB memory).
+    Compute Engine instance (4 vCPUs, 32 GB memory).
     """
 
     # Read paper_dataset file: ~3 minutes
@@ -30,7 +30,7 @@ def pickle_kd_tree(dataset_filename, pmc_pkl_filename, kdtree_pkl_filename):
     with open(pmc_pkl_filename, "wb") as fh:
         pickle.dump(pmc_map, fh)
 
-    # Create KNN paper_model: ~8 minutes (~30 GB RAM required)
+    # Create KNN paper_model: ~8 minutes (total memory usage: ~30 GB)
     updater_log("Start KNN fitting")
     paper_model = KNeighborsClassifier(n_neighbors=10)
     paper_model.fit(df.drop("journal", axis=1), df.journal)
