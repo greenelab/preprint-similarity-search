@@ -151,13 +151,3 @@ img {
 *:focus {
   outline: solid 2px var(--black);
 }
-
-/* tooltip */
-.tooltip {
-  max-width: min(300px, 100%);
-  padding: 10px 15px;
-  border-radius: 5px;
-  background: var(--black);
-  color: var(--white);
-  font-size: 0.8rem;
-}

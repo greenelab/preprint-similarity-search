@@ -1,5 +1,7 @@
 import color from "color";
 
+import Tooltip from "./tooltip";
+
 import "./card.css";
 
 const rankColorA = color("#ff980020");
@@ -11,35 +13,34 @@ const link = "https://www.ncbi.nlm.nih.gov/pmc/articles/";
 
 const SimilarPapers = ({ similarPapers }) => (
   <section id="similar-papers">
-    <h3>
-      <i className="fas fa-scroll"></i>
-      <span>Most Similar Papers</span>
-    </h3>
+    <Tooltip content="The closest paper within our generated paper embedding space">
+      <h3>
+        <i className="fas fa-scroll"></i>
+        <span>Most Similar Papers</span>
+      </h3>
+    </Tooltip>
     {similarPapers.map(
       (
         { id, title, authors, year, journal, rank, distance, strength },
         index
       ) => (
         <div key={index} className="card">
-          <div
-            className="card_score"
-            title={"Distance score: " + distance}
-            style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
-          >
-            {rank}
-          </div>
+          <Tooltip content={"Distance score: " + distance.toFixed(2)}>
+            <div
+              className="card_score"
+              style={{ backgroundColor: rankColorB.mix(rankColorA, strength) }}
+            >
+              {rank}
+            </div>
+          </Tooltip>
           <div className="card_details">
-            <a href={link + id} title={title} className="card_detail">
+            <a href={link + id} className="card_detail">
               {title}
             </a>
-            <div title={authors} className="card_detail truncate" tabIndex="0">
+            <div className="card_detail truncate" tabIndex="0">
               {authors}
             </div>
-            <div
-              title={journal + " · " + year}
-              className="card_detail truncate"
-              tabIndex="0"
-            >
+            <div className="card_detail truncate" tabIndex="0">
               {journal} · {year}
             </div>
           </div>

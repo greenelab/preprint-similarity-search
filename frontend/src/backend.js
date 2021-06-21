@@ -1,11 +1,14 @@
 import { CustomError } from "./error";
 
-const backendServer = "https://api-pss.greenelab.com/doi/";
+const doiServer = "https://api-pss.greenelab.com/doi";
+const textServer = "https://api-pss.greenelab.com/text";
 
 // get neighbor and coordinate data from backend
-export const getNeighbors = async (query) => {
+export const getNeighbors = async ({ doi, text }) => {
   // look up data from backend
-  const response = await fetch(backendServer + query);
+  const url = text ? textServer : doiServer + "/" + doi;
+  const options = { method: text ? "POST" : "GET", body: text || null };
+  const response = await fetch(url, options);
   if (!response.ok) throw new Error();
   const neighbors = await response.json();
 
@@ -50,19 +53,21 @@ export const getNeighborsMetadata = async (array) => {
 };
 
 // clean preprint data to handle more conveniently
-export const cleanPreprint = (preprint) => ({
+export const cleanPreprint = (preprint = {}) => ({
   // doi
   id: preprint.doi || null,
   // name of paper
   title: preprint.title || "",
   // authors of paper
-  authors: (preprint.authors || []).split("; ").join(", "),
+  authors: (preprint.authors || "").split("; ").join(", "),
   // name of journal
   journal: preprint.publisher || "",
   // year of publication
-  year: preprint.accepted_date.split("-")[0] || "",
+  year: (preprint.accepted_date || "").split("-")[0] || "",
   // is preliminary (PDF) result or XML/HTML result
   prelim: preprint.xml_found ? false : true,
+  // is a direct plain text upload
+  text: preprint.title ? false : true
 });
 
 // clean journal or paper neighbor data to handle more conveniently
