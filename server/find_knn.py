@@ -1,5 +1,6 @@
 """Get K nearest neighbors from KNN models."""
 
+from functools import lru_cache
 import numpy as np
 import pandas as pd
 import pickle
@@ -27,6 +28,7 @@ pmc_map = get_pmc_map()
 
 
 @timeout(seconds=240)
+@lru_cache
 def get_doi_neighbors(user_doi):
     """
     Find the closest papers and journals given an input paper's DOI.
@@ -60,6 +62,7 @@ def get_doi_neighbors(user_doi):
     }
 
 
+@lru_cache
 def get_text_neighbors(user_text):
     """
     Find the closest papers and journals given an input plain text.

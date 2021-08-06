@@ -1,8 +1,9 @@
+from functools import lru_cache
 import requests
 from flask_restful import abort
 from utils import server_log
 
-
+@lru_cache
 def get_doi_content(user_doi):
     """
     This function is designed to render the paper-journal
