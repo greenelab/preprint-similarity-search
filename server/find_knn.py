@@ -1,7 +1,7 @@
 """Get K nearest neighbors from KNN models."""
 
-from settings import CACHE_TTL
-from lru_ttl import timed_lru_cache
+import cachetools.func
+from settings import CACHE_TTL_SECS, CACHE_MAX_SIZE
 import numpy as np
 import pandas as pd
 import pickle
@@ -29,7 +29,7 @@ pmc_map = get_pmc_map()
 
 
 @timeout(seconds=240)
-@timed_lru_cache(ttl=CACHE_TTL)
+@cachetools.func.ttl_cache(ttl=CACHE_TTL_SECS, maxsize=CACHE_MAX_SIZE)
 def get_doi_neighbors(user_doi):
     """
     Find the closest papers and journals given an input paper's DOI.
@@ -63,7 +63,7 @@ def get_doi_neighbors(user_doi):
     }
 
 
-@timed_lru_cache(ttl=CACHE_TTL)
+@cachetools.func.ttl_cache(ttl=CACHE_TTL_SECS, maxsize=CACHE_MAX_SIZE)
 def get_text_neighbors(user_text):
     """
     Find the closest papers and journals given an input plain text.
