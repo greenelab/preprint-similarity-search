@@ -1,8 +1,10 @@
+import cachetools.func
+from settings import CACHE_TTL_SECS, CACHE_MAX_SIZE
 import requests
 from flask_restful import abort
 from utils import server_log
 
-
+@cachetools.func.ttl_cache(ttl=CACHE_TTL_SECS, maxsize=CACHE_MAX_SIZE)
 def get_doi_content(user_doi):
     """
     This function is designed to render the paper-journal
