@@ -13,5 +13,5 @@ scipy==1.5.0
 sentry-sdk[flask]==0.17.0
 smart-open==3.0.0
 spacy==3.0.3
-tensorflow==2.5.0
+tensorflow==2.5.1
 wheel
