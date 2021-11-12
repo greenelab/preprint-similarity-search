@@ -1,8 +1,9 @@
 import color from "color";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tooltip from "@tippyjs/react";
 
 import "./card.css";
+import { faScroll } from "@fortawesome/free-solid-svg-icons";
 
 const rankColorA = color("#ff980020");
 const rankColorB = color("#ff9800");
@@ -15,7 +16,7 @@ const SimilarPapers = ({ similarPapers }) => (
   <section id="similar-papers">
     <Tooltip content="The closest paper within our generated paper embedding space">
       <h3>
-        <i className="fas fa-scroll"></i>
+        <FontAwesomeIcon icon={faScroll} />
         <span>Most Similar Papers</span>
       </h3>
     </Tooltip>

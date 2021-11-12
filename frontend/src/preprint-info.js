@@ -1,4 +1,6 @@
 import Tooltip from "@tippyjs/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFeatherAlt, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const link = "https://doi.org/";
 
@@ -9,7 +11,7 @@ const PreprintInfo = ({
 }) => (
   <section id="your-preprint">
     <h3>
-      <i className="fas fa-feather-alt"></i>
+      <FontAwesomeIcon icon={faFeatherAlt} />
       <span>Your Preprint</span>
     </h3>
     {!text && (
@@ -28,7 +30,7 @@ const PreprintInfo = ({
     {!text && prelim && (
       <Tooltip content="These results were generated using the PDF version of the preprint, which is less reliable and can reduce the accuracy of predictions. Check back later when the full-text version is available.">
         <p className="center gray">
-          <i className="fas fa-info-circle"></i>
+          <FontAwesomeIcon icon={faInfoCircle} />
           <span>Preliminary results</span>
         </p>
       </Tooltip>
@@ -36,7 +38,7 @@ const PreprintInfo = ({
     {text && (
       <Tooltip content="You uploaded a plain text version of your preprint">
         <p className="center gray">
-          <i className="fas fa-info-circle"></i>
+          <FontAwesomeIcon icon={faInfoCircle} />
           <span>Plain text</span>
         </p>
       </Tooltip>

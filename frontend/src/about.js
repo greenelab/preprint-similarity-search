@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+
 import Tooltip from "@tippyjs/react";
 
 // about section
@@ -6,7 +9,7 @@ const About = () => (
   <section id="help">
     <Tooltip content="Overview of this tool in more detail">
       <h3>
-        <i className="fas fa-question-circle"></i>
+        <FontAwesomeIcon icon={faQuestionCircle} />
         <span>About this tool</span>
       </h3>
     </Tooltip>

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useEffect } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMap, faSquare } from "@fortawesome/free-solid-svg-icons";
 import Tooltip from "@tippyjs/react";
+
 import CloudButtons from "./cloud-buttons";
 import Map from "./map";
 import Legend from "./legend";
@@ -48,7 +50,7 @@ const MapSections = ({ coordinates }) => {
       <section id="map">
         <Tooltip content="A visualization of the PubMed landscape based on on textual content and model data">
           <h3>
-            <i className="fas fa-map"></i>
+            <FontAwesomeIcon icon={faMap} />
             <span>Map of PubMed Central</span>
           </h3>
         </Tooltip>
@@ -63,7 +65,7 @@ const MapSections = ({ coordinates }) => {
           <hr />
           <section id="cell-details">
             <h3>
-              <i className="fas fa-square"></i>
+              <FontAwesomeIcon icon={faSquare} />
               <span>Selected Square</span>
             </h3>
             <CellDetails {...{ selectedCell, selectedPc, setSelectedPc }} />
