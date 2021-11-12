@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 import { useViewBox } from "./hooks";
 
 import "./cell-details.css";

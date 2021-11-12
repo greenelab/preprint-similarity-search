@@ -34,6 +34,4 @@
 .cloud_enlarged {
   width: 400px;
   max-width: 90vw;
-  pointer-events: none;
-  outline: solid 2px var(--black);
 }

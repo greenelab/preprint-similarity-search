@@ -1,6 +1,6 @@
 import color from "color";
 
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 
 import "./card.css";
 

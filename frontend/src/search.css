@@ -34,6 +34,7 @@
 }
 .search_button {
   background: var(--light-orange);
+  color: var(--black);
   width: 50px;
   flex-grow: 0;
   flex-shrink: 0;

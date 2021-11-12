@@ -8,7 +8,7 @@ import { getNeighborsMetadata } from "./backend";
 import { cleanPreprint } from "./backend";
 import { cleanNeighbors } from "./backend";
 
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 
 import { loading } from "./status";
 import { success } from "./status";

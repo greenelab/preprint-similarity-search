@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 import CloudButtons from "./cloud-buttons";
 import Map from "./map";
 import Legend from "./legend";

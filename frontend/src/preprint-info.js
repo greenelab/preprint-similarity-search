@@ -1,4 +1,4 @@
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 
 const link = "https://doi.org/";
 
