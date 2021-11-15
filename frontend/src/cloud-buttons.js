@@ -3,7 +3,7 @@ import { endImage } from "./map-sections";
 import { range } from "./map-sections";
 import { getPcNum } from "./map-sections";
 import { getCloudUrl } from "./map-sections";
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 
 import "./cloud-buttons.css";
 
@@ -27,10 +27,9 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => (
         src={getCloudUrl(number)}
         className="cloud_enlarged"
         alt={"Principal component " + getPcNum(number)}
-        // put min estimated height to avoid flickering
-        style={{ minHeight: "300px" }}
       />
     }
+    maxWidth="none"
   >
     <button
       className="cloud_button"
@@ -47,6 +46,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => (
       <img
         src={getCloudUrl(number)}
         alt={"Principal component " + getPcNum(number)}
+        loading="lazy"
       />
     </button>
   </Tooltip>

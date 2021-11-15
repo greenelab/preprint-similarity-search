@@ -1,6 +1,7 @@
 import color from "color";
-
-import Tooltip from "./tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import Tooltip from "@tippyjs/react";
 
 import "./card.css";
 
@@ -15,7 +16,7 @@ const SimilarJournals = ({ similarJournals }) => (
   <section id="similar-journals">
     <Tooltip content="The closest journals within our generated paper embedding space">
       <h3>
-        <i className="fas fa-bookmark"></i>
+        <FontAwesomeIcon icon={faBookmark}/>
         <span>Most Similar Journals</span>
       </h3>
     </Tooltip>

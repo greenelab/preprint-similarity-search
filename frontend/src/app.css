@@ -14,13 +14,13 @@
   --trans: 0.2s ease;
 
   font-family: 'Libre Baskerville', serif;
-  color: var(--black);
 }
 html,
 body,
 #root {
   min-height: 100vh;
   margin: 0;
+  color: var(--black);
 }
 body {
   line-height: 1.75;
@@ -106,10 +106,10 @@ h4 {
 }
 
 /* icons */
-i + span {
+svg + span {
   margin-left: 10px;
 }
-h3 > i {
+h3 > svg {
   margin-right: 10px;
   color: var(--light-orange);
 }
@@ -117,6 +117,7 @@ h3 > i {
 /* elements */
 a,
 a * {
+  color: var(--black);
   transition: color var(--trans);
 }
 a:hover,
@@ -141,13 +142,18 @@ button {
   cursor: pointer;
   transition: color var(--trans);
 }
-button:hover,
-button:focus {
-  color: var(--orange);
-}
 img {
   max-width: 100%;
 }
 *:focus {
   outline: solid 2px var(--black);
+}
+
+/* tooltip */
+.tippy-content {
+  padding: 10px 15px;
+}
+.tippy-content img {
+  display: block;
+  margin: -5px -10px;
 }

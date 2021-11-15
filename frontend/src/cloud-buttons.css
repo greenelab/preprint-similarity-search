@@ -8,13 +8,14 @@
   opacity: 0.5;
 }
 .cloud_button[data-selected="true"]:before {
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  content: "\f00c";
+  content: "";
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-image: url("checkmark.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px;
 }
 .cloud_button:after {
   content: attr(data-number);
@@ -34,6 +35,4 @@
 .cloud_enlarged {
   width: 400px;
   max-width: 90vw;
-  pointer-events: none;
-  outline: solid 2px var(--black);
 }

@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useCallback } from "react";
 import * as Sentry from "@sentry/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import { getNeighbors } from "./backend";
 import { getNeighborsMetadata } from "./backend";
 import { cleanPreprint } from "./backend";
 import { cleanNeighbors } from "./backend";
 
-import Tooltip from "./tooltip";
+import Tooltip from "@tippyjs/react";
 
 import { loading } from "./status";
 import { success } from "./status";
@@ -173,7 +175,7 @@ const Search = ({
             type="submit"
             disabled={status === loading}
           >
-            <i className="fas fa-search"></i>
+            <FontAwesomeIcon icon={faSearch}/>
           </button>
         </Tooltip>
       </form>

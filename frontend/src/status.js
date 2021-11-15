@@ -1,3 +1,7 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamation, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+
 import "./status.css";
 
 // status key codes
@@ -11,7 +15,7 @@ const Status = ({ status }) => {
   if (status === empty) {
     return (
       <section className="center gray">
-        <i className="fas fa-exclamation"></i>
+        <FontAwesomeIcon icon={faExclamation} />
         <span>Search for a doi</span>
       </section>
     );
@@ -20,7 +24,7 @@ const Status = ({ status }) => {
   if (status === loading) {
     return (
       <section className="center gray">
-        <i className="fas fa-spinner fa-spin"></i>
+        <FontAwesomeIcon icon={faSpinner} spin />
         <span>Loading...</span>
       </section>
     );
@@ -30,7 +34,7 @@ const Status = ({ status }) => {
 
   return (
     <section className="center red">
-      <i className="far fa-times-circle"></i>
+      <FontAwesomeIcon icon={faTimesCircle} />
       <span>{status || "Couldn't get results"}</span>
     </section>
   );

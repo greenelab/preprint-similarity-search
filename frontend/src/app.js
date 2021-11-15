@@ -1,4 +1,5 @@
 import { useState } from "react";
+import 'tippy.js/dist/tippy.css';
 
 import Header from "./header";
 import Search from "./search";
