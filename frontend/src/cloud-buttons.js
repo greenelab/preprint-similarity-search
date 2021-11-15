@@ -46,6 +46,7 @@ const CloudButton = ({ number, selectedPc, setSelectedPc }) => (
       <img
         src={getCloudUrl(number)}
         alt={"Principal component " + getPcNum(number)}
+        loading="lazy"
       />
     </button>
   </Tooltip>
