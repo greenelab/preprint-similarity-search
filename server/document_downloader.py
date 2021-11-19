@@ -62,7 +62,7 @@ def get_doi_content(user_doi):
             f"{doc_url}/early/{accepted_date}/{user_doi.split('/')[-1]}.source.xml"
         )
 
-    # If not arxiv definitely bioRxiv/medRxiv
+    # If not bioRxiv/medRxiv definitely arxiv
     else:
         doc_url = f"https://export.arxiv.org/api/query?id_list={user_doi}"
         response = requests.get(doc_url)
