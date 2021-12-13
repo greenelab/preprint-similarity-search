@@ -1,7 +1,7 @@
 flask==1.1.2
 flask_restful==0.3.8
 gensim==3.8.3
-lxml==4.6.3
+lxml==4.6.5
 numpy==1.19.5
 pandas==1.2.2
 PyMuPDF==1.18.8
