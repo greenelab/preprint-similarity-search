@@ -4,7 +4,7 @@ flask_restful==0.3.8
 gensim==3.8.3
 gunicorn==20.0.4
 lxml==4.6.3
-numpy==1.19.5
+numpy==1.21.0
 pandas==1.2.2
 PyMuPDF==1.18.8
 requests==2.25.1
